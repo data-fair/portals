@@ -100,7 +100,7 @@ const pages = computed(() => {
   const genericByGroup: Record<string, { title: string, pages: any[] }> = {} // store each group of generic pages
 
   results.forEach(page => {
-    const metaKey = page.type + 'Metadata' // 'eventMetadata' | 'newsMetadata' | 'genericMetadata'
+    const metaKey = (page.type + 'Metadata') as 'eventMetadata' | 'newsMetadata' | 'genericMetadata'
     const metadata = page.config[metaKey] as Page['config']['eventMetadata'] | Page['config']['newsMetadata'] | Page['config']['genericMetadata']
     if (!metadata) return
 

@@ -118,6 +118,22 @@ export const generateUniqueSlug = async (baseTitle: string, pageType: 'event' | 
   return uniqueSlug
 }
 
+// the pages a portal has at most one of
+const standardPageTypes = ['home', 'contact', 'accessibility', 'terms-of-service', 'legal-notice', 'privacy-policy', 'cookie-policy', 'datasets', 'applications', 'reuses', 'event-catalog', 'news-catalog']
+
+// a 409 with a user-friendly message when a slug already exists, instead of the raw mongo error
+const throwSlugConflict = (err: any) => {
+  if (err.code !== 11000) return
+  const indexName: string = err.message.match(/index: ([^\s]+)/)?.[1] ?? ''
+  if (indexName.includes('event-slug')) {
+    throw httpError(409, 'An event page with this slug already exists for this owner')
+  } else if (indexName.includes('news-slug')) {
+    throw httpError(409, 'A news page with this slug already exists for this owner')
+  } else if (indexName.includes('generic-slug')) {
+    throw httpError(409, 'A generic page with this slug already exists for this owner')
+  }
+}
+
 export const createPage = async (page: Page, sourcePageId?: string) => {
   debug('createPage', page)
   validateMetadata(page)
@@ -126,7 +142,17 @@ export const createPage = async (page: Page, sourcePageId?: string) => {
   await renderMarkdownElements(page.config)
   if (page.draftConfig !== page.config) await renderMarkdownElements(page.draftConfig)
   page.config._toc = await resolvePageAnchors(page.config)
-  await mongo.pages.insertOne(page)
+  try {
+    await mongo.pages.insertOne(page)
+  } catch (err: any) {
+    throwSlugConflict(err)
+    throw err
+  }
+  // as a PATCH of its portals: a standard page created on portals replaces the page of its type
+  // there, instead of leaving two home pages that alternate
+  const standardReplacements = (page.portals.length && standardPageTypes.includes(page.type))
+    ? await switchStandardPages(page, page.portals)
+    : {}
 
   const details: string[] = []
   details.push(`Type: ${page.type}`)
@@ -142,6 +168,7 @@ export const createPage = async (page: Page, sourcePageId?: string) => {
       details.push(`Dupliquée depuis la page "${sourcePage.title}" (${sourcePageId})`)
     }
   }
+  details.push(...Object.values(standardReplacements))
 
   return details.join('; ')
 }
@@ -167,7 +194,7 @@ export const patchPage = async (page: Page, patch: Partial<Page>, session: Sessi
   let standardReplacements: Record<string, string> = {}
 
   // Handle standard page type publication: auto-switch pages of same type on the same portal
-  if (patch.portals && ['home', 'contact', 'accessibility', 'terms-of-service', 'legal-notice', 'privacy-policy', 'cookie-policy', 'datasets', 'applications', 'reuses', 'event-catalog', 'news-catalog'].includes(page.type)) {
+  if (patch.portals && standardPageTypes.includes(page.type)) {
     if (addedPortals.length > 0) {
       standardReplacements = await switchStandardPages(page, addedPortals)
     }
@@ -210,18 +237,7 @@ export const patchPage = async (page: Page, patch: Partial<Page>, session: Sessi
   try {
     await mongo.pages.updateOne({ _id: page._id }, { $set: fullPatch })
   } catch (err: any) {
-    // Throw a 409 error with a user-friendly message when a slug already exists
-    if (err.code === 11000) {
-      const indexMatch = err.message.match(/index: ([^\s]+)/)
-      const indexName = indexMatch ? indexMatch[1] : ''
-      if (indexName.includes('event-slug')) {
-        throw httpError(409, 'An event page with this slug already exists for this owner')
-      } else if (indexName.includes('news-slug')) {
-        throw httpError(409, 'A news page with this slug already exists for this owner')
-      } else if (indexName.includes('generic-slug')) {
-        throw httpError(409, 'A generic page with this slug already exists for this owner')
-      }
-    }
+    throwSlugConflict(err)
     throw err
   }
 
