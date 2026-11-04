@@ -1,6 +1,3 @@
-// relative, not #api: this module is also unit-tested from the root project (tests/features/agent-tools)
-import type { PortalConfig } from '../../../../api/types/portal-config/index.ts'
-
 /**
  * What every public portal page tells the AI chat, as keyed host state.
  *
@@ -16,7 +13,7 @@ import type { PortalConfig } from '../../../../api/types/portal-config/index.ts'
  *
  * Pure on purpose: unit-tested without a browser (tests/features/agent-tools).
  */
-export function portalAgentGuidance (portalConfig: Pick<PortalConfig, 'title'>, ownerName?: string, origin?: string): Record<string, string> {
+export function portalAgentGuidance (portalConfig: { title?: string }, ownerName?: string, origin?: string): Record<string, string> {
   const facts: string[] = []
   if (portalConfig.title) facts.push(`titled « ${portalConfig.title} »`)
   if (ownerName) facts.push(`managed by « ${ownerName} »`)
