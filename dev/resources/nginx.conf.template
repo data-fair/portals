@@ -102,6 +102,11 @@ server {
     proxy_pass http://localhost:${AGENTS_PORT};
   }
 
+  # the mcp server serves its own /mcp-server prefix (createSiteMiddleware), so the path is passed whole
+  location /mcp-server {
+    proxy_pass http://localhost:${MCP_PORT};
+  }
+
   # openapi-viewer does not run in this compose, the portal api-doc pages iframe this stub
   location /openapi-viewer/ {
     add_header Content-Type text/plain;

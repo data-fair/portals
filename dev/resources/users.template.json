@@ -110,5 +110,64 @@
       },
       "subject": "scope-tests"
     }
+  },
+  {
+    "id": "test_org1_pages_write_nhi",
+    "email": "test_org1_pages_write_nhi@test.com",
+    "nhi": {
+      "provider": {
+        "issuer": "http://{DEV_HOST}:{NGINX_PORT}/agents/api/nhi"
+      },
+      "subject": "autonomous-agent:sim-pages-write",
+      "scopes": [
+        "pages:write",
+        "portals:read",
+        "datasets:read",
+        "applications:read"
+      ]
+    }
+  },
+  {
+    "id": "test_org1_pages_admin_nhi",
+    "email": "test_org1_pages_admin_nhi@test.com",
+    "nhi": {
+      "provider": {
+        "issuer": "http://{DEV_HOST}:{NGINX_PORT}/agents/api/nhi"
+      },
+      "subject": "autonomous-agent:sim-pages-admin",
+      "scopes": [
+        "pages:admin",
+        "portals:read",
+        "datasets:read"
+      ]
+    }
+  },
+  {
+    "id": "test_org1_pages_read_nhi",
+    "email": "test_org1_pages_read_nhi@test.com",
+    "nhi": {
+      "provider": {
+        "issuer": "http://{DEV_HOST}:{NGINX_PORT}/agents/api/nhi"
+      },
+      "subject": "autonomous-agent:sim-pages-read",
+      "scopes": [
+        "pages:read",
+        "portals:read"
+      ]
+    }
+  },
+  {
+    "id": "test_org1_portals_write_nhi",
+    "email": "test_org1_portals_write_nhi@test.com",
+    "nhi": {
+      "provider": {
+        "issuer": "http://{DEV_HOST}:{NGINX_PORT}/agents/api/nhi"
+      },
+      "subject": "autonomous-agent:sim-portals-write",
+      "scopes": [
+        "portals:write",
+        "pages:read"
+      ]
+    }
   }
 ]

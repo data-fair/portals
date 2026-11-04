@@ -155,6 +155,10 @@ jobs:
     - name: Use ci.localhost as DEV_HOST in CI
       run: sed -i 's/^DEV_HOST=.*/DEV_HOST=ci.localhost/' .env
 
+    # simple-directory mounts it, with the host and port of .env
+    - name: Render dev users
+      run: node dev/render-users.mjs
+
     # the core services only, like a developer's default env: no test needs an optional one
     - name: Start docker compose services
       run: docker compose up -d --wait

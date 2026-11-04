@@ -14,6 +14,7 @@ services:
       - DF_PORT=${DF_PORT}
       - EVENTS_PORT=${EVENTS_PORT}
       - AGENTS_PORT=${AGENTS_PORT}
+      - MCP_PORT=${MCP_PORT}
       - DEV_API_PORT=${DEV_API_PORT}
       - DEV_UI_PORT=${DEV_UI_PORT}
       - DEV_PORTAL_PORT=${DEV_PORTAL_PORT}
@@ -47,10 +48,16 @@ services:
       - MANAGE_DEPARTMENTS=true
       - MANAGE_PARTNERS=true
       - MANAGE_SITES=true
-      # the test non-human identity of dev/resources/users.json (scope tests)
+      # non-human identities, declared in dev/resources/users.template.json (the scope tests, the
+      # autonomous-agent simulations)
       - MANAGE_NHIS=true
+      # dev only: the agents NHI issuer is plain http on a .localhost host, which assertSafeIssuer refuses otherwise
       - NHIS_ALLOW_INSECURE_ISSUERS=true
-      - PLATFORM_SCOPES_URL=http://localhost:${DEV_API_PORT}/portals-manager/api/scopes.json
+      # the token endpoint the agents service's autonomous agents get their bearer tokens from (off by default)
+      - OAUTH_SERVER_ENABLED=true
+      # the scopes an NHI may hold: those of every service of data-fair's platform document (portals included,
+      # data-fair merges it through PRIVATE_PORTALS_MANAGER_URL)
+      - PLATFORM_SCOPES_URL=http://localhost:${DF_PORT}/api/v1/scopes.json
       - SECRET_SITES=secret-sites
       - SECRET_EVENTS=secret-events
       - SECRET_SENDMAILS=secret-sendmails
@@ -62,6 +69,7 @@ services:
       # per recipient, stored in mongo: repeated test runs would stop the mails silently
       - MAILSRATELIMIT_POINTS=100000
     volumes:
+      # rendered from users.template.json with the host and port of .env (dev/render-users.mjs)
       - ./dev/resources/users.json:/app/data/users.json
       - ./dev/resources/organizations.json:/app/data/organizations.json
     healthcheck:
@@ -152,9 +160,44 @@ services:
       - SECRET_EVENTS=secret-events
       # the image has no model by default: the mock provider of agents' development config
       - PROVIDERS=[{"type":"mock","id":"global-mock","name":"Global Mock","enabled":true}]
-      - MODELS=[{"id":"mock-model","name":"Global Mock Model","provider":"global-mock","usage":["assistant","tools","summarizer","evaluator","moderator"],"inputPricePerMillion":0,"outputPricePerMillion":0}]
+      - MODELS=[{"id":"mock-model","name":"Global Mock Model","provider":"global-mock","usage":["assistant","tools","summarizer","moderator"],"inputPricePerMillion":0,"outputPricePerMillion":0}]
       - DEFAULT_MODELS={"assistant":{"provider":"global-mock","id":"mock-model"}}
       - DEFAULT_CREDITS=-1
+      # NODE_ENV=development only for POST /api/test-env/autonomous-agent: an NHI declared in
+      # simple-directory's files pins the agent id (autonomous-agent:<id>), which the public creation
+      # route always generates. The configuration stays the image's production one.
+      - NODE_ENV=development
+      - NODE_CONFIG_ENV=production
+      - SSRF_PUBLIC_IPS=127.0.0.1,::1
+      # the agents repo's development signing key, public by design: it only signs dev NHI assertions
+      - 'NHI_SIGNING_KEY={"kty":"EC","crv":"P-256","x":"iuGRxiUsSj4YmAvrp3XpXGnvttc6ruQIYakEVp-B4Ig","y":"nF0kPlKpzNztlqKozkb9T4sHl_sCD1M6ngrpwEnTL-M","d":"Hv71PS5oK6z6bqiRT-nq62cmgauiaCreaO-zmS30-6Q","kid":"dev-1","alg":"ES256"}'
+      # data-fair's mcp, built into every autonomous agent with an identity: called as the agent, its reach
+      # the identity's scopes
+      - PRIVATE_MCP_URL=http://${DEV_HOST}:${NGINX_PORT}/mcp-server/mcp
+
+  # the MCP server built from /data-fair/api/v1/platform/api-docs.json (portals merged in): /mcp-server/mcp
+  # (every tool, filtered by the caller's scopes, credentials required). Started with the agents (their
+  # autonomous agents call it) or on its own (profile mcp)
+  mcp:
+    profiles:
+      - mcp
+      - agents
+    image: ghcr.io/data-fair/mcp:main
+    network_mode: host
+    environment:
+      - TRANSPORT=http
+      - PORT=${MCP_PORT}
+      - MAIN_SITE_URL=http://${DEV_HOST}:${NGINX_PORT}
+      # the signing keys that verify callers' sessions and tokens
+      - PRIVATE_DIRECTORY_URL=http://localhost:${SD_PORT}
+      # sent as in production; the dev nginx has no request limiting and does not read it
+      - TRUSTED_FORWARDER=dev-trusted-forwarder
+      - SSRF_PUBLIC_IPS=127.0.0.1,::1
+      # tool titles are shown to people (chat chips)
+      - LOCALE=fr
+      - OBSERVER_ACTIVE=false
+      # seconds between refreshes of the platform document
+      - REFRESH_INTERVAL=10
 
   #####
   # tools

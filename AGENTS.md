@@ -44,10 +44,10 @@ Branch names: letters, digits, `.`, `_`, `-`, at most 60 characters, no `/`.
 The environment allows for integration testing thanks to docker containers (see docker-compose.yml).
 Random ports are allocated and defined in `.env`.
 A nginx proxy is part of the containers and exposes all services, including the development API server (configured in dev/resources/nginx.conf.template).
-Test users are defined in dev/resources/users.json
+Test users are defined in dev/resources/users.template.json (rendered to the git-ignored users.json with the host and port of `.env` by `node dev/render-users.mjs`: df-dev setup, the status pane, CI)
 
 The scope tests use a non-human identity, `test_org1_scope_nhi` (admin of `test_org1`,
-in dev/resources/users.json and organizations.json): `nhiSession(scope?)` in `tests/support/nhi.ts`
+in dev/resources/users.template.json and organizations.json): `nhiSession(scope?)` in `tests/support/nhi.ts`
 exchanges its assertion for a scoped (or, without scope, unrestricted) session.
 
 The test cleanup endpoint (`DELETE /api/test-env`) only removes data whose `owner.id` starts with `test_`. Use the dev-only superadmin `superadmin@dev.com` (id `dev_superadmin`, password `passwd`, member of org `dev_org`) to play around manually without seeing your data wiped by tests.

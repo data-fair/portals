@@ -30,8 +30,9 @@ A tier accepts itself, the higher tiers, the umbrella and the global tier scopes
 `GET /api/scopes.json` (public, any scope) answers the descriptions in the language of
 `Accept-Language`. simple-directory reads the platform's list (data-fair's
 `/api/v1/scopes.json`, which collects the scopes of every service of its platform document) to
-decide which scopes an admin may store on an NHI; in the dev stack it reads portals' list directly
-(`PLATFORM_SCOPES_URL` in `docker-compose.yml`).
+decide which scopes an admin may store on an NHI; the dev stack does the same (`PLATFORM_SCOPES_URL`
+in `docker-compose.yml`): the portals scopes are accepted only while data-fair's platform document
+holds portals' fragment (`PRIVATE_PORTALS_MANAGER_URL`).
 
 What each tier means, per family:
 
@@ -138,7 +139,7 @@ own credential (its bearer, else its cookie; `subscriptionRequests`). A failure 
 
 ## Testing
 
-- The test NHI `test_org1_scope_nhi` (`dev/resources/users.json`, admin of `test_org1` in
+- The test NHI `test_org1_scope_nhi` (`dev/resources/users.template.json`, admin of `test_org1` in
   `dev/resources/organizations.json`; simple-directory runs with `MANAGE_NHIS` and
   `NHIS_ALLOW_INSECURE_ISSUERS`): `nhiSession(scope?)` in `tests/support/nhi.ts` signs an
   assertion with `tests/resources/nhi/test-nhi-key.pem` and returns `cookieAx`, `bearerAx` and the
