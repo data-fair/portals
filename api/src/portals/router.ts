@@ -1,7 +1,7 @@
 import type { Portal, PortalConfig } from '#types/portal/index.ts'
 
 import { randomUUID } from 'node:crypto'
-import { Router } from 'express'
+import { Router, type Request } from 'express'
 import mongo from '#mongo'
 import config from '#config'
 import findUtils from '../utils/find.ts'
@@ -15,6 +15,9 @@ import { createPortal, validatePortalDraft, cancelPortalDraft, getPortal, getPor
 import { requireOperationScope } from '../scopes.ts'
 
 const router = Router()
+
+// the caller's credentials, forwarded by the syncs that act as the caller (data-fair, events)
+const syncHeaders = (req: Request) => ({ cookie: req.headers.cookie, authorization: req.headers.authorization })
 export default router
 
 router.get('', requireOperationScope('listPortals'), async (req, res, next) => {
@@ -122,7 +125,7 @@ router.post('', requireOperationScope('createPortal'), async (req, res, next) =>
   }
   assertAccountRole(session, portal.owner, 'admin')
 
-  await createPortal(portal, reqOrigin(req), req.headers.cookie)
+  await createPortal(portal, reqOrigin(req), { session, headers: syncHeaders(req) })
   sendPortalEvent(portal, 'a été créé', 'create', session, duplicationEventDetails)
   res.status(201).json(portal)
 })
@@ -154,7 +157,7 @@ router.patch('/:id', requireOperationScope('updatePortal'), async (req, res, nex
   const session = reqSessionAuthenticated(req)
   const portal = await getPortalAsAdmin(session, req.params.id)
   const body = patchReqBody.returnValid(req.body, { name: 'body' })
-  const updatedPortal = await patchPortal(portal, body, session, reqOrigin(req), [], req.headers.cookie)
+  const updatedPortal = await patchPortal(portal, body, session, reqOrigin(req), [], syncHeaders(req))
 
   // Send patch event only if not just draft changed
   const onlyDraftChanged = Object.keys(body).length === 1 && body.draftConfig
@@ -168,7 +171,7 @@ router.patch('/:id', requireOperationScope('updatePortal'), async (req, res, nex
 router.delete('/:id', requireOperationScope('deletePortal'), async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
   const portal = await getPortalAsAdmin(session, req.params.id)
-  await deletePortal(portal, reqOrigin(req), req.headers.cookie)
+  await deletePortal(portal, reqOrigin(req), { session, headers: syncHeaders(req) })
   sendPortalEvent(portal, 'a été supprimé', 'delete', session)
   res.status(204).send()
 })
@@ -176,14 +179,14 @@ router.delete('/:id', requireOperationScope('deletePortal'), async (req, res, ne
 router.post('/:id/draft', requireOperationScope('publishPortalDraft'), async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
   const portal = await getPortalAsAdmin(session, req.params.id)
-  await validatePortalDraft(portal, session, reqOrigin(req), req.headers.cookie)
+  await validatePortalDraft(portal, session, reqOrigin(req), syncHeaders(req))
   res.status(204).send()
 })
 
 router.delete('/:id/draft', requireOperationScope('cancelPortalDraft'), async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
   const portal = await getPortalAsAdmin(session, req.params.id)
-  await cancelPortalDraft(portal, session, reqOrigin(req), req.headers.cookie)
+  await cancelPortalDraft(portal, session, reqOrigin(req), syncHeaders(req))
   res.status(204).send()
 })
 
@@ -192,6 +195,6 @@ router.post('/:id/ingress', async (req, res, next) => {
   assertAdminMode(session)
   const portal = await getPortalAsAdmin(reqSessionAuthenticated(req), req.params.id)
   const ingress = postIngressReqBody.returnValid(req.body, { name: 'body' })
-  await patchPortal(portal, { ingress }, session, reqOrigin(req), ['ingress'], req.headers.cookie)
+  await patchPortal(portal, { ingress }, session, reqOrigin(req), ['ingress'], syncHeaders(req))
   res.status(204).send()
 })

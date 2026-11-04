@@ -38,6 +38,10 @@
     "privateEventsUrl": {
       "type": "string"
     },
+    "privateDataFairUrl": {
+      "type": "string",
+      "pattern": "^https?://"
+    },
     "secretKeys": {
       "type": "object",
       "additionalProperties": false,
@@ -60,6 +64,10 @@
         },
         "limits": {
           "type": "string"
+        },
+        "dataFair": {
+          "type": "string",
+          "description": "secret key of data-fair's publication-site writes (data-fair's secretKeys.portals), used for scope-restricted sessions"
         }
       }
     },

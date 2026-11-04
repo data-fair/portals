@@ -1,6 +1,7 @@
 export default {
   privateDirectoryUrl: 'http://simple-directory:8080',
   privateEventsUrl: undefined,
+  privateDataFairUrl: 'http://data-fair:8080',
   mongoUrl: 'mongodb://localhost:27017/data-fair-portals',
   port: 8080,
   tmpDir: '/tmp',
@@ -14,7 +15,8 @@ export default {
     events: undefined,
     sites: undefined,
     ingress: undefined,
-    limits: undefined
+    limits: undefined,
+    dataFair: undefined
   },
   // -1 means unlimited, overwritten per account by the customers service
   defaultLimits: {

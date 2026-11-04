@@ -7,6 +7,7 @@ export default {
   port: process.env.DEV_API_PORT,
   privateDirectoryUrl: `http://localhost:${process.env.SD_PORT}`,
   privateEventsUrl: `http://localhost:${process.env.EVENTS_PORT}`,
+  privateDataFairUrl: `http://localhost:${process.env.DF_PORT}`,
   mongoUrl: `mongodb://localhost:${process.env.MONGO_PORT}/data-fair-portals-test`,
   tmpDir: './tmp',
   observer: {
@@ -17,7 +18,8 @@ export default {
     identities: 'secret-identities',
     events: 'secret-events',
     sites: 'secret-sites',
-    limits: 'secret-limits'
+    limits: 'secret-limits',
+    dataFair: 'secret-portals'
   },
   portalUrlPattern: `http://{subdomain}.${process.env.DEV_HOST}:${process.env.NGINX_PORT}`,
   upgradeRoot: './'

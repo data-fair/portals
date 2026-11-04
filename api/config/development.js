@@ -7,6 +7,7 @@ export default {
   port: process.env.DEV_API_PORT,
   privateDirectoryUrl: `http://localhost:${process.env.SD_PORT}`,
   privateEventsUrl: `http://localhost:${process.env.EVENTS_PORT}`,
+  privateDataFairUrl: `http://localhost:${process.env.DF_PORT}`,
   mongoUrl: `mongodb://localhost:${process.env.MONGO_PORT}/data-fair-portals-development`,
   tmpDir: './tmp',
   observer: {
@@ -18,7 +19,8 @@ export default {
     events: 'secret-events',
     sites: 'secret-sites',
     ingress: 'secret-ingress',
-    limits: 'secret-limits'
+    limits: 'secret-limits',
+    dataFair: 'secret-portals'
   },
   portalUrlPattern: `http://{subdomain}.portals.${process.env.DEV_HOST}:${process.env.NGINX_PORT}`,
   privateIngressManagerUrl: `http://localhost:${process.env.DEV_INGRESS_PORT}`,

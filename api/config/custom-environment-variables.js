@@ -3,12 +3,14 @@ export default {
   port: 'PORT',
   privateDirectoryUrl: 'PRIVATE_DIRECTORY_URL',
   privateEventsUrl: 'PRIVATE_EVENTS_URL',
+  privateDataFairUrl: 'PRIVATE_DATA_FAIR_URL',
   secretKeys: {
     identities: 'SECRET_IDENTITIES',
     events: 'SECRET_EVENTS',
     sites: 'SECRET_SITES',
     ingress: 'SECRET_INGRESS',
-    limits: 'SECRET_LIMITS'
+    limits: 'SECRET_LIMITS',
+    dataFair: 'SECRET_DATA_FAIR'
   },
   defaultLimits: {
     nbPages: 'DEFAULT_LIMITS_NB_PAGES',

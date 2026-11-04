@@ -71,7 +71,8 @@ services:
       retries: 60
 
   data-fair:
-    image: ghcr.io/data-fair/data-fair:master
+    # DF_IMAGE: a data-fair build that accepts the portals secret key, for the agent publication-site test (tests/features/portals/publication-site-sync.api.spec.ts)
+    image: ${DF_IMAGE:-ghcr.io/data-fair/data-fair:master}
     restart: on-failure:10
     network_mode: host
     depends_on:
@@ -107,6 +108,8 @@ services:
       # tile cache capped collection, 2 GB by default
       - CACHE_MONGO_SIZE=200
       - SECRET_EVENTS=secret-events
+      # publication-site writes of portals for its scope-restricted sessions (portals secretKeys.dataFair)
+      - SECRET_PORTALS=secret-portals
       - PRIVATE_PORTALS_MANAGER_URL=http://localhost:${DEV_API_PORT}
     volumes:
       # the image declares an anonymous /data: datasets files would vanish on recreate while mongo keeps them
