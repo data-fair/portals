@@ -188,7 +188,6 @@ export async function runAgentCase (
     ...(evidenceErrors.length ? { evidenceErrors } : {})
   }
   writeEvidence(simCase.name, transcript, {
-    ...(hostState ? { check: hostState } : {}),
     case: simCase.name,
     valid: !error,
     error,

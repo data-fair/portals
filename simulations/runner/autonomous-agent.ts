@@ -81,8 +81,7 @@ export type AgentCase = SimulationCase & {
   /** What must have happened for the run to have tested its case; an invalid run is never judged. */
   premise: { description: string, holds: (state: RunState) => boolean },
   /**
-   * The stored state the judge is shown beside the transcript (the transcript's hostState and the
-   * sidecar). Evidence, never a verdict: a wrong outcome is the judge's to read, not an invalid run.
+   * The stored state the judge is shown beside the transcript (the transcript's hostState). Evidence, never a verdict: a wrong outcome is the judge's to read, not an invalid run.
    */
   check?: (state: RunState) => Record<string, unknown>
 }

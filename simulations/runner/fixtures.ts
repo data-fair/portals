@@ -4,7 +4,7 @@
  * on every run after the cleanups, so a case never inherits another run's state.
  *
  * DELETE /api/test-env only wipes the portals-manager collections, so the data-fair
- * datasets are deleted here by their fixed ids.
+ * datasets and application are deleted here by their fixed ids.
  */
 import FormData from 'form-data'
 import { readFileSync } from 'node:fs'
@@ -36,6 +36,8 @@ export async function seedAll (): Promise<SeedIds> {
   await clean()
   const ax = await axiosAuth({ email: OWNER_ADMIN_EMAIL, org: OWNER.id })
   for (const d of DATASETS) await ax.delete(`${ROOT}/data-fair/api/v1/datasets/${d.id}`).catch(() => {})
+  // seedAgentFixtures' application, so that no case of the other spec finds it
+  await ax.delete(`${ROOT}/data-fair/api/v1/applications/${APPLICATION.id}`, { validateStatus: (status: number) => status < 300 || status === 404 })
   await ax.patch(`${ROOT}/data-fair/api/v1/settings/${OWNER.type}/${OWNER.id}`, { topics: TOPICS })
 
   const portal = (await ax.post('/api/portals', {
@@ -133,7 +135,6 @@ export async function seedAgentFixtures (): Promise<AgentSeedIds> {
   const admin = await axiosAuth({ email: SUPER_ADMIN_EMAIL, adminMode: true })
   const baseApp = (await admin.post(`${ROOT}/data-fair/api/v1/base-applications`, { url: BASE_APP_URL })).data
   await admin.patch(`${ROOT}/data-fair/api/v1/base-applications/${encodeURIComponent(baseApp.id)}`, { public: true })
-  await ax.delete(`${ROOT}/data-fair/api/v1/applications/${APPLICATION.id}`).catch(() => {})
   const dataset = DATASETS[0]
   await ax.put(`${ROOT}/data-fair/api/v1/applications/${APPLICATION.id}`, {
     url: BASE_APP_URL,

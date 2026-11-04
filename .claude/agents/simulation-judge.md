@@ -29,6 +29,10 @@ A case name, the person's goal, and paths to the evidence. Read the files with
     arguments AND its result, and per run the system prompt and each model call
     (role, model, tokens, the tools offered, the page context folded in). Use it to
     check an assistant's claim against what a tool really returned.
+  - `hostState` — when present, state the host read back after the run, through
+    the API as the account's admin (stored page drafts, which pages are published
+    and attached to the portal, the portal's draft and live configuration). It is
+    a fact, not the agent's claim: weigh it over what the agent says it did.
   - `evidenceErrors` — when present, why some of that record is missing. A gap
     there is not a finding about the product.
   - `consoleErrors` — browser errors during the run
@@ -43,13 +47,20 @@ A case name, the person's goal, and paths to the evidence. Read the files with
   facts, not as a score: nothing in `metrics` is a pass mark, and a number only
   means something once you have seen in the transcript what produced it.
 
-Two shapes of run differ from a single chat:
+Three shapes of run differ from a single chat:
 
 - **Several conversations.** `conversation` may hold more than one, in order, each
   new one opened by an entry of role `new-conversation`; there is one export per
   conversation, oldest first. The person remembers the earlier ones; the assistant
   only knows what it carried over (an agent's memory, for instance). Judge them
   together, and count friction turns across the whole run.
+- **`surface: "autonomous-agent"`.** The route is `/agents/...`: the person
+  talks to an autonomous agent of their organization on the agents chat page,
+  with no portal or back-office page beside the chat. The agent acts as its own
+  identity, with the scopes of that identity, through the mcp server's tools
+  (`portals_*`, `datafair_*`); a tool it was not offered is outside its scopes
+  by design. What it changed is only visible to the person through what it says
+  and the links it gives, so check its claims against the export and `hostState`.
 - **`surface: "unattended"`.** Nobody was there: a planned task ran on its own
   and there are no persona turns, so `conversation` and `observations` are empty
   by construction, not by silence. `persona` names the absent reader of the
@@ -59,9 +70,12 @@ Two shapes of run differ from a single chat:
   that is true to what its tools returned. A friction's `turn` is then 1.
 
 **Read the architecture documentation before judging.** `docs/architecture/agent.md`
-in this repository describes the two surfaces a case runs on — the data-fair
+in this repository describes the surfaces a case runs on — the data-fair
 back-office shell embedding the portals manager (cases with a `/data-fair/...`
-route) and the public portal with its own chat (cases with a portal path) — what
+route), the public portal with its own chat (cases with a portal path), and an
+autonomous agent of the organization on the agents chat page (cases with an
+`/agents/...` route, `surface: "autonomous-agent"`: an agent acting as its own
+identity through the mcp server, no page beside the chat) — what
 the tools on each promise, what they deliberately do not cover, and how drafts are
 saved and validated. Read it first, then whatever looks relevant to what you saw.
 The chat itself (conversation, skills, waits) belongs to the agents service; a

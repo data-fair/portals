@@ -80,7 +80,7 @@ export const agentCases: AgentCase[] = [
     tools: { required: ['portals_publish_page', 'portals_attach_page_to_portals'] },
     persona: COMMUNICATION,
     goal: 'Un collègue a préparé la page « Agenda culturel de l\'été », mais elle n\'est pas encore visible sur le portail de l\'agglomération. Tu veux qu\'elle y soit en ligne dans la dernière version qu\'il a préparée, et que la page d\'accueil du portail invite les visiteurs à la consulter. Le reste du portail doit rester tel qu\'il est.',
-    maxTurns: 8,
+    maxTurns: 7,
     premise: {
       description: 'portals_publish_page was called on the prepared page « Agenda culturel de l\'été »',
       holds: state => calledTool(state.exports, 'portals_publish_page', input => input?.id === state.ids.draftPageId)
