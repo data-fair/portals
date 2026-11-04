@@ -302,14 +302,11 @@ const publicationSitesPath = (portal: Portal) => {
 }
 
 // the headers of a publication-site write on data-fair's private url, for a scope-restricted session
-const dataFairSecretHeaders = (session: SessionStateAuthenticated) => {
+const dataFairSecretHeaders = () => {
   if (!config.privateDataFairUrl || !config.secretKeys.dataFair) {
     throw httpError(500, 'config.privateDataFairUrl and config.secretKeys.dataFair are required to sync the publication sites of scope-restricted sessions')
   }
-  return {
-    'x-secret-key': config.secretKeys.dataFair,
-    'x-acting-user': encodeURIComponent(JSON.stringify({ id: session.user.id, name: session.user.name }))
-  }
+  return { 'x-secret-key': config.secretKeys.dataFair }
 }
 
 // data-fair does not subscribe a caller it only knows through the secret key, its own credentials do it here
@@ -347,7 +344,7 @@ export async function syncPortalUpdate (portal: Portal, previousPortal: Portal |
         formatSyncError('data-fair', err)
       }
     } else {
-      const headers = dataFairSecretHeaders(caller.session)
+      const headers = dataFairSecretHeaders()
       let response: { created: boolean, subscriptions?: unknown[] } | undefined
       try {
         response = (await axios.post(`${config.privateDataFairUrl}${publicationSitesPath(portal)}`, publicationSite, { headers })).data
@@ -402,7 +399,7 @@ async function syncPortalDelete (portal: Portal, reqOrigin: string, caller: Sync
   if (syncPath(caller.session, caller.headers) === 'cookie') {
     await axios.delete(`${reqOrigin}/data-fair${sitePath}`, { headers: { cookie: caller.headers.cookie } })
   } else {
-    const headers = dataFairSecretHeaders(caller.session)
+    const headers = dataFairSecretHeaders()
     try {
       await axios.delete(`${config.privateDataFairUrl}${sitePath}`, { headers })
     } catch (err: any) {

@@ -118,8 +118,7 @@ scoped token on its settings writes, so the path depends on the session (`syncPa
 - bearer session (an `Authorization` header, scoped or not: a cookie beside it is not the
   credential lib-express read) or scope-restricted session (agents): the write goes to `config.privateDataFairUrl`
   (`PRIVATE_DATA_FAIR_URL`) with the header `x-secret-key: config.secretKeys.dataFair`
-  (`SECRET_DATA_FAIR`, data-fair's `secretKeys.portals`) and `x-acting-user` (the session's user
-  id and name). Without both settings the save answers 500 and stores nothing.
+  (`SECRET_DATA_FAIR`, data-fair's `secretKeys.portals`), no other identity header. Without both settings the save answers 500 and stores nothing.
 
 Both paths first assert the caller is admin of the portal owner (`assertCanSyncPortal`). The sync
 runs before the portal is stored: a data-fair error leaves the portal unchanged. Its message keeps
@@ -132,7 +131,7 @@ data-fair sync without a caller answers 500.
 ### Subscriptions
 
 On the cookie path data-fair subscribes the user to the events of a new publication site itself.
-On the secret-key path it only knows the acting user: when it answers `created` with
+On the secret-key path it knows no session: when it answers `created` with
 `subscriptions`, portals posts them to `<origin>/events/api/v1/subscriptions` with the caller's
 own credential (its bearer, else its cookie; `subscriptionRequests`). A failure is only logged
 (`subscribe-publication-site`).
