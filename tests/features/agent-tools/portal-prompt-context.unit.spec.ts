@@ -15,9 +15,9 @@ test.describe('portal prompt context', () => {
   test('says how to check what a dataset table on screen shows', () => {
     // a judged run opened a filtered table, then said « je ne vois pas les lignes du tableau »
     // and left the check to the person: the table shows the rows of the page's filters, which
-    // the data sub-agent can query
+    // the data tools can query
     const prompt = portalPromptContext({ title: 'Portail test' } as any, 'Owner').join('\n')
     expect(prompt).toContain('le tableau affiche exactement ces lignes')
-    expect(prompt).toContain('subagent_dataset_data')
+    expect(prompt).toContain('query-dataset-data')
   })
 })
