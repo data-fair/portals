@@ -50,6 +50,7 @@ if (import.meta.client) {
     localFetch: $localFetch,
     portalConfig: $portal.config,
     portalId: $portal._id,
+    ownerName: $portal.owner.name,
     navigationStore
   })
 }

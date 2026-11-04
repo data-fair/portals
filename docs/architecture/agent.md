@@ -51,13 +51,20 @@ portal (Nuxt, <portal>.portals.<host>/...)           ← this repo's portal/
   bucket (`anonymous`, `external`, `user`, `contrib`, `admin` relative to the portal
   owner) is in `agentChat.visibleTo` (no `visibleTo` = everyone). It is mounted
   client-side only, after hydration.
-- `agentChat.type` is `menu` (default) or `drawer`; `agentChat.systemPrompt` is
-  prepended to the context built by `portal/app/composables/agent/portal-prompt-context.ts`
-  (portal title, owner, available pages and features).
-  **Not applied since agents libs 0.7**: `hostInitConfig` ignores the `systemPrompt` prop (a
-  persona is a configured agent, chosen by `agentId`), so neither `agentChat.systemPrompt` nor the
-  `custom-agent` page block's prompt and focus datasets reach the chat
-  (`tests/features/portal-rendering/custom-agent-block.e2e.spec.ts` fails); to be decided.
+- `agentChat.type` is `menu` (default) or `drawer`.
+- The portal's built-in guidance (portal title, owner and origin; never invent data and
+  base figures on tool results; check a table on screen with its page filters; open pages
+  with `navigate` and read the screen before describing it; absolute markdown links) is
+  published on every portal page as keyed host state (`useAgentState`, keys `portal`,
+  `portal-data`, `portal-screen`, `portal-links`, built by
+  `portal/app/composables/agent/portal-agent-guidance.ts`), which the agents server tells
+  the model on every turn. It used to be the chat's system prompt, which agents libs 0.7
+  ignore (`hostInitConfig` drops the `systemPrompt` prop: a persona is a configured agent,
+  chosen by `agentId`).
+- **Known regression since agents libs 0.7: the custom persona.** `agentChat.systemPrompt` and
+  the `custom-agent` page block's prompt, focus datasets and page containment are not applied;
+  their replacement needs an `agentId`-based configuration, to be decided
+  (`tests/features/portal-rendering/custom-agent-block.e2e.spec.ts` is `test.fixme` until then).
 - Tools are registered on every portal page, independent of whether the chat is shown.
 
 ## Manager tools (back-office)

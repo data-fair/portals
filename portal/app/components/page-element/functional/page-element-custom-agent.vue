@@ -17,7 +17,6 @@
         :account-type="owner.type"
         :account-id="owner.id"
         :chat-title="element.title"
-        :system-prompt="systemPrompt"
         :init-config-key="element.uuid"
       />
     </div>
@@ -28,7 +27,6 @@
 import { defineAsyncComponent, computed } from 'vue'
 import type { CustomAgentElement } from '#api/types/page-elements/index.ts'
 import { type Account, getAccountRole } from '@data-fair/lib-common-types/session/index.js'
-import { portalPromptContext } from '../../../composables/agent/portal-prompt-context'
 
 const DfAgentChatBlock = defineAsyncComponent(() => import('@data-fair/lib-vuetify-agents/DfAgentChatBlock.vue'))
 
@@ -50,16 +48,7 @@ const canSee = computed(() => {
   return visibleTo.includes(viewerBucket.value)
 })
 
-// The lib component carries no raw d-frame / URL / navigate logic — it resolves
-// the chat URL and routes navigate-messages internally. We only compose the
-// effective prompt: block prompt + portal context + focus datasets + containment.
-const systemPrompt = computed(() => {
-  const parts = [element.systemPrompt || '', ...portalPromptContext(portalConfig.value, owner.value?.name, !!element.systemPrompt)]
-  if (element.focusDatasets?.length) {
-    const list = element.focusDatasets.map((d: { id: string, title?: string }) => `"${d.title ?? d.id}" (id: ${d.id})`).join(', ')
-    parts.push(`Concentre tes explorations de données sur ces jeux de données : ${list}. Tu peux explorer le reste du catalogue uniquement si l'utilisateur le demande explicitement.`)
-  }
-  parts.push("Ton travail est limité au contexte de cette page. N'utilise pas l'outil de navigation pour quitter la page, sauf si l'utilisateur le demande explicitement.")
-  return parts.filter(Boolean).join('\n')
-})
+// No system prompt: agents libs 0.7 ignore it, so the block's prompt and focus datasets are not
+// applied (a persona is a configured agent, chosen by agentId: docs/architecture/agent.md). The
+// portal's built-in guidance reaches the chat as host state (composables/agent/use-portal-agent-host.ts).
 </script>

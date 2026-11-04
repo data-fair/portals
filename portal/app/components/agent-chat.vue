@@ -5,7 +5,6 @@
         :account-type="owner.type"
         :account-id="owner.id"
         :chat-title="agentChat.chatTitle"
-        :system-prompt="systemPrompt"
         :drawer-props="agentChat.drawerProps"
       />
       <Teleport
@@ -31,8 +30,7 @@
           :account-type="owner.type"
           :account-id="owner.id"
           :chat-title="agentChat.chatTitle"
-          :system-prompt="systemPrompt"
-          :btn-props="agentChat.btnProps"
+            :btn-props="agentChat.btnProps"
           :menu-props="agentChat.menuProps"
         />
       </Teleport>
@@ -44,8 +42,7 @@
           :account-type="owner.type"
           :account-id="owner.id"
           :chat-title="agentChat.chatTitle"
-          :system-prompt="systemPrompt"
-          :btn-props="agentChat.btnProps"
+            :btn-props="agentChat.btnProps"
           :menu-props="agentChat.menuProps"
         />
       </div>
@@ -57,7 +54,6 @@
 import { defineAsyncComponent, computed } from 'vue'
 import type { PortalConfig } from '#api/types/portal-config'
 import { type Account, getAccountRole } from '@data-fair/lib-common-types/session/index.js'
-import { portalPromptContext } from '../composables/agent/portal-prompt-context'
 
 const DfAgentChatDrawer = defineAsyncComponent(() => import('@data-fair/lib-vuetify-agents/DfAgentChatDrawer.vue'))
 const DfAgentChatToggle = defineAsyncComponent(() => import('@data-fair/lib-vuetify-agents/DfAgentChatToggle.vue'))
@@ -87,10 +83,8 @@ const canSee = computed(() => {
   return visibleTo.includes(viewerBucket.value)
 })
 
-const systemPrompt = computed(() => {
-  const base = agentChat.value?.systemPrompt || ''
-  const parts = [base, ...portalPromptContext(props.portalConfig, props.owner.name, !!base)]
-  return parts.filter(Boolean).join('\n')
-})
+// No system prompt: agents libs 0.7 ignore it (a persona is a configured agent, chosen by
+// agentId — agentChat.systemPrompt is not applied, docs/architecture/agent.md). The portal's
+// built-in guidance reaches the chat as host state (composables/agent/use-portal-agent-host.ts).
 
 </script>
