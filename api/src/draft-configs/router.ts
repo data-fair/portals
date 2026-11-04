@@ -5,7 +5,8 @@ import { Router } from 'express'
 import * as pagePatchReqBody from '#doc/pages/patch-req-body/index.ts'
 import * as portalPatchReqBody from '#doc/portals/patch-req-body/index.ts'
 import { validate as healPageConfig } from '#types/page-config/index.ts'
-import { reqSessionAuthenticated, reqOrigin } from '@data-fair/lib-express'
+import pageConfigRootSchema from '#types/page-config/schema.js'
+import { reqSessionAuthenticated, reqOrigin, httpError } from '@data-fair/lib-express'
 import { requireOperationScope } from '../scopes.ts'
 import { getPageAsContrib, patchPage } from '../pages/service.ts'
 import { getPortalAsAdmin, patchPortal } from '../portals/service.ts'
@@ -25,6 +26,14 @@ const healedPageConfig = <T>(config: T): T => {
   return healed
 }
 
+// the healing is for the leftovers of elements: the root of a draft read from GET is already
+// healed, an unknown root key in a PUT is a mistake of its author (an invented toc option...)
+const assertKnownRootKeys = (config: unknown) => {
+  if (!config || typeof config !== 'object' || Array.isArray(config)) return
+  const unknownKeys = Object.keys(config).filter(key => !(key in pageConfigRootSchema.properties))
+  if (unknownKeys.length) throw httpError(400, `body must NOT have additional properties (${unknownKeys.join(', ')})`)
+}
+
 router.get('/pages/:id/draft-config', requireOperationScope('getPageDraftConfig'), async (req, res) => {
   const page = await getPageAsContrib(reqSessionAuthenticated(req), req.params.id)
   res.send(healedPageConfig(page.draftConfig))
@@ -33,6 +42,7 @@ router.get('/pages/:id/draft-config', requireOperationScope('getPageDraftConfig'
 router.put('/pages/:id/draft-config', requireOperationScope('putPageDraftConfig'), async (req, res) => {
   const session = reqSessionAuthenticated(req)
   const page = await getPageAsContrib(session, req.params.id)
+  assertKnownRootKeys(req.body)
   const { draftConfig } = pagePatchReqBody.returnValid({ draftConfig: healedPageConfig(req.body) }, { name: 'body' })
   const updatedPage = await patchPage(page, { draftConfig }, session)
   res.send(updatedPage.draftConfig)

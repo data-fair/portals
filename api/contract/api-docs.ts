@@ -400,7 +400,7 @@ const paths = {
     }),
     put: operation('putPageDraftConfig', 'Pages', 'Replace the draft configuration of a page', {
       parameters: [idParam('Id of the page.')],
-      requestBody: jsonBody({ type: 'object' }, 'The whole draft configuration, valid against the schema of GET /pages/{id}/draft-config/schema. Properties the schema does not know are dropped (as the page editors heal a draft), the response is the document saved.'),
+      requestBody: jsonBody({ type: 'object' }, 'The whole draft configuration, valid against the schema of GET /pages/{id}/draft-config/schema. An unknown top-level property is refused (400 naming it); properties of an element the schema does not know are dropped, as the page editors heal a draft. The response is the document saved.'),
       responses: ok('The saved draft configuration.', { type: 'object' })
     })
   },

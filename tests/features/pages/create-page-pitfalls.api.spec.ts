@@ -47,11 +47,11 @@ test.describe('page creation pitfalls', () => {
       config: { title: 'Home', elements: [] }
     }))
     assert.equal(status, 400)
-    assert.match(String(data), /owner/)
-    assert.match(String(data), /name/)
+    // the field path, as in "body/owner requires the property name (name)"
+    assert.match(String(data), /body\/owner\b[^\n]*\bname\b/)
   })
 
-  test('an unknown page config key is refused by the page routes and dropped by the editor PUT', async () => {
+  test('an unknown page config key is refused', async () => {
     const page = (await orgAdmin.post('/api/pages', {
       type: 'generic',
       config: { title: 'Page', elements: [], genericMetadata: { slug: 'unknown-key' } }
@@ -66,12 +66,20 @@ test.describe('page creation pitfalls', () => {
     }))
     assert.equal(postError.status, 400)
     assert.match(String(postError.data), /toc/)
-    // the whole-document PUT of the editor tools heals its body as the page editors do: the
-    // unknown key is dropped, and the saved document answered shows it
-    const saved = (await orgAdmin.put(`/api/pages/${page._id}/draft-config`, draftConfig)).data
-    assert.equal(saved.toc, undefined)
-    const stored = (await orgAdmin.get(`/api/pages/${page._id}`)).data
-    assert.equal(stored.draftConfig.toc, undefined)
+    // the whole-document PUT of the editor tools refuses an unknown root key too
+    const putError = await errorOf(orgAdmin.put(`/api/pages/${page._id}/draft-config`, { ...draftConfig, toc: {} }))
+    assert.equal(putError.status, 400)
+    assert.match(String(putError.data), /toc/)
+    // what GET answers is accepted as is
+    const read = (await orgAdmin.get(`/api/pages/${page._id}/draft-config`)).data
+    assert.equal((await orgAdmin.put(`/api/pages/${page._id}/draft-config`, read)).status, 200)
+    // a leftover property of an element is still healed, not refused
+    const healed = (await orgAdmin.put(`/api/pages/${page._id}/draft-config`, {
+      ...read,
+      elements: [{ type: 'text', content: 'Texte', leftover: true }]
+    })).data
+    assert.equal(healed.elements[0].leftover, undefined)
+    assert.equal(healed.elements[0].content, 'Texte')
   })
 
   test('a standard page created on a portal replaces the page of its type', async () => {
