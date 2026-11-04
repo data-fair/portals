@@ -31,7 +31,6 @@
           :options="vjsfOptions"
           :data-title="t('portalConfig')"
           prefix-name="portalConfig_"
-          :sub-agent="true"
           @update:state="onFormState"
           @update:model-value="onFormData"
         >
@@ -371,7 +370,7 @@ const pages = computed(() => {
 
 const configureContext = computed(() => {
   const lines = [
-    'Use the subagent tool portalConfig_form to help the user configure the current portal.',
+    'Help the user configure the current portal with the portalConfig_ form tools, following the portal-config-form skill.',
     'Start the session by asking the user what they want to achieve.',
   ]
   if (editConfig.value?.title) lines.push(`The portal title is "${editConfig.value.title}".`)

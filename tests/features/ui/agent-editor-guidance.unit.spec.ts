@@ -10,23 +10,28 @@ import { editorGuidance, draftState, draftSaveState, formCompletenessState, page
 test.describe('agent editor guidance', () => {
   test('page editor guidance explains the draft and hands validation to the person', () => {
     const text = Object.values(editorGuidance('page')).join('\n')
-    expect(text).toContain('pageConfig_form')
+    // no sub-agent anymore: the form tools and the skill that guides them
+    expect(text).toContain('pageConfig_ form tools')
+    expect(text).toContain('page-config-form skill')
+    expect(text).not.toMatch(/sub-?agent/i)
     expect(text).toContain('« Valider le brouillon »')
     expect(text).toContain('wait_for_user_action')
     // the published page, not the draft: never promise it shows the edits
     expect(text).toContain('published page')
     // the menu lives in the portal editor, not in the page form
     expect(text).toContain('« Barre de navigation »')
-    expect(text).toContain('portalConfig_form')
+    expect(text).toContain('portalConfig_ form tools')
     // the menu hint was read as an order: unprompted offers to edit the menu
     expect(text).toContain('only if the person wants this page in the menu')
     // the datasets list block defaults to the 3 latest datasets
     expect(text).toContain('« Catalogue de données »')
   })
 
-  test('portal editor guidance names its sub-agent, the menu and the draft preview', () => {
+  test('portal editor guidance names its form tools, the menu and the draft preview', () => {
     const text = Object.values(editorGuidance('portal')).join('\n')
-    expect(text).toContain('portalConfig_form')
+    expect(text).toContain('portalConfig_ form tools')
+    expect(text).toContain('portal-config-form skill')
+    expect(text).not.toMatch(/sub-?agent/i)
     expect(text).toContain('« Page libre »')
     // a catalog page (events, datasets, …) is a « Page standard » item with its « Type de page »:
     // an after-fix run looked for an events catalog under « Page libre » and never found it
@@ -72,6 +77,7 @@ test.describe('agent editor guidance', () => {
     expect(draftSaveState('400 - body/draftConfig/elements/1 …', true)).toContain('NOT saved')
     expect(draftSaveState('400 - body/draftConfig/elements/1 …', true)).toContain('400 - body/draftConfig/elements/1')
     expect(draftSaveState(undefined, true)).toContain('saved again')
+    expect(draftSaveState('400', true)).toContain('with the form tools')
   })
 
   test('guiding a form section names the real options and gives every remaining step at once', () => {
@@ -83,7 +89,7 @@ test.describe('agent editor guidance', () => {
       // three runs told the person a tab was open on the sub-agent's guess; its writes now open
       // the tab that shows them, and say so
       expect(guiding, kind).toContain('open the tab that holds what they change')
-      expect(guiding, kind).toContain('ask it to open the tab')
+      expect(guiding, kind).toContain(`open its tab with ${kind}Config_openSection`)
       expect(guiding, kind).toContain('all the remaining steps of a section in one reply')
       expect(guiding.length, kind).toBeLessThanOrEqual(EVENT_DETAIL_MAX_CHARS)
     }
@@ -130,6 +136,7 @@ test.describe('agent editor guidance', () => {
     expect(formCompletenessState(false, true)).toContain('lost if the person leaves the editor')
     // a state cannot be withdrawn once published: it must say the form is complete again
     expect(formCompletenessState(true, true)).toContain('complete again')
+    expect(formCompletenessState(false, true)).toContain('with the form tools')
   })
 
   test('the menu guidance says a free page must be published on the portal first', () => {
@@ -164,7 +171,7 @@ test.describe('agent editor guidance', () => {
     for (const kind of ['page', 'portal'] as const) {
       const text = Object.values(editorGuidance(kind)).join('\n')
       expect(text, kind).toContain('never guess')
-      expect(text, kind).toContain('sub-agent describe the form')
+      expect(text, kind).toContain(`describe the form with ${kind}Config_describeState`)
       // a run asked the form sub-agent where « Valider le brouillon » is: it cannot see the panel
       expect(text, kind).toContain('The actions panel is outside the form')
     }
@@ -210,11 +217,11 @@ test.describe('agent editor guidance', () => {
     expect(PAGES_LIST_GUIDANCE.length).toBeLessThanOrEqual(EVENT_DETAIL_MAX_CHARS)
   })
 
-  test('describing the form is asked of the sub-agent read-only', () => {
-    // judged runs: four requests to describe the menu, none read-only, and twice the sub-agent
-    // changed the form anyway, leaving a draft to validate
+  test('describing the form is said to change nothing', () => {
+    // judged runs: four requests to describe the menu, and twice the (then) sub-agent changed
+    // the form anyway, leaving a draft to validate
     for (const kind of ['page', 'portal'] as const) {
-      expect(editorGuidance(kind)['editor-guiding'], kind).toContain('readOnly: true')
+      expect(editorGuidance(kind)['editor-guiding'], kind).toContain('it changes nothing')
     }
   })
 

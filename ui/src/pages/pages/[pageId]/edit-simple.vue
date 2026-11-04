@@ -19,7 +19,6 @@
         :options="vjsfOptions"
         :data-title="t('pageConfig')"
         prefix-name="pageConfig_"
-        :sub-agent="true"
         @update:model-value="saveDraft.execute()"
       >
         <template #image-upload="{ node, statefulLayout, width, height, label }">
@@ -131,7 +130,7 @@ const pages = computed(() => {
 
 const configureContext = computed(() => {
   const lines = [
-    'Use the subagent tool pageConfig_form to help the user configure this page.',
+    'Help the user configure this page with the pageConfig_ form tools, following the page-config-form skill.',
     'Start by asking the user what they want to achieve.',
   ]
   if (editConfig.value?.title) lines.push(`The page title is "${editConfig.value.title}".`)
