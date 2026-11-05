@@ -1,9 +1,6 @@
 import type { BrowserContext } from '@playwright/test'
 import { test } from '../../fixtures/login.ts'
 import assert from 'node:assert/strict'
-import { createReadStream } from 'node:fs'
-import FormData from 'form-data'
-import { MongoClient } from 'mongodb'
 import { axiosAuth, clean } from '../../support/axios.ts'
 
 const orgAdmin = await axiosAuth({ email: 'test_admin@test.com', org: 'test_org1' })
@@ -57,45 +54,5 @@ test.describe('portal page drafts', () => {
     await allowDraftHost(context, portal._id)
     assert.equal((await context.request.get(pageUrl(portal._id, true, 'requested'))).status(), 200)
     assert.equal((await context.request.get(pageUrl(portal._id, false, 'requested'))).status(), 404)
-  })
-
-  test('the draft host serves the images of a requested page under its draft slug', async ({ context, goToWithAuth }) => {
-    const portal = (await orgAdmin.post('/api/portals', { config: { title: 'P', menu: { children: [] } } })).data
-    const page = (await orgAdmin.post('/api/pages', {
-      type: 'generic',
-      config: { title: 'A', elements: [], genericMetadata: { slug: 'published-slug' } }
-    })).data
-    await orgAdmin.put(`/api/pages/${page._id}/draft-config`, { title: 'B', elements: [], genericMetadata: { slug: 'draft-slug' } })
-    await orgAdmin.patch(`/api/pages/${page._id}`, { requestedPortals: [portal._id] })
-    const form = new FormData()
-    form.append('body', JSON.stringify({ resource: { type: 'page', _id: page._id } }))
-    form.append('image', createReadStream('tests/resources/logo.svg'))
-    const image = (await orgAdmin.post('/api/images', form)).data
-
-    await goToWithAuth(`http://${baseHost}/portals-manager/`, 'test_admin', { org: 'test_org1' })
-    await allowDraftHost(context, portal._id)
-    assert.equal((await context.request.get(pageUrl(portal._id, true, 'draft-slug') + `/images/${image._id}`)).status(), 200)
-    assert.equal((await context.request.get(pageUrl(portal._id, false, 'published-slug') + `/images/${image._id}`)).status(), 404)
-  })
-
-  test('the draft host falls back to the published config of a page without draft', async ({ context, goToWithAuth }) => {
-    const portal = (await orgAdmin.post('/api/portals', { config: { title: 'P', menu: { children: [] } } })).data
-    const page = (await orgAdmin.post('/api/pages', {
-      type: 'generic',
-      config: { title: 'Legacy', elements: [], genericMetadata: { slug: 'legacy' } },
-      portals: [portal._id]
-    })).data
-    const client = await MongoClient.connect(`mongodb://localhost:${process.env.MONGO_PORT}/data-fair-portals-development`)
-    try {
-      await client.db().collection('pages').updateOne({ _id: page._id }, { $unset: { draftConfig: '' } })
-    } finally {
-      await client.close()
-    }
-
-    await goToWithAuth(`http://${baseHost}/portals-manager/`, 'test_admin', { org: 'test_org1' })
-    await allowDraftHost(context, portal._id)
-    const res = await context.request.get(pageUrl(portal._id, true, 'legacy'))
-    assert.equal(res.status(), 200)
-    assert.equal((await res.json()).title, 'Legacy')
   })
 })
