@@ -21,7 +21,7 @@ layout {
     }
     pane name="portal" command="bash" {
       // piped: in a real terminal nuxt switches to its interactive screen instead of plain logs
-      args "-c" "./node_modules/.bin/df-dev wait-deps && cd portal && FORCE_COLOR=1 NUXT_MONGO_URL=mongodb://localhost:$MONGO_PORT/data-fair-portals-development NUXT_PORTAL_URL_PATTERN=http://{subdomain}.portals.$DEV_HOST:$NGINX_PORT NUXT_PRIVATE_DIRECTORY_URL=http://localhost:$SD_PORT NUXT_FRAME_ANCESTORS=http://$DEV_HOST:$NGINX_PORT ../node_modules/.bin/df-mem-cap nuxt dev 2>&1 | cat"
+      args "-c" "./node_modules/.bin/df-dev wait-deps && cd portal && FORCE_COLOR=1 NUXT_MONGO_URL=mongodb://localhost:$MONGO_PORT/data-fair-portals-development NUXT_PORTAL_URL_PATTERN=http://{subdomain}.portals.$DEV_HOST:$NGINX_PORT NUXT_PRIVATE_DIRECTORY_URL=http://localhost:$SD_PORT NUXT_FRAME_ANCESTORS=http://$DEV_HOST:$NGINX_PORT NUXT_S3_ENDPOINT=http://localhost:$S3_PORT NUXT_S3_BUCKET=portals-assets NUXT_S3_ACCESS_KEY_ID=rustfsadmin NUXT_S3_SECRET_ACCESS_KEY=rustfsadmin NUXT_S3_FORCE_PATH_STYLE=true ../node_modules/.bin/df-mem-cap nuxt dev 2>&1 | cat"
     }
   }
   pane name="url" size=1 borderless=true command="bash" {

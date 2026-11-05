@@ -150,6 +150,35 @@ services:
       - DEFAULT_CREDITS=-1
 
   #####
+  # object storage of the assets (same image as data-fair's dev env)
+  #####
+
+  s3:
+    image: rustfs/rustfs:1.0.0-rc.6
+    ports:
+      - ${S3_PORT}:9000
+    environment:
+      - RUSTFS_ACCESS_KEY=rustfsadmin
+      - RUSTFS_SECRET_KEY=rustfsadmin
+    volumes:
+      - s3-data:/data
+
+  s3-init:
+    image: amazon/aws-cli:2.32.0
+    depends_on:
+      - s3
+    environment:
+      - AWS_ACCESS_KEY_ID=rustfsadmin
+      - AWS_SECRET_ACCESS_KEY=rustfsadmin
+      - AWS_DEFAULT_REGION=us-east-1
+      - AWS_ENDPOINT_URL=http://s3:9000
+    entrypoint: >
+      /bin/sh -c "
+      until aws s3api list-buckets >/dev/null 2>&1; do sleep 1; done;
+      aws s3api head-bucket --bucket portals-assets 2>/dev/null || aws s3api create-bucket --bucket portals-assets;
+      "
+
+  #####
   # tools
   #####
 
@@ -220,4 +249,5 @@ services:
 volumes:
   elasticsearch-data:
   mongo-data:
+  s3-data:
   data-fair-data:

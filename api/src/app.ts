@@ -13,6 +13,7 @@ import pagesRouter from './pages/router.ts'
 import reusesRouter from './reuses/router.ts'
 import adminRouter from './admin/router.ts'
 import imagesRouter from './images/router.ts'
+import assetsRouter from './assets/router.ts'
 import fontsRouter from './fonts/router.ts'
 import fontAssetsRouter from './font-assets/router.ts'
 import limitsRouter from './limits/router.ts'
@@ -45,6 +46,7 @@ app.use('/api/portals', portalsRouter)
 app.use('/api/pages', pagesRouter)
 app.use('/api/reuses', reusesRouter)
 app.use('/api/images', imagesRouter)
+app.use('/api/assets', assetsRouter)
 app.use('/api/identities', identitiesRouter)
 app.use('/api/admin', adminRouter)
 app.use('/api/fonts', fontsRouter)

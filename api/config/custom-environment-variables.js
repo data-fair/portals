@@ -18,6 +18,15 @@ export default {
     active: 'OBSERVER_ACTIVE',
     port: 'OBSERVER_PORT'
   },
+  s3: {
+    endpoint: 'S3_ENDPOINT',
+    region: 'S3_REGION',
+    bucket: 'S3_BUCKET',
+    accessKeyId: 'S3_ACCESS_KEY_ID',
+    secretAccessKey: 'S3_SECRET_ACCESS_KEY',
+    forcePathStyle: { __name: 'S3_FORCE_PATH_STYLE', __format: 'json' }
+  },
+  assetMaxSize: 'ASSET_MAX_SIZE',
   portalUrlPattern: 'PORTAL_URL_PATTERN',
   privateIngressManagerUrl: 'PRIVATE_INGRESS_MANAGER_URL',
   ingressControllers: {

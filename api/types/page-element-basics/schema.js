@@ -483,6 +483,40 @@ export default {
         mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
       }
     },
+    'element-video': {
+      type: 'object',
+      title: 'VideoElement',
+      'x-i18n-title': { en: 'Video', fr: 'Vidéo' },
+      required: ['type', 'title', 'asset'],
+      properties: {
+        type: { const: 'video' },
+        uuid: { type: 'string', layout: 'none' },
+        title: {
+          title: 'Video title',
+          'x-i18n-title': { fr: 'Titre de la vidéo' },
+          description: 'Read by screen readers.',
+          'x-i18n-description': { fr: "Lu par les lecteurs d'écran." },
+          type: 'string'
+        },
+        asset: {
+          type: 'object',
+          title: 'Video file',
+          'x-i18n-title': { fr: 'Fichier vidéo' },
+          layout: { slots: { component: { name: 'video-upload' } } },
+          required: ['_id', 'name', 'mimeType'],
+          properties: {
+            _id: { type: 'string' },
+            name: { type: 'string' },
+            mimeType: { type: 'string' },
+            width: { type: 'number' },
+            height: { type: 'number' },
+            duration: { type: 'number' },
+            posterId: { type: 'string' }
+          }
+        },
+        mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
+      }
+    },
     'element-iframe': {
       type: 'object',
       title: 'IFrame',

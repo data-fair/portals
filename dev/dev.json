@@ -10,6 +10,7 @@
     "MAILDEV_UI_PORT",
     "MAILDEV_SMTP_PORT",
     "MONGO_PORT",
+    "S3_PORT",
     "ES_PORT",
     "SD_PORT",
     "DF_PORT",

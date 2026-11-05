@@ -20,6 +20,14 @@ export default {
     ingress: 'secret-ingress',
     limits: 'secret-limits'
   },
+  s3: {
+    endpoint: `http://localhost:${process.env.S3_PORT}`,
+    region: 'us-east-1',
+    bucket: 'portals-assets',
+    accessKeyId: 'rustfsadmin',
+    secretAccessKey: 'rustfsadmin',
+    forcePathStyle: true
+  },
   portalUrlPattern: `http://{subdomain}.portals.${process.env.DEV_HOST}:${process.env.NGINX_PORT}`,
   privateIngressManagerUrl: `http://localhost:${process.env.DEV_INGRESS_PORT}`,
   ingressControllers: ['nginx'],

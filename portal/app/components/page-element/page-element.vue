@@ -18,6 +18,10 @@
     :element="element"
     :context="context"
   />
+  <page-element-video
+    v-else-if="element.type === 'video'"
+    :element="element"
+  />
   <page-element-iframe
     v-else-if="element.type === 'iframe'"
     :element="element"

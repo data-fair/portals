@@ -30,6 +30,10 @@ export class PortalMongo {
     return mongo.db.collection<Image>('images')
   }
 
+  get assets () {
+    return mongo.db.collection<{ _id: string, owner: { type: string, id: string }, key: string, mimeType: string, size: number }>('assets')
+  }
+
   get fontAssets () {
     return mongo.db.collection<FontAsset>('font-assets')
   }

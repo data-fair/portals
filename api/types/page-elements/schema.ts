@@ -39,6 +39,7 @@ const groups = [
       { from: basics, def: 'element-text', title: 'Text', 'x-i18n-title': { fr: 'Texte' } },
       { from: basics, def: 'element-alert', title: 'Accented text', 'x-i18n-title': { fr: 'Texte accentué' } },
       { from: basics, def: 'element-image', title: 'Image', 'x-i18n-title': { fr: 'Image' } },
+      { from: basics, def: 'element-video', title: 'Video', 'x-i18n-title': { fr: 'Vidéo' } },
       { from: basics, def: 'element-iframe', title: 'IFrame', 'x-i18n-title': { fr: 'IFrame' } },
       { from: basics, def: 'element-icon', title: 'Icon', 'x-i18n-title': { fr: 'Icône' } },
       { from: basics, def: 'element-mermaid', title: 'Mermaid diagram (beta)', 'x-i18n-title': { fr: 'Diagramme Mermaid (Bêta)' } }

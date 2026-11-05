@@ -19,7 +19,8 @@
     "secretKeys",
     "portalUrlPattern",
     "ingressControllers",
-    "defaultLimits"
+    "defaultLimits",
+    "assetMaxSize"
   ],
   "properties": {
     "mongoUrl": {
@@ -107,6 +108,36 @@
     },
     "util": {},
     "get": {},
-    "has": {}
+    "has": {},
+    "s3": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "bucket"
+      ],
+      "properties": {
+        "endpoint": {
+          "type": "string"
+        },
+        "region": {
+          "type": "string"
+        },
+        "bucket": {
+          "type": "string"
+        },
+        "accessKeyId": {
+          "type": "string"
+        },
+        "secretAccessKey": {
+          "type": "string"
+        },
+        "forcePathStyle": {
+          "type": "boolean"
+        }
+      }
+    },
+    "assetMaxSize": {
+      "type": "number"
+    }
   }
 }

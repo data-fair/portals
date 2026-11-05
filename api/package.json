@@ -11,6 +11,8 @@
     "#types/*": "./types/*"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1162.0",
+    "@aws-sdk/lib-storage": "^3.1162.0",
     "@data-fair/lib-common-types": "^1.21.0",
     "@data-fair/lib-express": "^1.31.0",
     "@data-fair/lib-node": "^2.16.1",

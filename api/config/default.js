@@ -21,6 +21,9 @@ export default {
     nbPages: -1,
     nbDomains: -1
   },
+  // assets (videos) need a S3 bucket, the feature is unavailable without it
+  s3: undefined,
+  assetMaxSize: 1024 * 1024 * 1024,
   portalUrlPattern: undefined,
   privateIngressManagerUrl: undefined,
   ingressControllers: [],

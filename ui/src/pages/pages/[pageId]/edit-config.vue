@@ -33,6 +33,12 @@
             </v-defaults-provider>
           </template>
 
+          <template #video-upload="{ node, statefulLayout }">
+            <video-upload
+              :model-value="node.data"
+              @update:model-value="(data: any) => statefulLayout.input(node, data)"
+            />
+          </template>
           <template #image-upload="{ node, statefulLayout, width, height, label }">
             <image-upload
               :model-value="node.data"

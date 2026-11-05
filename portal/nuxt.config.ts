@@ -12,6 +12,7 @@ const contentSecurityPolicy: Record<string, string[]> = {
   'frame-ancestors': ["'self'"],
   'frame-src': ["'self'"],
   'img-src': ["'self'", 'data:', 'blob:', 'https:'], // we often allow free img integration
+  'media-src': ["'self'"], // default-src only holds a nonce, which does not apply to media
   'object-src': ["'none'"],
   // strict-dynamic necessary for analytics
   'script-src': ["'nonce-{{nonce}}'", "'strict-dynamic'"],
@@ -51,6 +52,12 @@ export default defineNuxtConfig({
     // the forwarder secret, and the in-cluster proxy a page render's calls go through (app/utils/ssr-forward.ts)
     secretTrustedForwarder: '',
     upstreamProxyHost: '',
+    s3Endpoint: '',
+    s3Region: 'us-east-1',
+    s3Bucket: '',
+    s3AccessKeyId: '',
+    s3SecretAccessKey: '',
+    s3ForcePathStyle: false,
     // TODO: remove with the legacy ignore secret (see ssrForwardHeaders in app/utils/ssr-forward.ts)
     secretIgnoreRateLimiting: ''
   },
