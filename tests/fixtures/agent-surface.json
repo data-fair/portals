@@ -41,6 +41,7 @@
       "portal_config_saveForm",
       "portal_config_setData",
       "portal_config_setFieldValue",
+      "preview_portal_page",
       "publish_page",
       "publish_portal_config",
       "publish_reuse",
@@ -131,7 +132,8 @@
       "get_group",
       "get_page",
       "list_groups",
-      "list_pages"
+      "list_pages",
+      "preview_portal_page"
     ],
     "skills": [
       "pages"
@@ -154,6 +156,7 @@
       "page_config_saveForm",
       "page_config_setData",
       "page_config_setFieldValue",
+      "preview_portal_page",
       "update_group",
       "update_page",
       "upload_image"
@@ -184,6 +187,7 @@
       "page_config_saveForm",
       "page_config_setData",
       "page_config_setFieldValue",
+      "preview_portal_page",
       "publish_page",
       "request_page_publication",
       "transfer_page",
@@ -241,7 +245,8 @@
       "list_groups",
       "list_pages",
       "list_portals",
-      "list_reuses"
+      "list_reuses",
+      "preview_portal_page"
     ],
     "skills": [
       "config",
@@ -290,6 +295,7 @@
       "portal_config_saveForm",
       "portal_config_setData",
       "portal_config_setFieldValue",
+      "preview_portal_page",
       "publish_page",
       "publish_portal_config",
       "publish_reuse",

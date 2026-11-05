@@ -10,6 +10,7 @@ import { createPage, validatePageDraft, cancelPageDraft, getPageAsContrib, patch
 import { pageFacets } from './aggregations.ts'
 import { assertNbPagesLimit } from '../limits/service.ts'
 import { requireOperationScope } from '../scopes.ts'
+import { assertPreviewConfigured, previewTarget, pseudoSessionCookie, inspect, consumePreview } from './preview.ts'
 
 const router = Router()
 export default router
@@ -146,4 +147,39 @@ router.delete('/:id/draft', requireOperationScope('cancelPageDraft'), async (req
   const page = await getPageAsContrib(session, req.params.id)
   await cancelPageDraft(page, session)
   res.status(204).send()
+})
+
+const booleanQuery = (value: unknown, name: string, defaultValue: boolean) => {
+  if (value === undefined) return defaultValue
+  if (value === 'true' || value === 'false') return value === 'true'
+  throw httpError(400, `query parameter "${name}" must be true or false`)
+}
+
+// renders the page as the caller and returns a screenshot with a report of the render (the preview_portal_page agent tool)
+router.get('/:id/preview', requireOperationScope('previewPage'), async (req, res, next) => {
+  const session = reqSessionAuthenticated(req)
+  const page = await getPageAsContrib(session, req.params.id)
+
+  const query = req.query as Record<string, unknown>
+  const draft = booleanQuery(query.draft, 'draft', true)
+  const fullPage = booleanQuery(query.fullPage, 'fullPage', true)
+  if (query.viewport !== undefined && query.viewport !== 'desktop' && query.viewport !== 'mobile') throw httpError(400, 'query parameter "viewport" must be desktop or mobile')
+  const portalId = query.portal ?? page.portals[0] ?? page.requestedPortals[0]
+  if (!portalId) throw httpError(400, 'the page is attached to no portal and requested on none: there is nothing to render it on')
+  if (typeof portalId !== 'string' || (!page.portals.includes(portalId) && !page.requestedPortals.includes(portalId))) {
+    throw httpError(400, `the page is not attached to portal "${String(portalId)}" nor requested on it`)
+  }
+  const portal = await mongo.portals.findOne({ _id: portalId }, { projection: { _id: 1, ingress: 1 } })
+  if (!portal) throw httpError(404, `portal "${portalId}" not found`)
+
+  // the cheap refusals above come before the budget
+  assertPreviewConfigured()
+  const retryAfter = consumePreview(session.user.id)
+  if (retryAfter) {
+    res.set('Retry-After', String(retryAfter))
+    throw httpError(429, `too many page previews, retry in ${retryAfter} seconds`)
+  }
+
+  const cookie = await pseudoSessionCookie(session)
+  res.json(await inspect(previewTarget(portal, page, draft), cookie, { mobile: query.viewport === 'mobile', fullPage }))
 })

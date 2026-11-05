@@ -81,6 +81,7 @@ export const scopedOperations = {
   deletePage: { method: 'delete', path: '/pages/{id}', family: 'pages', tier: 'admin' },
   publishPageDraft: { method: 'post', path: '/pages/{id}/draft', family: 'pages', tier: 'admin' },
   cancelPageDraft: { method: 'delete', path: '/pages/{id}/draft', family: 'pages', tier: 'write' },
+  previewPage: { method: 'get', path: '/pages/{id}/preview', family: 'pages', tier: 'read' },
   getPageDraftConfig: { method: 'get', path: '/pages/{id}/draft-config', family: 'pages', tier: 'read' },
   putPageDraftConfig: { method: 'put', path: '/pages/{id}/draft-config', family: 'pages', tier: 'write' },
   getPageConfigSchema: { method: 'get', path: '/pages/{id}/draft-config/schema', family: 'pages', tier: 'read' },

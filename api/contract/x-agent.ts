@@ -30,7 +30,7 @@ export const root: AgentRoot = {
     description: 'The model of the portal pages and what their schemas do not say: draft and live content, publication and attachment to portals, owners, departments and roles, what a write or an admin token may do, page types and standard pages (home, catalogs, contact, legal pages), slugs, groups and breadcrumbs, uploaded images, the behaviour of the content blocks (titles, table of contents, full width, images, buttons, cards, tabs), embedded applications and iframes, Mermaid diagrams. Read it before creating, editing, publishing, attaching, moving or transferring a page; the form mechanics are in portals-page-config.',
     href: 'agents/skills/pages.md',
     tools: [
-      'list_pages', 'get_page', 'create_page', 'create_page_on_portals', 'update_page', 'attach_page_to_portals', 'request_page_publication', 'transfer_page', 'delete_page', 'publish_page', 'cancel_page_draft',
+      'list_pages', 'get_page', 'create_page', 'create_page_on_portals', 'update_page', 'attach_page_to_portals', 'request_page_publication', 'transfer_page', 'delete_page', 'publish_page', 'preview_portal_page', 'cancel_page_draft',
       ...editorTools('page_config'),
       'list_groups', 'get_group', 'create_group', 'update_group', 'delete_group'
     ]
@@ -218,6 +218,17 @@ export const operations: Partial<Record<ScopedOperationId | keyof typeof imageOp
     description: 'Discard the changes of the draft configuration of a page: the draft becomes the live configuration again.',
     params: idParam('page'),
     annotations: { destructiveHint: true }
+  },
+  previewPage: {
+    name: 'preview_portal_page',
+    title: { en: 'Preview a portal page', fr: 'Prévisualiser une page de portail' },
+    description: 'Render a portal page as a visitor would and return a screenshot, the page\'s accessibility snapshot in Playwright\'s YAML format, and what went wrong (console errors, failed API calls, timeout). By default it renders the drafts of the page and of the portal: call it after portals_update_page and before portals_publish_page. Previewing any page also shows the portal\'s theme, header and footer. Use this tool, not fetch_url, for this platform\'s portal pages: fetch_url runs no JavaScript, has no session, and cannot reach drafts. The render reads the page\'s content (datasets, applications, reuses) with your account\'s permissions, so their content in the result is expected. Do not use this tool to read data your scopes do not otherwise grant.',
+    annotations: { readOnlyHint: true, openWorldHint: true },
+    params: {
+      ...idParam('page'),
+      portal: { description: 'Id of the portal to render the page on, one of the portals the page is attached to or requested on (default: the first portal of the page).' }
+    },
+    response: { image: '/image', text: '/text' }
   },
   putPageDraftConfig: {
     name: 'page_config',

@@ -1,6 +1,6 @@
 // operations.ts — pure functions only
 // must not import #mongo, #config, or store state
-import type { PageElement, PageConfig } from '#types/page/index.ts'
+import type { Page, PageElement, PageConfig } from '#types/page/index.ts'
 import slug from 'slugify'
 
 export const traversePageElements = async (pageElements: PageElement[] | undefined, callback: (pageElement: PageElement) => Promise<void> | void) => {
@@ -61,4 +61,36 @@ export const resolvePageAnchors = async (pageConfig: PageConfig) => {
     }
   })
   return toc
+}
+
+const standardPaths: Partial<Record<Page['type'], string>> = {
+  home: '/',
+  contact: '/contact',
+  accessibility: '/accessibility',
+  'terms-of-service': '/terms-of-service',
+  'legal-notice': '/legal-notice',
+  'privacy-policy': '/privacy-policy',
+  'cookie-policy': '/cookie-policy',
+  datasets: '/datasets',
+  applications: '/applications',
+  reuses: '/reuses',
+  'event-catalog': '/event',
+  'news-catalog': '/news'
+}
+
+/**
+ * The path of a page on a portal, the table of the menu links (portal/app/utils/nav-active.ts
+ * resolveMenuLink). The draft host serves the slug (and group) of the draft configuration.
+ */
+export const pagePath = (page: Page, draft: boolean): string => {
+  const config = (draft ? page.draftConfig : undefined) ?? page.config
+  switch (page.type) {
+    case 'event': return `/event/${config.eventMetadata?.slug}`
+    case 'news': return `/news/${config.newsMetadata?.slug}`
+    case 'generic': {
+      const group = config.genericMetadata?.group
+      return `/pages${group ? `-${group.slug}` : ''}/${config.genericMetadata?.slug}`
+    }
+    default: return standardPaths[page.type] ?? '/'
+  }
 }

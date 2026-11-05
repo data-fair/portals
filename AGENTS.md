@@ -19,7 +19,7 @@ npx --no df-dev down maildev
 - Read the logs before restarting: nodemon (api, ingress-manager), vite (ui) and nuxt (portal) already reload on file changes. Restart only a pane that exited, hangs, or needs new env.
 - If `restart` answers "not ready", report to the user with the logs instead of retrying.
 - Never use `docker compose restart`, `kill` or `zellij action` directly.
-- Optional containers: `agents` (back-office and portal chat, simulations), `events`, `maildev` (contact form mails). The user can start them with the env: `npm run dev-zellij -- --services agents,events,maildev`.
+- Optional containers: `agents` (back-office and portal chat, simulations), `events`, `capture` (renders the pages for the agents' page preview, needs the `capture` image and simple-directory's pseudo sessions), `maildev` (contact form mails). The user can start them with the env: `npm run dev-zellij -- --services agents,events,capture,maildev`.
 
 ### Port assignments
 

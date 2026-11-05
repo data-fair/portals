@@ -19,7 +19,8 @@ How the pages of the data portals work: their model (draft and live content, own
 1. Find the portal (**portals_list_portals**) and the existing pages (**portals_list_pages**, filter on type, or search with `q`).
 2. **portals_create_page** with `type` and `config.title` (or edit an existing page).
 3. Build the content with the portals_page_config tools, starting with **portals_page_config_describeState**, saved with **portals_page_config_saveForm**.
-4. **portals_publish_page**, then **portals_attach_page_to_portals** (or **portals_create_page_on_portals** to create it attached at once). A contributor asks instead with **portals_request_page_publication**; a portal administrator accepts by attaching it, then removes the portal from `requestedPortals` with **portals_request_page_publication** (attaching does not clear the request).
+4. Check the result with **portals_preview_portal_page**: it renders the draft of the page on the draft host of one of its portals, as you would see it (a page attached to no portal, nor requested on one, cannot be previewed).
+5. **portals_publish_page**, then **portals_attach_page_to_portals** (or **portals_create_page_on_portals** to create it attached at once). A contributor asks instead with **portals_request_page_publication**; a portal administrator accepts by attaching it, then removes the portal from `requestedPortals` with **portals_request_page_publication** (attaching does not clear the request).
 
 ## Roles and token tiers
 

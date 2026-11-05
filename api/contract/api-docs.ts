@@ -396,6 +396,34 @@ const paths = {
       responses: noContent('Discarded.')
     })
   },
+  '/pages/{id}/preview': {
+    get: operation('previewPage', 'Pages', 'Preview a page', {
+      description: 'Renders the page on one of its portals as the calling user (a short-lived read-only session of the same account) and returns a screenshot with a report of the render. The number of renders per user is limited (429, see Retry-After).',
+      parameters: [
+        idParam('Id of the page.'),
+        { in: 'query', name: 'portal', required: false, description: 'Id of the portal to render the page on, one of those it is attached to or requested on (default: the first of its portals, else the first portal it is requested on).', schema: { type: 'string' } },
+        { in: 'query', name: 'draft', required: false, description: 'Render the drafts of the page and of the portal, on the draft host of the portal, instead of the published ones.', schema: { type: 'boolean', default: true } },
+        { in: 'query', name: 'viewport', required: false, description: 'Size of the simulated screen.', schema: { type: 'string', enum: ['desktop', 'mobile'], default: 'desktop' } },
+        { in: 'query', name: 'fullPage', required: false, description: 'Capture the whole height of the page instead of the visible screen only.', schema: { type: 'boolean', default: true } }
+      ],
+      responses: ok('The screenshot and the report of the render.', {
+        type: 'object',
+        required: ['image', 'text', 'report'],
+        properties: {
+          image: {
+            type: 'object',
+            required: ['data', 'mediaType'],
+            properties: {
+              data: { type: 'string', description: 'The image, base64 encoded.' },
+              mediaType: { type: 'string', description: 'Type of the image, for example image/png.' }
+            }
+          },
+          text: { type: 'string', description: 'Readable report: page, console errors, failed requests and accessibility snapshot of the page.' },
+          report: { type: 'object', description: 'Structured report of the render (url, finalUrl, verdict, blockedFrames, failedRequests...).', additionalProperties: true }
+        }
+      })
+    })
+  },
   '/pages/{id}/draft-config': {
     get: operation('getPageDraftConfig', 'Pages', 'Get the draft configuration of a page', {
       parameters: [idParam('Id of the page.')],

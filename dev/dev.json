@@ -16,7 +16,8 @@
     "EVENTS_PORT",
     "AGENTS_PORT",
     "BRIDGE_PORT",
-    "MCP_PORT"
+    "MCP_PORT",
+    "CAPTURE_PORT"
   ],
   "panes": {
     "api": {
@@ -37,6 +38,9 @@
   "optional": {
     "events": {
       "privateEventsUrl": ""
+    },
+    "capture": {
+      "privateCaptureUrl": ""
     }
   }
 }

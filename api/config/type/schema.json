@@ -42,6 +42,9 @@
       "type": "string",
       "pattern": "^https?://"
     },
+    "privateCaptureUrl": {
+      "type": "string"
+    },
     "secretKeys": {
       "type": "object",
       "additionalProperties": false,
@@ -68,6 +71,14 @@
         "dataFair": {
           "type": "string",
           "description": "secret key of data-fair's publication-site writes (data-fair's secretKeys.portals), used for scope-restricted sessions"
+        },
+        "capture": {
+          "type": "string",
+          "description": "secret key of the capture service (its secretKeys.capture), used by the page preview"
+        },
+        "pseudoSession": {
+          "type": "string",
+          "description": "secret key of simple-directory's pseudo sessions (its secretKeys.pseudoSession), used by the page preview"
         }
       }
     },
@@ -76,7 +87,8 @@
       "additionalProperties": false,
       "required": [
         "nbPages",
-        "nbDomains"
+        "nbDomains",
+        "pagePreviews"
       ],
       "properties": {
         "nbPages": {
@@ -84,6 +96,24 @@
         },
         "nbDomains": {
           "type": "number"
+        },
+        "pagePreviews": {
+          "type": "object",
+          "description": "renders of the preview of a page allowed per user in a window",
+          "additionalProperties": false,
+          "required": [
+            "duration",
+            "nb"
+          ],
+          "properties": {
+            "duration": {
+              "type": "number",
+              "description": "window in seconds"
+            },
+            "nb": {
+              "type": "number"
+            }
+          }
         }
       }
     },

@@ -98,6 +98,20 @@ test.describe('agent surface of the api docs', () => {
     }
   })
 
+  test('the page preview is a read tool returning the screenshot as an image and the report as text', async () => {
+    const toolSet = await loadSurface()
+    const preview = toolSet.tools.find(t => t.name === 'preview_portal_page')!
+    assert.ok(preview)
+    assert.equal(preview.annotations?.readOnlyHint, true)
+    assert.equal(preview.annotations?.openWorldHint, true)
+    assert.deepEqual(Object.keys(preview.inputSchema.properties).sort(), ['draft', 'fullPage', 'id', 'portal', 'viewport'])
+    const names = (scopes: string[]) => toolsForScopes(toolSet, scopes).tools.map(t => t.name)
+    assert.ok(names(['pages:read']).includes('preview_portal_page'))
+    for (const scopes of [['portals:admin'], ['reuses:admin']]) assert.ok(!names(scopes).includes('preview_portal_page'), scopes.join())
+    assert.match(preview.description, /not fetch_url/)
+    assert.match(preview.description, /portals_update_page/)
+  })
+
   test('descriptions name the tools by their platform names', async () => {
     // data-fair prefixes every tool of this document with portals_: a text naming `publish_page`
     // sends the agent to a tool that does not exist in the platform document

@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import mongo from './mongo.ts'
+import { clearPreviewLimits } from './pages/preview.ts'
 
 const router = Router()
 
@@ -10,6 +11,7 @@ router.delete('/', async (req, res) => {
     await mongo.db.collection(name).deleteMany(testOwnerFilter)
   }
   await mongo.limits.deleteMany({ id: { $regex: /^test_/ } })
+  clearPreviewLimits()
 
   res.status(204).send()
 })
