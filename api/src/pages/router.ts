@@ -174,6 +174,9 @@ router.get('/:id/preview', requireOperationScope('previewPage'), async (req, res
   const portal = await mongo.portals.findOne({ _id: portalId }, { projection: { _id: 1, ingress: 1 } })
   if (!portal) throw httpError(404, `portal "${portalId}" not found`)
 
+  // the draft renders on the manager of the caller's site; computed before the budget, it may refuse
+  const managerUrl = draft ? reqSiteUrl(req) + '/portals-manager' : ''
+
   // the cheap refusals above come before the budget
   assertPreviewConfigured()
   const retryAfter = consumePreview(session.user.id)
@@ -183,5 +186,5 @@ router.get('/:id/preview', requireOperationScope('previewPage'), async (req, res
   }
 
   const cookie = await pseudoSessionCookie(session)
-  res.json(await inspect(previewTarget(reqSiteUrl(req) + '/portals-manager', portal, page, draft), cookie, { mobile: query.viewport === 'mobile', fullPage }))
+  res.json(await inspect(previewTarget(managerUrl, portal, page, draft), cookie, { mobile: query.viewport === 'mobile', fullPage }))
 })
