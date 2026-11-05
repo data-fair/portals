@@ -487,7 +487,7 @@ export default {
       type: 'object',
       title: 'VideoElement',
       'x-i18n-title': { en: 'Video', fr: 'Vidéo' },
-      required: ['type', 'title', 'asset'],
+      required: ['type', 'title'],
       properties: {
         type: { const: 'video' },
         uuid: { type: 'string', layout: 'none' },
@@ -497,6 +497,18 @@ export default {
           description: 'Read by screen readers.',
           'x-i18n-description': { fr: "Lu par les lecteurs d'écran." },
           type: 'string'
+        },
+        url: {
+          type: 'string',
+          title: 'Video URL',
+          'x-i18n-title': { fr: 'URL de la vidéo' },
+          description: 'Address of a MP4 file in the assets bucket. Its domain must be listed in the allowed sources of the portal.',
+          'x-i18n-description': { fr: "Adresse d'un fichier MP4 du bucket d'assets. Son domaine doit figurer dans les sources autorisées du portail." }
+        },
+        posterUrl: {
+          type: 'string',
+          title: 'Thumbnail URL',
+          'x-i18n-title': { fr: 'URL de la vignette' }
         },
         asset: {
           type: 'object',
