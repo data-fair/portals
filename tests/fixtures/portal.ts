@@ -19,7 +19,8 @@ export const test = base.extend<{
       await page.route('**/*', async (route) => {
         if (route.request().resourceType() !== 'document') return route.fallback()
         // no own timeout: the navigation timeout bounds it, actionTimeout (5 s) is shorter than a cold SSR
-        const response = await route.fetch({ timeout: 0 })
+        // no followed redirect: the browser would show its target under the redirecting URL
+        const response = await route.fetch({ timeout: 0, maxRedirects: 0 })
         const headers = response.headers()
         const csp = headers['content-security-policy']
         if (csp) headers['content-security-policy'] = csp.replace(/upgrade-insecure-requests;?\s*/, '')
