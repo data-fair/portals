@@ -1,3 +1,4 @@
+// read by the dashboard of data-fair (facets.requestedPortals with size=0): changing it needs a coordinated release
 export const pageFacets = (query: Record<string, any>, showAll: boolean) => {
   const aggregationPipeline = [
     {
