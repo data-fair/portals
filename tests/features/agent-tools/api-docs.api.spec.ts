@@ -20,7 +20,7 @@ test.describe('api docs', () => {
     assert.match(String(res.headers.vary), /Accept-Language/)
     const scopes = (data: any) => data.components.securitySchemes.oauth2.flows.clientCredentials.scopes
     const en = await axios().get('/api/api-docs.json', { headers: { 'accept-language': 'en' } })
-    assert.equal(scopes(en.data)['pages:read'], "Read the account's pages and page groups")
+    assert.match(scopes(en.data)['pages:read'], /^Read the account's pages and page groups/)
     assert.notEqual(scopes(res.data)['pages:read'], scopes(en.data)['pages:read'])
   })
 

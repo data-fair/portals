@@ -14,15 +14,27 @@ export { pagePath }
 // default lifetime of the pseudo session of a caller whose own token carries no expiration (seconds)
 const defaultSessionDuration = 120
 
-const baseUrl = (portal: Pick<Portal, '_id' | 'ingress'>, draft: boolean) => {
-  if (draft) return config.portalUrlPattern.replace('{subdomain}', `${portal._id}.draft`)
-  return portal.ingress?.url ?? config.portalUrlPattern.replace('{subdomain}', portal._id)
+/**
+ * The url to render. The draft is the read-only route of the manager UI that shows the page draft as the
+ * page editor previews it, with the theme of the portal; it is on the main site (managerUrl, the public
+ * url of the manager seen by the request), so the session cookie applies directly. The published page
+ * is on the public host of the portal.
+ */
+export const previewTarget = (managerUrl: string, portal: Pick<Portal, '_id' | 'ingress'>, page: Page, draft: boolean): string => {
+  if (draft) return `${managerUrl.replace(/\/+$/, '')}/pages/${encodeURIComponent(page._id)}/preview?portal=${encodeURIComponent(portal._id)}`
+  const base = portal.ingress?.url ?? config.portalUrlPattern.replace('{subdomain}', portal._id)
+  return base.replace(/\/+$/, '') + pagePath(page)
 }
 
-/** The url to render: the draft host of the portal (draftConfig, requested pages) or its public host */
-export const previewTarget = (portal: Pick<Portal, '_id' | 'ingress'>, page: Page, draft: boolean): string => {
-  const path = pagePath(page, draft)
-  return baseUrl(portal, draft).replace(/\/+$/, '') + path
+/**
+ * The status the preview answers with when an internal service fails: 504 on a timeout, 503 when the service
+ * does not answer at all, else 502. The messages carry the status code only, never what the service
+ * answered (it could echo secrets or cookies).
+ */
+export const upstreamError = (service: string, err: any) => {
+  if (err.code === 'ECONNABORTED' || err.code === 'ETIMEDOUT') return httpError(504, `${service} timed out`)
+  if (!err.status) return httpError(503, `${service} is unreachable`)
+  return httpError(502, `${service} failed (${err.status})`)
 }
 
 export const assertPreviewConfigured = () => {
@@ -49,16 +61,17 @@ export const pseudoSessionCookie = async (session: SessionStateAuthenticated): P
     }, { headers: { 'x-secret-key': config.secretKeys.pseudoSession } })
     cookies = res.headers['set-cookie'] ?? []
   } catch (err: any) {
-    // an identity simple-directory does not know (an API key user), an expired token...
-    if (err.status >= 400 && err.status < 500) throw httpError(err.status, `a session to render the page cannot be opened for this identity: ${typeof err.data === 'string' ? err.data : err.message}`)
-    throw err
+    // an identity simple-directory does not know, typically the user of an organization API key
+    if (err.status === 404) throw httpError(400, 'previews need a user or agent session')
+    // pseudo sessions disabled, wrong secret... a platform problem, not the caller's
+    throw upstreamError('the directory service', err)
   }
   const cookie = cookies
     .map(c => c.split(';')[0])
     // the other cookies set by simple-directory are only cleared (empty value)
     .filter(c => /^(id_token|id_token_sign|id_token_org|id_token_dep)=[^=]/.test(c))
   // rendering anonymously would answer with a login page and pass for a success
-  if (!cookie.some(c => c.startsWith('id_token='))) throw httpError(502, 'simple-directory did not open a session to render the page')
+  if (!cookie.some(c => c.startsWith('id_token='))) throw httpError(502, 'the directory service did not open a session to render the page')
   return cookie.join('; ')
 }
 
@@ -74,8 +87,7 @@ export const inspect = async (target: string, cookie: string, opts: { mobile: bo
     })
     return res.data
   } catch (err: any) {
-    if (err.status) throw httpError(502, `the capture service failed to render the page (${err.status}): ${typeof err.data === 'string' ? err.data : err.message}`)
-    throw httpError(503, `the capture service is unreachable: ${err.message}`)
+    throw upstreamError('the capture service', err)
   }
 }
 

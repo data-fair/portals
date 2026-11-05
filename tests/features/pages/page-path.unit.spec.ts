@@ -8,29 +8,20 @@ const page = (type: Page['type'], config: Record<string, any>, draftConfig?: Rec
 
 test.describe('pagePath', () => {
   test('a standard page has a fixed path', () => {
-    assert.equal(pagePath(page('home', {}), false), '/')
-    assert.equal(pagePath(page('contact', {}), true), '/contact')
-    assert.equal(pagePath(page('event-catalog', {}), false), '/event')
-    assert.equal(pagePath(page('legal-notice', {}), false), '/legal-notice')
+    assert.equal(pagePath(page('home', {})), '/')
+    assert.equal(pagePath(page('contact', {})), '/contact')
+    assert.equal(pagePath(page('event-catalog', {})), '/event')
+    assert.equal(pagePath(page('legal-notice', {})), '/legal-notice')
   })
 
   test('a generic page is under its group', () => {
     const group = { _id: 'g1', title: 'Guides', slug: 'guides' }
-    assert.equal(pagePath(page('generic', { genericMetadata: { slug: 'intro', group } }), false), '/pages-guides/intro')
-    assert.equal(pagePath(page('generic', { genericMetadata: { slug: 'intro' } }), false), '/pages/intro')
+    assert.equal(pagePath(page('generic', { genericMetadata: { slug: 'intro', group } })), '/pages-guides/intro')
+    assert.equal(pagePath(page('generic', { genericMetadata: { slug: 'intro' } })), '/pages/intro')
   })
 
-  test('the draft host reads the slug and the group of the draft', () => {
+  test('the path reads the published configuration, not the draft', () => {
     const published = page('news', { newsMetadata: { slug: 'old-slug' } }, { newsMetadata: { slug: 'new-slug' } })
-    assert.equal(pagePath(published, false), '/news/old-slug')
-    assert.equal(pagePath(published, true), '/news/new-slug')
-    const group = { _id: 'g1', title: 'Guides', slug: 'guides' }
-    const generic = page('generic', { genericMetadata: { slug: 'a' } }, { genericMetadata: { slug: 'a', group } })
-    assert.equal(pagePath(generic, false), '/pages/a')
-    assert.equal(pagePath(generic, true), '/pages-guides/a')
-  })
-
-  test('a page without draft falls back on its published config', () => {
-    assert.equal(pagePath(page('event', { eventMetadata: { slug: 'fete' } }), true), '/event/fete')
+    assert.equal(pagePath(published), '/news/old-slug')
   })
 })

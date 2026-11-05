@@ -13,8 +13,9 @@ const outsider = await axiosAuth('test_alone@test.com')
 const baseHost = `${process.env.DEV_HOST}:${process.env.NGINX_PORT}`
 
 // the preview needs simple-directory's pseudo sessions and the capture service: only the render cases skip without them
+// with the feature enabled and the secret accepted, an empty body is refused for what it lacks; a disabled feature answers 400 too ("pseudoSession functionality is disabled")
 const pseudoAvailable = await fetch(`http://localhost:${process.env.SD_PORT}/api/auth/pseudo`, { method: 'POST', headers: { 'x-secret-key': 'secret-pseudo-session', 'content-type': 'application/json' }, body: '{}' })
-  .then(res => res.status === 400, () => false)
+  .then(async res => res.status === 400 && /Missing type or id/.test(await res.text()), () => false)
 const captureAvailable = await fetch(`http://localhost:${process.env.CAPTURE_PORT}/api/v1/api-docs.json`).then(res => res.status === 200, () => false)
 // a render waits for the network to be idle: up to 20 s when the events service is not started
 const skipUnlessRenderable = () => {
@@ -80,25 +81,39 @@ test.describe('GET /pages/:id/preview', () => {
     assert.equal(await statusOf(orgAdmin.get(`/api/pages/${page._id}/preview`)), 400)
   })
 
-  test('renders the draft of the page on the draft host as the caller', async () => {
+  test('renders the draft of the page as the editor previews it', async () => {
     skipUnlessRenderable()
     const { portal, page } = await seed()
+    // a draft that differs from the published page: what is rendered is the draft
+    await orgAdmin.patch(`/api/pages/${page._id}`, { draftConfig: { title: 'Preview page', elements: [{ type: 'text', content: 'Texte du brouillon uniquement.' }], genericMetadata: { slug: 'preview-page' } } })
     const res = await orgAdmin.get(`/api/pages/${page._id}/preview`)
     assert.equal(res.status, 200)
     assert.equal(res.data.image.mediaType, 'image/png')
     assert.ok(res.data.image.data.length > 100)
     assert.equal(typeof res.data.text, 'string')
-    assert.equal(res.data.report.url, `http://${portal._id}.draft.portals.${baseHost}/pages/preview-page`)
+    assert.equal(res.data.report.url, `http://${baseHost}/portals-manager/pages/${page._id}/preview?portal=${portal._id}`)
     assert.notEqual(res.data.report.verdict, 'unauthenticated', JSON.stringify(res.data.report))
+    assert.match(res.data.text, /Texte du brouillon uniquement/)
+    assert.doesNotMatch(res.data.text, /Un texte\./)
   })
 
   test('renders the published page on the public host with draft=false', async () => {
     skipUnlessRenderable()
     const { portal, page } = await seed()
+    await orgAdmin.patch(`/api/pages/${page._id}`, { draftConfig: { title: 'Preview page', elements: [{ type: 'text', content: 'Texte du brouillon uniquement.' }], genericMetadata: { slug: 'preview-page' } } })
     const res = await orgAdmin.get(`/api/pages/${page._id}/preview`, { params: { draft: false, viewport: 'mobile', fullPage: false } })
     assert.equal(res.status, 200)
     assert.ok(res.data.report.url.startsWith(`http://${portal._id}.`), res.data.report.url)
-    assert.ok(!res.data.report.url.includes('.draft.'), res.data.report.url)
+    assert.ok(res.data.report.url.endsWith('/pages/preview-page'), res.data.report.url)
+    assert.match(res.data.text, /Un texte\./)
+    assert.doesNotMatch(res.data.text, /Texte du brouillon/)
+  })
+
+  test('draft=false is refused for a page that is only requested on the portal', async () => {
+    const { portal } = await seed()
+    const page = (await orgAdmin.post('/api/pages', { type: 'generic', config: { title: 'Requested', elements: [], genericMetadata: { slug: 'requested' } } })).data
+    await orgAdmin.patch(`/api/pages/${page._id}`, { requestedPortals: [portal._id] })
+    assert.equal(await statusOf(orgAdmin.get(`/api/pages/${page._id}/preview`, { params: { draft: false } })), 400)
   })
 
   test('renders as a member of a department', async () => {
@@ -125,9 +140,10 @@ test.describe('GET /pages/:id/preview', () => {
       const res = await pagesRead.bearerAx.get(`/api/pages/${page._id}/preview`)
       assert.equal(res.status, 200)
       assert.notEqual(res.data.report.verdict, 'unauthenticated', JSON.stringify(res.data.report))
-      assert.deepEqual(res.data.report.blockedFrames, [])
+      // the editor preview does not embed the application (no iframe, so nothing blocked or cross-host): it shows its image
       assert.ok(!res.data.report.failedRequests.some((r: any) => r.status === 403), JSON.stringify(res.data.report.failedRequests))
-      assert.match(res.data.text, /iframe "Application - Private app"/)
+      assert.match(res.data.text, /image "Private app"/)
+      assert.doesNotMatch(res.data.text, /iframe/)
     } finally {
       await orgAdmin.delete(`${dataFairUrl}/api/v1/applications/${app.id}`).catch(() => {})
     }

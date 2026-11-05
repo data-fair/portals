@@ -29,7 +29,7 @@ export const vocabulary = defineScopes({
     tiers: ['read', 'write', 'admin'],
     descriptions: {
       umbrella: { fr: 'Tous les droits sur les pages', en: 'All pages scopes' },
-      read: { fr: 'Lire les pages et les groupes de pages du compte', en: "Read the account's pages and page groups" },
+      read: { fr: 'Lire les pages et les groupes de pages du compte ; la prévisualisation d\'une page affiche son contenu (jeux de données, applications, réutilisations) avec les droits du rôle', en: "Read the account's pages and page groups; the page preview renders the page's content (datasets, applications, reuses) with the role's permissions" },
       write: { fr: 'Créer des pages et des groupes de pages, modifier leur brouillon', en: 'Create pages and page groups, edit their draft' },
       admin: { fr: 'Publier et supprimer les pages, choisir les portails où elles sont publiées et leur propriétaire', en: 'Publish and delete pages, choose the portals they are published on and their owner' }
     }

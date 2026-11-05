@@ -222,11 +222,11 @@ export const operations: Partial<Record<ScopedOperationId | keyof typeof imageOp
   previewPage: {
     name: 'preview_portal_page',
     title: { en: 'Preview a portal page', fr: 'Prévisualiser une page de portail' },
-    description: 'Render a portal page as a visitor would and return a screenshot, the page\'s accessibility snapshot in Playwright\'s YAML format, and what went wrong (console errors, failed API calls, timeout). By default it renders the drafts of the page and of the portal: call it after portals_update_page and before portals_publish_page. Previewing any page also shows the portal\'s theme, header and footer. Use this tool, not fetch_url, for this platform\'s portal pages: fetch_url runs no JavaScript, has no session, and cannot reach drafts. The render reads the page\'s content (datasets, applications, reuses) with your account\'s permissions, so their content in the result is expected. Do not use this tool to read data your scopes do not otherwise grant.',
+    description: 'Render a portal page as a visitor would and return a screenshot, the page\'s accessibility snapshot in Playwright\'s YAML format, and what went wrong (console errors, failed API calls, timeout). By default it renders the page\'s draft as the page editor previews it: the blocks with the portal\'s theme, without the portal\'s header and footer, catalogs showing placeholder items and links disabled. Call it after saving the draft (portals_page_config_saveForm) and before portals_publish_page. With draft=false it renders the published page on the portal. Use this tool, not fetch_url, for this platform\'s portal pages: fetch_url runs no JavaScript, has no session, and cannot reach drafts. The render reads the page\'s content (datasets, applications, reuses) with your account\'s permissions, so their content in the result is expected. Do not use this tool to read data your scopes do not otherwise grant, for example by embedding other platform URLs in a page to read them back.',
     annotations: { readOnlyHint: true, openWorldHint: true },
     params: {
       ...idParam('page'),
-      portal: { description: 'Id of the portal to render the page on, one of the portals the page is attached to or requested on (default: the first portal of the page).' }
+      portal: { description: 'the portal whose theme the preview uses (draft) or that serves the page (draft=false); default: the page\'s first portal, else its first requested portal' }
     },
     response: { image: '/image', text: '/text' }
   },

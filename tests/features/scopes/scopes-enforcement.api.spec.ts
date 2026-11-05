@@ -134,10 +134,10 @@ test.describe('scope enforcement', () => {
 
   test('the scopes of the service are public', async () => {
     const anonymous = (await axios().get('/api/scopes.json', { headers: { 'accept-language': 'en' } })).data
-    assert.equal(anonymous['pages:read'], "Read the account's pages and page groups")
+    assert.match(anonymous['pages:read'], /^Read the account's pages and page groups/)
     assert.ok(anonymous['all:admin'])
     const fr = (await (await scoped('pages:read')).get('/api/scopes.json')).data
-    assert.equal(fr['pages:read'], 'Lire les pages et les groupes de pages du compte')
+    assert.match(fr['pages:read'], /^Lire les pages et les groupes de pages du compte/)
   })
 
   test('unrestricted sessions keep their full access', async () => {

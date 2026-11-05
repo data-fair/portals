@@ -109,7 +109,7 @@ test.describe('agent surface of the api docs', () => {
     assert.ok(names(['pages:read']).includes('preview_portal_page'))
     for (const scopes of [['portals:admin'], ['reuses:admin']]) assert.ok(!names(scopes).includes('preview_portal_page'), scopes.join())
     assert.match(preview.description, /not fetch_url/)
-    assert.match(preview.description, /portals_update_page/)
+    assert.match(preview.description, /portals_page_config_saveForm/)
   })
 
   test('descriptions name the tools by their platform names', async () => {

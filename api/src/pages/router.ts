@@ -5,7 +5,7 @@ import mongo from '#mongo'
 import findUtils from '../utils/find.ts'
 import * as postReqBody from '#doc/pages/post-req-body/index.ts'
 import * as patchReqBody from '#doc/pages/patch-req-body/index.ts'
-import { httpError, reqSessionAuthenticated, assertAccountRole, assertAdminMode } from '@data-fair/lib-express/index.js'
+import { httpError, reqSessionAuthenticated, assertAccountRole, assertAdminMode, reqSiteUrl } from '@data-fair/lib-express/index.js'
 import { createPage, validatePageDraft, cancelPageDraft, getPageAsContrib, patchPage, deletePage, generateUniqueSlug, duplicatePageElements, initCatalogPageElements, sendPageEvent } from './service.ts'
 import { pageFacets } from './aggregations.ts'
 import { assertNbPagesLimit } from '../limits/service.ts'
@@ -169,6 +169,8 @@ router.get('/:id/preview', requireOperationScope('previewPage'), async (req, res
   if (typeof portalId !== 'string' || (!page.portals.includes(portalId) && !page.requestedPortals.includes(portalId))) {
     throw httpError(400, `the page is not attached to portal "${String(portalId)}" nor requested on it`)
   }
+  // the published page is only served by the portals it is attached to
+  if (!draft && !page.portals.includes(portalId)) throw httpError(400, `the page is not published on portal "${portalId}" (only requested): use draft=true`)
   const portal = await mongo.portals.findOne({ _id: portalId }, { projection: { _id: 1, ingress: 1 } })
   if (!portal) throw httpError(404, `portal "${portalId}" not found`)
 
@@ -181,5 +183,5 @@ router.get('/:id/preview', requireOperationScope('previewPage'), async (req, res
   }
 
   const cookie = await pseudoSessionCookie(session)
-  res.json(await inspect(previewTarget(portal, page, draft), cookie, { mobile: query.viewport === 'mobile', fullPage }))
+  res.json(await inspect(previewTarget(reqSiteUrl(req) + '/portals-manager', portal, page, draft), cookie, { mobile: query.viewport === 'mobile', fullPage }))
 })

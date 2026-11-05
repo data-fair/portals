@@ -80,10 +80,10 @@ const standardPaths: Partial<Record<Page['type'], string>> = {
 
 /**
  * The path of a page on a portal, the table of the menu links (portal/app/utils/nav-active.ts
- * resolveMenuLink). The draft host serves the slug (and group) of the draft configuration.
+ * resolveMenuLink), for the published slug (and group).
  */
-export const pagePath = (page: Page, draft: boolean): string => {
-  const config = (draft ? page.draftConfig : undefined) ?? page.config
+export const pagePath = (page: Page): string => {
+  const config = page.config
   switch (page.type) {
     case 'event': return `/event/${config.eventMetadata?.slug}`
     case 'news': return `/news/${config.newsMetadata?.slug}`
