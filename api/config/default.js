@@ -19,6 +19,7 @@ export default {
     ingress: undefined,
     limits: undefined,
     dataFair: undefined,
+    // the SECRET_INSPECT of the capture service: /inspect renders for the page previews
     capture: undefined,
     // simple-directory's pseudo sessions: the preview renders pages as the calling user
     pseudoSession: undefined

@@ -217,7 +217,7 @@ services:
     environment:
       - PORT=${CAPTURE_PORT}
       - ONLY_SAME_HOST=true
-      - SECRET_CAPTURE=secret-capture
+      - SECRET_INSPECT=secret-capture
       - OBSERVER_ACTIVE=false
       - PUPPETEER_ARGS=["--no-sandbox"]
 
