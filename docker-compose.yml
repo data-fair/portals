@@ -178,6 +178,9 @@ services:
       # data-fair's mcp, built into every autonomous agent with an identity: called as the agent, its reach
       # the identity's scopes
       - PRIVATE_MCP_URL=http://${DEV_HOST}:${NGINX_PORT}/mcp-server/mcp
+      # the approval reviewer's stage 1 runs on the dev bridge, which starts a Claude Code session per call:
+      # the production 5 s timeout turns most reviews into cards there (agents docs, moderation.md)
+      - APPROVAL_REVIEW_STAGE1_TIMEOUT_MS=15000
 
   # the MCP server built from /data-fair/api/v1/platform/api-docs.json (portals merged in): /mcp-server/mcp
   # (every tool, filtered by the caller's scopes, credentials required). Started with the agents (their
