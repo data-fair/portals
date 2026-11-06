@@ -1,7 +1,7 @@
 <!-- eslint-disable vue/no-v-html -->
 <template>
   <div
-    :class="[element.mb !== 0 && `mb-${element.mb ?? 4}`, element.centered && 'text-center']"
+    :class="[element.mb !== 0 && `mb-${element.mb ?? 4}`, element.align === 'center' && 'text-center', element.align === 'justify' && 'text-justify']"
     style="overflow-wrap: break-word;"
     v-html="annotateLinks(element._html)"
   />

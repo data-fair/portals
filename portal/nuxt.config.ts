@@ -164,6 +164,7 @@ export default defineNuxtConfig({
         '@data-fair/lib-vue/locale-dayjs.js',
         '@data-fair/lib-vue/owner.js',
         '@data-fair/lib-vue/async-action.js',
+        '@data-fair/lib-vue/format/bytes.js',
         '@data-fair/lib-utils/micro-template.js',
         '@data-fair/lib-vue/reactive-search-params.js',
         '@data-fair/frame/lib/d-frame.js',
@@ -174,6 +175,7 @@ export default defineNuxtConfig({
         'analytics',
         'mermaid',
         'undici',
+        'vue3-social-sharing',
       ]
     }
   },

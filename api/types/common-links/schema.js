@@ -197,6 +197,8 @@ export const externalLink = {
       type: 'string',
       title: 'Label',
       'x-i18n-title': { fr: 'Libellé' },
+      description: 'Together with its context, the label must tell where the link leads (RGAA criterion 6.1): prefer "Read the 2025 report" to "Click here".',
+      'x-i18n-description': { fr: 'Avec son contexte, le libellé doit indiquer où mène le lien (critère RGAA 6.1) : préférez « Consulter le rapport 2025 » à « Cliquez ici ».' },
       layout: { cols: { md: 6 } }
     },
     target: {
