@@ -42,6 +42,10 @@ export default {
           'x-i18n-title': {
             fr: 'Balise'
           },
+          description: 'Pick the tag from the structure of the page, not from the size of the text, which is set by "Title size". The heading hierarchy must stay consistent (RGAA criterion 9.1): h1, then h2, then h3, ideally without skipping a level. "Div" gives the text the look of a title without making it one.',
+          'x-i18n-description': {
+            fr: "Choisissez la balise selon la structure de la page, pas selon la taille du texte, réglée par « Taille du titre ». La hiérarchie des titres doit rester cohérente (critère RGAA 9.1) : h1, puis h2, puis h3, idéalement sans sauter de niveau. « Div » donne au texte l'apparence d'un titre sans en faire un titre."
+          },
           type: 'string',
           oneOf: [
             { const: 'h1', title: 'H1' },
@@ -166,11 +170,20 @@ export default {
           type: 'string',
           layout: 'markdown'
         },
-        centered: {
-          type: 'boolean',
-          title: 'Center the content',
-          'x-i18n-title': { fr: 'Centrer le contenu' },
-          default: false,
+        align: {
+          type: 'string',
+          title: 'Text alignment',
+          'x-i18n-title': { fr: 'Alignement du texte' },
+          description: '**Align your paragraphs to the left**: they will be easier to read.\n\n- **Centered:** keep it for very short texts (one or two lines). Beyond that, each line starts at a different place, which makes reading harder.\n- **Justified:** not recommended for accessibility. Uneven gaps between words make reading harder, especially for people with dyslexia. Justified text does not meet WCAG success criterion 1.4.8 (level AAA).',
+          'x-i18n-description': {
+            fr: "**Alignez vos paragraphes à gauche** : ils seront plus faciles à lire.\n\n- **Centré :** à réserver aux textes très courts (une ou deux lignes). Au-delà, chaque ligne commence à un endroit différent et la lecture devient plus difficile.\n- **Justifié :** déconseillé pour l'accessibilité. Les espaces irréguliers entre les mots gênent la lecture, notamment pour les personnes dyslexiques. Un texte justifié ne respecte pas le critère WCAG 1.4.8 (niveau AAA)."
+          },
+          default: 'left',
+          oneOf: [
+            { const: 'left', title: 'Left', 'x-i18n-title': { fr: 'Gauche' } },
+            { const: 'center', title: 'Centered', 'x-i18n-title': { fr: 'Centré' } },
+            { const: 'justify', title: 'Justified', 'x-i18n-title': { fr: 'Justifié' } }
+          ]
         },
         mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' },
         _html: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rendered-html' }
@@ -459,8 +472,8 @@ export default {
           type: 'string',
           title: 'Alternative text (accessibility)',
           'x-i18n-title': { fr: 'Texte alternatif (accessibilité)' },
-          description: 'Required for accessibility when the image is not decorative; describes the image for screen readers.',
-          'x-i18n-description': { fr: "Nécessaire pour l'accessibilité si l'image n'est pas décorative ; décrit l'image pour les lecteurs d'écran." }
+          description: 'Required for accessibility when the image is not decorative; describes the image for screen readers. Give the information the image carries rather than its appearance: on a chart, the message to remember rather than "Chart" (RGAA criteria 1.1 and 1.3).',
+          'x-i18n-description': { fr: "Nécessaire pour l'accessibilité si l'image n'est pas décorative ; décrit l'image pour les lecteurs d'écran. Donnez l'information apportée par l'image plutôt que son apparence : sur un graphique, le message à retenir plutôt que « Graphique » (critères RGAA 1.1 et 1.3)." }
         },
         legend: {
           type: 'string',
