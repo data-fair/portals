@@ -1,5 +1,7 @@
 import dotenv from 'dotenv'
-dotenv.config({ path: import.meta.resolve('../../.env').replace('file://', ''), quiet: true })
+
+// no import.meta in a config file: playwright compiles it to CommonJS when a spec loads the config
+dotenv.config({ path: ['.env', '../.env'], quiet: true })
 
 if (!process.env.DEV_API_PORT) throw new Error('missing DEV_API_PORT env variable, run "npx --no df-dev setup" to create .env, then start the env with "npm run dev-zellij"')
 
