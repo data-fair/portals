@@ -28,8 +28,8 @@ export default {
         title: 'General settings',
         'x-i18n-title': { fr: 'Paramètres généraux' },
         children: [{
-          title: 'Metadata',
-          'x-i18n-title': { fr: 'Métadonnées' },
+          title: 'Portal identity',
+          'x-i18n-title': { fr: 'Identité du portail' },
           comp: 'card',
           children: ['title', 'description']
         },
@@ -42,10 +42,10 @@ export default {
           children: ['topics']
         },
         {
-          title: 'Labels',
-          'x-i18n-title': { fr: 'Libellés' },
-          subtitle: 'You can override some of the portal standard labels',
-          'x-i18n-subtitle': { fr: 'Vous pouvez surcharger certains des libellés standards du portail' },
+          title: 'Vocabulary',
+          'x-i18n-title': { fr: 'Vocabulaire' },
+          subtitle: 'Replace some words of the portal with your own',
+          'x-i18n-subtitle': { fr: 'Remplacez certains mots du portail par les vôtres' },
           comp: 'card',
           children: ['labelsOverrides']
         },
@@ -56,10 +56,10 @@ export default {
           children: ['socialShares', 'socialLinks']
         },
         {
-          title: 'Activity tracking (web analytics)',
-          'x-i18n-title': { fr: "Suivi d'activité (Web analytics)" },
-          subtitle: 'You can set up your own activity tracking system from a list of supported systems. By default, the platform does not track anything except API usage metrics.',
-          'x-i18n-subtitle': { fr: "Vous pouvez configurer votre propre système de suivi d'activité parmi une liste de systèmes supportés. Par défaut aucun suivi n'est effectué par la plateforme hormis les métriques de consommation des APIs." },
+          title: 'Audience measurement',
+          'x-i18n-title': { fr: "Mesure d'audience" },
+          subtitle: 'You can set up your own audience measurement tool from a list of supported tools. By default, the platform does not track anything except API usage metrics.',
+          'x-i18n-subtitle': { fr: "Vous pouvez configurer votre propre outil de mesure d'audience parmi une liste d'outils supportés. Par défaut aucun suivi n'est effectué par la plateforme hormis les métriques de consommation des APIs." },
           comp: 'card',
           children: ['analytics']
         },
@@ -77,7 +77,7 @@ export default {
           {
             title: 'Images',
             subtitle: 'These images are used for the overall look of the site, the login screen, etc. You can upload many other images in a more targeted way in the other sections and in the pages.',
-            'x-i18n-subtitle': { fr: "Ces images seront utilisées pour l'apparence globale du site, la mire d'authentification, etc. Vous pouvez charger de nombreuses autres images de manière plus ciblée dans les autres sections et dans les pages." },
+            'x-i18n-subtitle': { fr: "Ces images seront utilisées pour l'apparence globale du site, la page de connexion, etc. Vous pouvez charger de nombreuses autres images de manière plus ciblée dans les autres sections et dans les pages." },
             comp: 'card',
             children: ['logo', 'logoDark', 'favicon', 'errorImages']
           },
@@ -260,14 +260,14 @@ export default {
     description: {
       type: 'string',
       title: 'Description',
+      description: 'A short description of the portal, used by search engines and when sharing on social networks.',
+      'x-i18n-description': { fr: 'Une brève description du portail utilisée par les moteurs de recherche et lors du partage sur les réseaux sociaux.' },
       layout: {
         comp: 'textarea',
         props: {
           autoGrow: true,
           counter: true,
-          rows: 3,
-          placeholder: 'A short description of the portal, used by search engines and when sharing on social networks.',
-          'x-i18n-placeholder': { fr: 'Une brève description du portail utilisée par les moteurs de recherche et lors du partage sur les réseaux sociaux.' }
+          rows: 3
         }
       }
     },
@@ -342,8 +342,8 @@ export default {
       type: 'string',
       title: 'Heading font',
       'x-i18n-title': { fr: 'Police des titres' },
-      hint: 'Leave empty to use the main font',
-      'x-i18n-hint': { fr: 'laissez vide pour utiliser la police principale' },
+      description: 'Leave empty to use the main font.',
+      'x-i18n-description': { fr: 'Laissez vide pour utiliser la police principale.' },
       layout: {
         comp: 'autocomplete',
         getItems: {
@@ -442,6 +442,7 @@ export default {
       'x-i18n-title': { fr: 'Logo - variante pour thème sombre' },
       required: ['_id', 'name', 'mimeType'],
       layout: {
+        if: 'parent.data?.theme?.dark || parent.data?.theme?.hcDark || parent.data?.logoDark',
         slots: {
           component: {
             name: 'image-upload',
@@ -467,13 +468,14 @@ export default {
     },
     favicon: {
       type: 'object',
-      title: 'Favicon',
+      title: 'Browser tab icon (favicon)',
+      'x-i18n-title': { fr: "Icône de l'onglet du navigateur (favicon)" },
       required: ['_id', 'name', 'mimeType'],
       layout: {
         slots: {
           component: {
             name: 'image-upload',
-            props: { width: 512, height: 512, label: 'Favicon' }
+            props: { width: 512, height: 512, label: 'Browser tab icon (favicon)', 'x-i18n-label': { fr: "Icône de l'onglet du navigateur (favicon)" } }
           }
         }
       },
@@ -548,8 +550,8 @@ export default {
         },
         mergeDatasetAppPaths: {
           type: 'boolean',
-          title: 'Merge dataset/application pages',
-          'x-i18n-title': { fr: 'Fusionner les pages datasets/applications' },
+          title: 'Group the subpages of a dataset in the statistics',
+          'x-i18n-title': { fr: "Regrouper les sous-pages d'un jeu de données dans les statistiques" },
           description: 'If enabled, the subpages of a dataset or an application (e.g. /datasets/123/table) are counted as the parent page (/datasets/123) in the statistics.',
           'x-i18n-description': { fr: "Si activé, les sous-pages d'un dataset ou d'une application (ex: /datasets/123/table) seront comptabilisées comme la page parent (/datasets/123) dans les statistiques." },
           default: false

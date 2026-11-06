@@ -23,9 +23,7 @@ export default {
       title: { type: 'string', layout: 'none' },
       description: {
         type: 'string',
-        title: 'Add a description',
-        'x-i18n-title': { fr: 'Ajouter une description' },
-        layout: 'textarea'
+        layout: 'none'
       },
       thumbnail: {
         type: 'object',
@@ -34,7 +32,7 @@ export default {
           slots: {
             component: {
               name: 'image-upload',
-              props: { width: 1280, label: 'Upload an image', 'x-i18n-label': { fr: 'Chargez une image' } }
+              props: { width: 1280, label: 'Image of the cards of this topic', 'x-i18n-label': { fr: 'Image des vignettes de cette thématique' } }
             }
           }
         },
