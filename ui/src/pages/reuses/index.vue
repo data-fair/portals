@@ -21,20 +21,17 @@
       </v-col>
     </v-row>
 
-    <!-- No reuses created -->
-    <span
-      v-else-if="!reusesFetch.data.value?.results.length && !isFiltered"
-      class="d-flex justify-center text-title-large mt-4"
-    >
-      {{ t('noReusesCreated') }}
-    </span>
-    <!-- No reuses displayed (filters) -->
-    <span
+    <!-- No reuses, or none matching the filters -->
+    <df-layout-empty-state
       v-else-if="!displayReuses.length"
-      class="d-flex justify-center text-title-large mt-4"
-    >
-      {{ t('noReusesDisplayed') }}
-    </span>
+      :btn-text="t('createReuse')"
+      :has-search="isFiltered"
+      :icon="mdiPageNext"
+      :no-data-text="t('noReusesCreated')"
+      :no-result-text="t('noReusesDisplayed')"
+      btn-to="/reuses/new"
+      can-create
+    />
 
     <!-- List of reuses -->
     <v-row
@@ -65,6 +62,7 @@
 </template>
 
 <script setup lang="ts">
+import { mdiPageNext } from '@mdi/js'
 import type { ReusesGetRes, ReusesFacets } from '#api/doc/reuses/get-res'
 
 const showAll = useBooleanSearchParam('showAll')
@@ -107,11 +105,13 @@ watch(
 
 <i18n lang="yaml">
   en:
+    createReuse: Create a new reuse
     noReusesCreated: You haven't created any reuses yet.
     noReusesDisplayed: No results match the search criteria.
     reusesDisplayed: No reuses | {displayed}/{count} reuse displayed | {displayed}/{count} reuses displayed
 
   fr:
+    createReuse: Créer une nouvelle réutilisation
     noReusesCreated: Vous n'avez pas encore créé de réutilisation.
     noReusesDisplayed: Aucun résultat ne correspond aux critères de recherche.
     reusesDisplayed: Aucune réutilisation | {displayed}/{count} réutilisation affichée | {displayed}/{count} réutilisations affichées
