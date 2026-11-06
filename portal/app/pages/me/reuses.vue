@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import createStateChangeAdapter from '@data-fair/frame/lib/vue-router/state-change-adapter'
+import createStateChangeAdapter from '@data-fair/frame/lib/vue-router/state-change-adapter.js'
 
 const { t } = useI18n()
 const { setBreadcrumbs } = useNavigationStore()
