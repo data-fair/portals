@@ -13,7 +13,7 @@
  */
 import type { AgentRoot, AgentOperation } from '@data-fair/openapi-mcp'
 import { oauth2Alternatives } from '@data-fair/lib-common-types/scopes.js'
-import { acceptedScopes, type ScopeFamily, type ScopeTier, type ScopedOperationId, type imageOperations } from '../src/scopes.ts'
+import { acceptedScopes, scopedOperations, type ScopeFamily, type ScopeTier, type ScopedOperationId, type imageOperations } from '../src/scopes.ts'
 
 /** the security of a tool reaching the operation at this tier: the cookie session, or a token holding one of the accepted scopes */
 export const agentSecurity = (family: ScopeFamily, tier: ScopeTier) => [{ sdCookie: [] }, ...oauth2Alternatives(acceptedScopes(family, tier))]
@@ -60,7 +60,7 @@ const portalFields = ['_id', 'title', 'owner', 'staging', 'ingress', 'updatedAt'
 const pageFields = ['_id', 'title', 'type', 'portals', 'requestedPortals', 'owner', 'updatedAt']
 const reuseFields = ['_id', 'title', 'slug', 'portals', 'requestedPortals', 'owner', 'updatedAt']
 
-export const operations: Partial<Record<ScopedOperationId | keyof typeof imageOperations, AgentOperation | AgentOperation[]>> = {
+const declaredOperations: Partial<Record<ScopedOperationId | keyof typeof imageOperations, AgentOperation | AgentOperation[]>> = {
   // portals
   listPortals: {
     name: 'list_portals',
@@ -340,3 +340,20 @@ export const operations: Partial<Record<ScopedOperationId | keyof typeof imageOp
     params: idParam('reuse')
   }
 }
+
+/**
+ * Closed world (MCP `openWorldHint: false`) unless an operation says otherwise: portal configurations, pages,
+ * groups, fonts and images are written by the account's members only, so their results are not outside content
+ * for the agents service (its tool-output tripwire does not scan them, its approval reviewer does not count them as
+ * exposure). Reuses stay open: a portal's users from other accounts submit them, and the submitted reuse is given
+ * to the portal's owner. The page preview declares itself open: it renders datasets.
+ */
+const closedWorld = (operation: AgentOperation): AgentOperation => ({
+  ...operation,
+  annotations: { openWorldHint: false, ...operation.annotations }
+})
+
+export const operations: typeof declaredOperations = Object.fromEntries(Object.entries(declaredOperations).map(([id, operation]) => {
+  if ((scopedOperations as Record<string, { family?: string }>)[id]?.family === 'reuses') return [id, operation]
+  return [id, Array.isArray(operation) ? operation.map(closedWorld) : closedWorld(operation as AgentOperation)]
+}))

@@ -98,6 +98,17 @@ test.describe('agent surface of the api docs', () => {
     }
   })
 
+  test('member-written resources are closed world, reuses and the page preview stay open', async () => {
+    const toolSet = await loadSurface()
+    const openWorld = (name: string) => toolSet.tools.find(t => t.name === name)?.annotations?.openWorldHint
+    for (const name of ['list_portals', 'get_portal', 'list_pages', 'get_page', 'create_page', 'publish_page', 'upload_image']) {
+      assert.equal(openWorld(name), false, name)
+    }
+    // submitted by a portal's users from other accounts
+    for (const name of ['list_reuses', 'get_reuse']) assert.notEqual(openWorld(name), false, name)
+    assert.equal(openWorld('preview_portal_page'), true)
+  })
+
   test('the page preview is a read tool returning the screenshot as an image and the report as text', async () => {
     const toolSet = await loadSurface()
     const preview = toolSet.tools.find(t => t.name === 'preview_portal_page')!
