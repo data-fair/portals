@@ -338,7 +338,7 @@ const portalsById = computed(() => {
     ownerChanged: Owner changed!
     sensitiveOperation: Sensitive operation
     validateDraft: Validate draft
-    draftValidated: The draft was validated, the changes are published.
+    draftValidated: The draft was validated.
     draftCanceled: The draft was canceled.
     viewOn: View on {portalTitle}
     notPublishedOnAnyPortal: This page is not published on any portal
@@ -361,7 +361,7 @@ const portalsById = computed(() => {
     ownerChanged: Propriétaire changé !
     sensitiveOperation: Opération sensible
     validateDraft: Valider le brouillon
-    draftValidated: Le brouillon a été validé, les changements sont publiés.
+    draftValidated: Le brouillon a été validé.
     draftCanceled: Le brouillon a été annulé.
     viewOn: Voir sur {portalTitle}
     notPublishedOnAnyPortal: Cette page n'est publiée sur aucun portail

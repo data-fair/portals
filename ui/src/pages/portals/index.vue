@@ -21,20 +21,17 @@
       </v-col>
     </v-row>
 
-    <!-- No portals created -->
-    <span
-      v-else-if="!portalsFetch.data.value?.results.length"
-      class="d-flex justify-center text-title-large mt-4"
-    >
-      {{ t('noPortalsCreated') }}
-    </span>
-    <!-- No portals displayed (filters) -->
-    <span
+    <!-- No portals, or none matching the search -->
+    <df-layout-empty-state
       v-else-if="!displayPortals.length"
-      class="d-flex justify-center text-title-large mt-4"
-    >
-      {{ t('noPortalsDisplayed') }}
-    </span>
+      :btn-text="t('createPortal')"
+      :can-create="session.state.accountRole === 'admin'"
+      :has-search="!!search"
+      :icon="mdiMonitorDashboard"
+      :no-data-text="t('noPortalsCreated')"
+      :no-result-text="t('noPortalsDisplayed')"
+      btn-to="/portals/new"
+    />
 
     <!-- List of portals -->
     <template v-else>
@@ -66,6 +63,7 @@
 
 <script setup lang="ts">
 import type { Portal } from '#api/types/portal/index'
+import { mdiMonitorDashboard } from '@mdi/js'
 
 const session = useSessionAuthenticated()
 const showAll = useBooleanSearchParam('showAll')
@@ -121,11 +119,13 @@ watch(
 <i18n lang="yaml">
   en:
     noPortalsCreated: You haven't created any portals yet.
+    createPortal: Create a new portal
     noPortalsDisplayed: No results match the search criteria.
     portalDisplayed: No portals | {displayed}/{count} portal displayed | {displayed}/{count} portals displayed
 
   fr:
     noPortalsCreated: Vous n'avez pas encore créé de portail.
+    createPortal: Créer un nouveau portail
     noPortalsDisplayed: Aucun résultat ne correspond aux critères de recherche.
     portalDisplayed: Aucun portail | {displayed}/{count} portail affiché | {displayed}/{count} portails affichés
 

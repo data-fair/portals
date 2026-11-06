@@ -21,21 +21,17 @@
       </v-col>
     </v-row>
 
-    <!-- No pages created -->
-    <span
-      v-else-if="!pagesFetch.data.value?.results.length && !isFiltered"
-      class="d-flex justify-center text-title-large mt-4"
-    >
-      {{ t('noPagesCreated') }}
-    </span>
-
-    <!-- No pages displayed (filters) -->
-    <span
+    <!-- No pages, or none matching the filters -->
+    <df-layout-empty-state
       v-else-if="!displayPages.length"
-      class="d-flex justify-center text-title-large mt-4"
-    >
-      {{ t('noPagesDisplayed') }}
-    </span>
+      :btn-text="t('createPage')"
+      :can-create="session.state.accountRole === 'admin'"
+      :has-search="isFiltered"
+      :icon="mdiViewDashboardEdit"
+      :no-data-text="t('noPagesCreated')"
+      :no-result-text="t('noPagesDisplayed')"
+      btn-to="/pages/new"
+    />
 
     <!-- List of pages -->
     <v-row
@@ -72,11 +68,13 @@
 </template>
 
 <script setup lang="ts">
+import { mdiViewDashboardEdit } from '@mdi/js'
 import { useAgentState } from '@data-fair/lib-vue-agents'
 import { PAGES_LIST_GUIDANCE } from '~/utils/agent-editor-guidance'
 import type { Page } from '#api/types/page'
 import type { PagesGetRes, PagesFacets } from '#api/doc/pages/get-res'
 
+const session = useSessionAuthenticated()
 const { t } = useI18n()
 useAgentState('pages', PAGES_LIST_GUIDANCE)
 const showAll = useBooleanSearchParam('showAll')
@@ -164,6 +162,7 @@ watch(
       event: Events
       news: News
       default: Other pages
+    createPage: Create a new page
     noPagesCreated: You haven't created any page yet.
     noPagesDisplayed: No result matches your criteria.
     pagesDisplayed: No pages | {displayed}/{count} page displayed | {displayed}/{count} pages displayed
@@ -175,6 +174,7 @@ watch(
       event: Événements
       news: Actualités
       default: Autres pages
+    createPage: Créer une nouvelle page
     noPagesCreated: Vous n'avez pas encore créé de page.
     noPagesDisplayed: Aucun résultat ne correspond à vos critères.
     pagesDisplayed: Aucune page | {displayed}/{count} page affichée | {displayed}/{count} pages affichées

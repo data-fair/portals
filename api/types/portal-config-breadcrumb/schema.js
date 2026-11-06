@@ -117,13 +117,13 @@ export default {
         },
         icon: {
           type: 'object',
-          title: 'MDI icon',
-          'x-i18n-title': { fr: 'Icône MDI' },
+          title: 'Icon',
+          'x-i18n-title': { fr: 'Icône' },
           required: ['name', 'svg', 'svgPath'],
           layout: {
             if: 'parent.data?.type === "icon"',
             getItems: {
-              url: 'https://koumoul.com/data-fair/api/v1/datasets/icons-mdi-latest/lines?q={q}&select=name,svg,svgPath&size=20',
+              url: 'https://koumoul.com/data-fair/api/v1/datasets/icons-mdi-latest/lines?q={q}&select=name,svg,svgPath&size=50',
               itemKey: 'data.name',
               itemTitle: 'data.name',
               itemIcon: 'data.svg',

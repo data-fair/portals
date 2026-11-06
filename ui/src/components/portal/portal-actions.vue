@@ -456,7 +456,7 @@ const updateAdminConfig = useAsyncAction(async (key: string, value: boolean) => 
     portalDeleted: Portal deleted!
     sensitiveOperation: Sensitive operation
     validateDraft: Validate draft
-    draftValidated: The draft was validated, the changes are published.
+    draftValidated: The draft was validated.
     draftCanceled: The draft was canceled.
     viewDraft: View draft
     viewPortal: View portal
@@ -491,7 +491,7 @@ const updateAdminConfig = useAsyncAction(async (key: string, value: boolean) => 
     portalDeleted: Portail supprimé !
     sensitiveOperation: Opération sensible
     validateDraft: Valider le brouillon
-    draftValidated: Le brouillon a été validé, les changements sont publiés.
+    draftValidated: Le brouillon a été validé.
     draftCanceled: Le brouillon a été annulé.
     viewDraft: Voir le brouillon
     viewPortal: Visiter le portail

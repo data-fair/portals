@@ -23,8 +23,8 @@ export default {
     },
     phoneLabel: {
       type: 'string',
-      title: 'Name associated with the contact phone',
-      'x-i18n-title': { fr: 'Nom associé au téléphone de contact' },
+      title: 'Text shown instead of the number',
+      'x-i18n-title': { fr: 'Texte affiché à la place du numéro' },
       layout: { cols: { md: 6 } }
     },
     website: {
@@ -35,16 +35,16 @@ export default {
     },
     websiteLabel: {
       type: 'string',
-      title: 'Name associated with the contact website',
-      'x-i18n-title': { fr: 'Nom associé au site Web de contact' },
+      title: 'Text shown instead of the address',
+      'x-i18n-title': { fr: "Texte affiché à la place de l'adresse" },
       layout: { cols: { md: 6 } }
     },
     infos: {
       type: 'string',
       title: 'Contact information',
       'x-i18n-title': { fr: 'Informations de contact' },
-      description: 'This text field can be displayed next to the contact form or above the footer in a section dedicated to contact information.',
-      'x-i18n-description': { fr: 'Ce champ de texte pourra être affiché à côté du formulaire de contact ou au-dessus du pied de page dans une partie dédiée aux informations de contact.' },
+      description: 'This text can be displayed next to the contact form.',
+      'x-i18n-description': { fr: 'Ce texte peut être affiché à côté du formulaire de contact.' },
       layout: 'markdown'
     },
     infos_html: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rendered-html' }
