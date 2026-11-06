@@ -72,6 +72,7 @@ const elements = defineModel<PageElement[]>()
 const { addItemMessage, pages } = defineProps<{ addItemMessage: string, pages: any, root?: boolean }>()
 const session = useSessionAuthenticated()
 const pageRef = { type: 'page' as const, _id: inject('page-id') as string }
+const { t } = useI18n()
 
 // computed, otherwise the context would freeze the pages list as it was on setup,
 // before the pages fetch of the parent resolves, and no link could target a page
@@ -80,7 +81,12 @@ const vjsfOptions = computed<VjsfOptions>(() => ({
   density: 'compact',
   updateOn: 'blur',
   initialValidation: 'always',
-  messages: { addItem: addItemMessage } as VjsfOptions['messages'],
+  messages: {
+    addItem: addItemMessage,
+    edit: t('edit'),
+    insertAfter: t('insertAfter'),
+    sort: t('sort')
+  } as VjsfOptions['messages'],
   pluginsOptions: {
     markdown: {
       cspNonce: $cspNonce,
@@ -93,6 +99,17 @@ const vjsfOptions = computed<VjsfOptions>(() => ({
   context: { pages, adminMode: session.user.value.adminMode }
 }))
 </script>
+
+<i18n lang="yaml">
+  en:
+    edit: Edit
+    insertAfter: Insert an element
+    sort: Move
+  fr:
+    edit: Modifier
+    insertAfter: Insérer un bloc
+    sort: Déplacer
+</i18n>
 
 <style lang="css">
 .vjsf-list-dialog .vjsf-list-dialog-toolbar .v-spacer {

@@ -552,7 +552,7 @@ export default {
       title: 'ResponsiveGridElement',
       'x-i18n-title': {
         en: 'Responsive grid',
-        fr: 'Grille responsive'
+        fr: 'Grille de blocs'
       },
       required: ['type', 'children'],
       properties: {
