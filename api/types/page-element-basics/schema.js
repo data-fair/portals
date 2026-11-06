@@ -170,7 +170,7 @@ export default {
           type: 'string',
           layout: 'markdown'
         },
-        align: {
+        textAlign: {
           type: 'string',
           title: 'Text alignment',
           'x-i18n-title': { fr: 'Alignement du texte' },

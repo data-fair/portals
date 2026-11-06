@@ -14,9 +14,9 @@ test.describe('text align migration', () => {
     assert.equal(migrateTextAlign(config), true)
     assert.deepEqual(config, {
       elements: [
-        { type: 'text', content: 'a', align: 'center' },
+        { type: 'text', content: 'a', textAlign: 'center' },
         { type: 'text', content: 'b' },
-        { type: 'tabs', tabs: [{ children: [{ type: 'card', children: [{ type: 'text', content: 'c', align: 'center' }] }] }] }
+        { type: 'tabs', tabs: [{ children: [{ type: 'card', children: [{ type: 'text', content: 'c', textAlign: 'center' }] }] }] }
       ]
     })
   })
@@ -31,6 +31,6 @@ test.describe('text align migration', () => {
     const config = { elements: [{ type: 'text', centered: true, content: 'a' }] }
     migrateTextAlign(config)
     assert.equal(migrateTextAlign(config), false)
-    assert.deepEqual(config, { elements: [{ type: 'text', content: 'a', align: 'center' }] })
+    assert.deepEqual(config, { elements: [{ type: 'text', content: 'a', textAlign: 'center' }] })
   })
 })

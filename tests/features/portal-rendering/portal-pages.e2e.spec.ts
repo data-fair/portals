@@ -118,7 +118,7 @@ test.describe('portal rendering', () => {
     })).data
     await user1.post('/api/pages', {
       type: 'home',
-      config: { title: 'Home', elements: [{ type: 'text', align: 'justify', content: 'Justified paragraph' }] },
+      config: { title: 'Home', elements: [{ type: 'text', textAlign: 'justify', content: 'Justified paragraph' }] },
       portals: [portal._id],
       owner: portal.owner
     })

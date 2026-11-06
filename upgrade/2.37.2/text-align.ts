@@ -1,7 +1,7 @@
 import type { UpgradeScript } from '@data-fair/lib-node/upgrade-scripts.js'
 
 /**
- * Text blocks: the centered option becomes the center value of align. Walks any nesting of
+ * Text blocks: the centered option becomes the center value of textAlign. Walks any nesting of
  * page elements. Returns true if something changed.
  */
 export const migrateTextAlign = (value: unknown): boolean => {
@@ -9,7 +9,7 @@ export const migrateTextAlign = (value: unknown): boolean => {
   let changed = false
   const element = value as Record<string, any>
   if (element.type === 'text' && 'centered' in element) {
-    if (element.centered) element.align = 'center'
+    if (element.centered) element.textAlign = 'center'
     delete element.centered
     changed = true
   }
@@ -20,7 +20,7 @@ export const migrateTextAlign = (value: unknown): boolean => {
 }
 
 export default {
-  description: 'Replace the centered option of text blocks by the align option',
+  description: 'Replace the centered option of text blocks by the textAlign option',
   async exec (db, debug) {
     let count = 0
     for await (const doc of db.collection('pages').find({}, { projection: { config: 1, draftConfig: 1 } })) {

@@ -27,7 +27,7 @@ const brokenConfig = () => ({
           mb: 0,
           actions: [],
           children: [
-            { uuid: 'a0000003', type: 'text', align: 'center', mb: 0, content: 'hello' },
+            { uuid: 'a0000003', type: 'text', textAlign: 'center', mb: 0, content: 'hello' },
             { uuid: 'a0000004', type: 'title', titleSize: 'h5', titleTag: 'h1', content: 'hi', mb: 0 }
           ]
         }
