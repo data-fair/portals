@@ -112,6 +112,21 @@ test.describe('portal rendering', () => {
     await expect(page.getByText('Caption')).toBeVisible()
   })
 
+  test('should justify a text block', async ({ page, goToPortal }) => {
+    const portal = (await user1.post('/api/portals', {
+      config: { title: 'Justified Text Portal', menu: { children: [] } }
+    })).data
+    await user1.post('/api/pages', {
+      type: 'home',
+      config: { title: 'Home', elements: [{ type: 'text', align: 'justify', content: 'Justified paragraph' }] },
+      portals: [portal._id],
+      owner: portal.owner
+    })
+
+    await goToPortal(portal._id)
+    await expect(page.getByText('Justified paragraph')).toHaveCSS('text-align', 'justify', { timeout: 10_000 })
+  })
+
   test('should render app bar and footer', async ({ page, goToPortal }) => {
     const portal = (await user1.post('/api/portals', {
       config: { title: 'Layout Test Portal', menu: { children: [] } }
