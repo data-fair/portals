@@ -14,7 +14,7 @@ const { t } = useI18n()
 
 <i18n lang="yaml">
   en:
-    unsaved: Last change not saved, a required field is empty (shown in red).
+    unsaved: Last change not saved, a field is empty or invalid (shown in red).
   fr:
-    unsaved: Dernière modification non enregistrée, un champ obligatoire est vide (signalé en rouge).
+    unsaved: Dernière modification non enregistrée, un champ est vide ou mal renseigné (signalé en rouge).
 </i18n>

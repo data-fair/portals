@@ -75,13 +75,13 @@ export function draftSaveState (error: string | undefined, hadFailure: boolean):
 }
 
 /**
- * Whether the form is complete. An incomplete one (a required field empty, as in a menu row
+ * Whether the form is valid. An invalid one (a field empty or wrongly filled in, as in a menu row
  * just added) is not saved: the draft keeps the last complete state. A judged run lost a
  * half-configured menu item when the person left the editor, and nothing had said so.
  */
 export function formCompletenessState (valid: boolean | null, hadIncomplete: boolean): string | undefined {
   // null: v-form has not checked every field yet, as while the form opens
-  if (valid === false) return 'the form is incomplete (a required field is empty): its last change is NOT saved, the draft keeps the last complete state, and the change is lost if the person leaves the editor. Have the form sub-agent find and fill the missing field'
+  if (valid === false) return 'the form is invalid (a field is empty or wrongly filled in): its last change is NOT saved, the draft keeps the last complete state, and the change is lost if the person leaves the editor. Have the form sub-agent find and fill the missing field'
   if (hadIncomplete) return 'the form is complete again: its changes are saved to the draft'
   return undefined
 }
