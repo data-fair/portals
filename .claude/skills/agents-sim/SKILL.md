@@ -17,7 +17,9 @@ Three things must be true, and each fails confusingly if it is not:
    data-fair, mongo, elasticsearch) healthy, panes `api`, `ui`, `portal` running, and the
    optional `agents` container started (`npx --no df-dev up agents` if it shows `not started`;
    it starts the `mcp` container too, which the autonomous-agent cases need, and nginx needs
-   `MCP_PORT` in `.env`: add it by hand in an existing worktree).
+   `MCP_PORT` in `.env`: add it by hand in an existing worktree), and the `events` container
+   (`npx --no df-dev up events`): without it the portal's notification calls answer 502, and
+   `portals_preview_portal_page` times out on the pages that make them, the home page first.
    Back-office cases run the manager UI from the `ui` pane inside the data-fair shell;
    portal cases run the `portal` pane.
 2. The data-fair container runs with `PRIVATE_AGENTS_URL` (see docker-compose.yml).
