@@ -200,12 +200,12 @@ export default {
       properties: {
         mdi: {
           type: 'object',
-          title: 'MDI Icon',
-          'x-i18n-title': { fr: 'Icône MDI' },
+          title: 'Icon',
+          'x-i18n-title': { fr: 'Icône' },
           required: ['name', 'svg', 'svgPath'],
           layout: {
             getItems: {
-              url: 'https://koumoul.com/data-fair/api/v1/datasets/icons-mdi-latest/lines?q={q}&select=name,svg,svgPath&size=20',
+              url: 'https://koumoul.com/data-fair/api/v1/datasets/icons-mdi-latest/lines?q={q}&select=name,svg,svgPath&size=50',
               itemKey: 'data.name',
               itemTitle: 'data.name',
               itemIcon: 'data.svg',

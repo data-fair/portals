@@ -84,6 +84,7 @@
           <h2 class="text-title-large mt-2">
             {{ t('initFromOtherPortal.title') }}
           </h2>
+          <p>{{ t('initFromOtherPortal.description') }}</p>
           <v-row class="d-flex align-stretch mt-2">
             <v-col
               md="4"
@@ -798,8 +799,8 @@ setBreadcrumbs([
       titleRequired: Portal title is required
       owner: Choose the portal owner
     initFromOtherPortal:
-      title: Initialize configuration from an existing portal
-      description: This will copy the styles, menu and permissions, but not the pages.
+      title: Starting configuration
+      description: Start from the default configuration, or copy the one of a portal below (styles, menu and permissions, but not the pages).
     useReferencePortal:
       title: Use a reference portal
       description: Select a pre-designed portal configuration to save time.
@@ -819,7 +820,7 @@ setBreadcrumbs([
       title: Standard catalog (recommended)
       datasets: Automatically lists your datasets.
       applications: Automatically lists your applications.
-    blankPortal: None (Default)
+    blankPortal: Default configuration
     noCatalog:
       title: Do not include a catalog
       description: You can add it later in the page management.
@@ -856,8 +857,8 @@ setBreadcrumbs([
       titleRequired: Le titre du portail est obligatoire
       owner: Choisir le propriétaire du portail
     initFromOtherPortal:
-      title: Initialiser la configuration depuis un portail existant
-      description: Cela copiera les styles, le menu et les permissions, mais pas les pages.
+      title: Configuration de départ
+      description: Partez de la configuration par défaut, ou copiez celle d'un portail ci-dessous (styles, menu et permissions, mais pas les pages).
     useReferencePortal:
       title: Utiliser un portail de référence
       description: Sélectionnez une configuration de portail pré-conçue pour gagner du temps.
@@ -877,7 +878,7 @@ setBreadcrumbs([
       title: Catalogue standard (recommandé)
       datasets: Liste automatiquement vos jeux de données.
       applications: Liste automatiquement vos visualisations.
-    blankPortal: Aucun (Défaut)
+    blankPortal: Configuration par défaut
     noCatalog:
       title: Ne pas inclure de catalogue
       description: Vous pourrez l'ajouter plus tard dans la gestion des pages.

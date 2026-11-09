@@ -14,9 +14,9 @@ export default {
         type: { const: 'title' },
         uuid: { type: 'string', layout: 'none' },
         content: {
-          title: 'Content',
+          title: 'Title text',
           'x-i18n-title': {
-            fr: 'Contenu'
+            fr: 'Texte du titre'
           },
           type: 'string'
         },
@@ -170,7 +170,7 @@ export default {
           type: 'string',
           layout: 'markdown'
         },
-        align: {
+        textAlign: {
           type: 'string',
           title: 'Text alignment',
           'x-i18n-title': { fr: 'Alignement du texte' },
@@ -499,6 +499,7 @@ export default {
     'element-iframe': {
       type: 'object',
       title: 'IFrame',
+      'x-i18n-title': { fr: 'Page web externe (iframe)' },
       required: ['type', 'url'],
       properties: {
         type: { const: 'iframe' },

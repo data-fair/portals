@@ -19,6 +19,7 @@ const mdiPuzzleOutline = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2
 const mdiDatabaseOutline = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>database-outline</title><path d="M12 3C7.58 3 4 4.79 4 7V17C4 19.21 7.59 21 12 21S20 19.21 20 17V7C20 4.79 16.42 3 12 3M18 17C18 17.5 15.87 19 12 19S6 17.5 6 17V14.77C7.61 15.55 9.72 16 12 16S16.39 15.55 18 14.77V17M18 12.45C16.7 13.4 14.42 14 12 14C9.58 14 7.3 13.4 6 12.45V9.64C7.47 10.47 9.61 11 12 11C14.39 11 16.53 10.47 18 9.64V12.45M12 9C8.13 9 6 7.5 6 7S8.13 5 12 5C15.87 5 18 6.5 18 7S15.87 9 12 9Z" /></svg>'
 const mdiImageMultiple = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>image-multiple</title><path d="M22,16V4A2,2 0 0,0 20,2H8A2,2 0 0,0 6,4V16A2,2 0 0,0 8,18H20A2,2 0 0,0 22,16M11,12L13.03,14.71L16,11L20,16H8M2,6V20A2,2 0 0,0 4,22H18V20H4V6" /></svg>'
 const mdiPageNext = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>page-next</title><path d="M20,3H5A2,2 0 0,0 3,5V11H7V9L11,12L7,15V13H3V19A2,2 0 0,0 5,21H20A2,2 0 0,0 22,19V5A2,2 0 0,0 20,3M17,17H13V15H17V17M20,13H13V11H20V13M20,9H13V7H20V9M3,13H0V11H3V13Z" /></svg>'
+const mdiCogOutline = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>cog-outline</title><path d="M12,8A4,4 0 0,1 16,12A4,4 0 0,1 12,16A4,4 0 0,1 8,12A4,4 0 0,1 12,8M12,10A2,2 0 0,0 10,12A2,2 0 0,0 12,14A2,2 0 0,0 14,12A2,2 0 0,0 12,10M10,22C9.75,22 9.54,21.82 9.5,21.58L9.13,18.93C8.5,18.68 7.96,18.34 7.44,17.94L4.95,18.95C4.73,19.03 4.46,18.95 4.34,18.73L2.34,15.27C2.21,15.05 2.27,14.78 2.46,14.63L4.57,12.97L4.5,12L4.57,11L2.46,9.37C2.27,9.22 2.21,8.95 2.34,8.73L4.34,5.27C4.46,5.05 4.73,4.96 4.95,5.05L7.44,6.05C7.96,5.66 8.5,5.32 9.13,5.07L9.5,2.42C9.54,2.18 9.75,2 10,2H14C14.25,2 14.46,2.18 14.5,2.42L14.87,5.07C15.5,5.32 16.04,5.66 16.56,6.05L19.05,5.05C19.27,4.96 19.54,5.05 19.66,5.27L21.66,8.73C21.79,8.95 21.73,9.22 21.54,9.37L19.43,11L19.5,12L19.43,13L21.54,14.63C21.73,14.78 21.79,15.05 21.66,15.27L19.66,18.73C19.54,18.95 19.27,19.04 19.05,18.95L16.56,17.95C16.04,18.34 15.5,18.68 14.87,18.93L14.5,21.58C14.46,21.82 14.25,22 14,22H10M11.25,4L10.88,6.61C9.68,6.86 8.62,7.5 7.85,8.39L5.44,7.35L4.69,8.65L6.8,10.2C6.4,11.37 6.4,12.64 6.8,13.8L4.68,15.36L5.43,16.66L7.86,15.62C8.63,16.5 9.68,17.14 10.87,17.38L11.24,20H12.76L13.13,17.39C14.32,17.14 15.37,16.5 16.14,15.62L18.57,16.66L19.32,15.36L17.2,13.81C17.6,12.64 17.6,11.37 17.2,10.2L19.31,8.65L18.56,7.35L16.15,8.39C15.38,7.5 14.32,6.86 13.12,6.62L12.75,4H11.25Z" /></svg>'
 const mdiNavigationVariant = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>navigation-variant</title><path d="M21 3L3 10.53V11.5L9.84 14.16L12.5 21H13.46L21 3Z" /></svg>'
 const mdiCalendar = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>calendar</title><path d="M19,19H5V8H19M16,1V3H8V1H6V3H5C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,3H18V1M17,12H12V17H17V12Z" /></svg>'
 const mdiNewspaperVariant = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>newspaper-variant</title><path d="M20 3H4C2.89 3 2 3.89 2 5V19C2 20.11 2.89 21 4 21H20C21.11 21 22 20.11 22 19V5C22 3.89 21.11 3 20 3M5 7H10V13H5V7M19 17H5V15H19V17M19 13H12V11H19V13M19 9H12V7H19V9Z" /></svg>'
@@ -32,26 +33,23 @@ const mdiNewspaperVariant = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 
 const groups = [
   {
     title: 'Basic elements',
-    'x-i18n-title': { fr: 'Éléments de base' },
+    'x-i18n-title': { fr: 'Blocs de base' },
     icon: mdiShapeOutlineIcon,
     items: [
       { from: basics, def: 'element-title', title: 'Title', 'x-i18n-title': { fr: 'Titre' } },
       { from: basics, def: 'element-text', title: 'Text', 'x-i18n-title': { fr: 'Texte' } },
       { from: basics, def: 'element-alert', title: 'Accented text', 'x-i18n-title': { fr: 'Texte accentué' } },
       { from: basics, def: 'element-image', title: 'Image', 'x-i18n-title': { fr: 'Image' } },
-      { from: basics, def: 'element-iframe', title: 'IFrame', 'x-i18n-title': { fr: 'IFrame' } },
-      { from: basics, def: 'element-icon', title: 'Icon', 'x-i18n-title': { fr: 'Icône' } },
-      { from: basics, def: 'element-mermaid', title: 'Mermaid diagram (beta)', 'x-i18n-title': { fr: 'Diagramme Mermaid (Bêta)' } }
+      { from: basics, def: 'element-icon', title: 'Icon', 'x-i18n-title': { fr: 'Icône' } }
     ]
   },
   {
     title: 'Navigation elements',
-    'x-i18n-title': { fr: 'Éléments de navigation' },
+    'x-i18n-title': { fr: 'Blocs de navigation' },
     icon: mdiNavigationVariant,
     items: [
       { from: navigation, def: 'element-button', title: 'Navigation button', 'x-i18n-title': { fr: 'Bouton de navigation' } },
-      { from: navigation, def: 'element-menu', title: 'Navigation menu', 'x-i18n-title': { fr: 'Menu de navigation' } },
-      { from: navigation, def: 'element-breadcrumbs', title: 'Breadcrumbs', 'x-i18n-title': { fr: 'Fil d\'Ariane' } }
+      { from: navigation, def: 'element-menu', title: 'Navigation menu', 'x-i18n-title': { fr: 'Menu de navigation' } }
     ]
   },
   {
@@ -63,7 +61,7 @@ const groups = [
       { from: layout, def: 'element-banner', title: 'Colored background section', 'x-i18n-title': { fr: 'Section sur fond coloré' } },
       { from: layout, def: 'element-card', title: 'Box', 'x-i18n-title': { fr: 'Boîte' } },
       { from: layout, def: 'element-two-columns', title: 'Two columns', 'x-i18n-title': { fr: 'Deux colonnes' } },
-      { from: layout, def: 'element-responsive-grid', title: 'Responsive grid', 'x-i18n-title': { fr: 'Grille responsive' } },
+      { from: layout, def: 'element-responsive-grid', title: 'Responsive grid', 'x-i18n-title': { fr: 'Grille de blocs' } },
       { from: layout, def: 'element-tabs', title: 'Tabs', 'x-i18n-title': { fr: 'Onglets' } },
       { from: layout, def: 'element-expansion-panels', title: 'Expansion panels', 'x-i18n-title': { fr: 'Accordéons' } }
     ]
@@ -76,8 +74,7 @@ const groups = [
       { from: functional, def: 'element-search', title: 'Search', 'x-i18n-title': { fr: 'Barre de recherche' } },
       { from: functional, def: 'element-topics', title: 'Topics list', 'x-i18n-title': { fr: 'Liste de thématiques' } },
       { from: functional, def: 'element-metrics', title: 'Key metrics (deprecated)', 'x-i18n-title': { fr: 'Chiffres clés (déprécié)' } },
-      { from: functional, def: 'element-contact', title: 'Contact form', 'x-i18n-title': { fr: 'Formulaire de contact' } },
-      { from: functional, def: 'element-custom-agent', title: 'Custom AI assistant (beta)', 'x-i18n-title': { fr: 'Assistant IA personnalisé (bêta)' } }
+      { from: functional, def: 'element-contact', title: 'Contact form', 'x-i18n-title': { fr: 'Formulaire de contact' } }
     ]
   },
   {
@@ -132,6 +129,17 @@ const groups = [
       { from: news, def: 'element-news-list', title: 'News list', 'x-i18n-title': { fr: "Liste d'actualités" } },
       { from: news, def: 'element-news-card', title: 'News card', 'x-i18n-title': { fr: "Vignette d'actualité" } }
     ]
+  },
+  {
+    title: 'Advanced',
+    'x-i18n-title': { fr: 'Avancé' },
+    icon: mdiCogOutline,
+    items: [
+      { from: basics, def: 'element-iframe', title: 'IFrame', 'x-i18n-title': { fr: 'Page web externe (iframe)' } },
+      { from: basics, def: 'element-mermaid', title: 'Mermaid diagram (beta)', 'x-i18n-title': { fr: 'Diagramme Mermaid (Bêta)' } },
+      { from: navigation, def: 'element-breadcrumbs', title: 'Breadcrumbs', 'x-i18n-title': { fr: 'Fil d\'Ariane' } },
+      { from: functional, def: 'element-custom-agent', title: 'Custom AI assistant (beta)', 'x-i18n-title': { fr: 'Assistant IA personnalisé (bêta)' } }
+    ]
   }
 ]
 
@@ -181,7 +189,7 @@ export default {
       oneOfLayout: {
         label: 'Type of element',
         'x-i18n-label': {
-          fr: "Type d'élément"
+          fr: 'Type de bloc'
         },
         autocomplete: true,
         oneOfItems
