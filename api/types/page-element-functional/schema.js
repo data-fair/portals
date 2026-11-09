@@ -20,18 +20,22 @@ export default {
           'x-i18n-title': { fr: "Titre de l'assistant" },
           type: 'string'
         },
+        // DEPRECATED with focusDatasets (agents libs 0.7 ignore them, docs/architecture/agent.md): kept for
+        // existing pages; remove with an upgrade script in a future release.
         systemPrompt: {
           title: 'Instructions (prompt)',
-          description: 'Describe the role of this assistant and the topic it helps with.',
-          'x-i18n-description': { fr: 'Décrivez le rôle de cet assistant et le sujet sur lequel il aide.' },
+          deprecated: true,
+          description: 'Deprecated, ignored since agents 0.7 (a persona is now a configured agent, chosen by its id). Kept so existing configurations stay valid; to be removed in a future release.',
+          'x-i18n-description': { fr: 'Obsolète, ignoré depuis agents 0.7 (une persona est désormais un agent configuré, choisi par son identifiant). Conservé pour que les configurations existantes restent valides ; sera supprimé dans une prochaine version.' },
           type: 'string',
           layout: 'textarea'
         },
         focusDatasets: {
           title: 'Focus datasets',
           'x-i18n-title': { fr: 'Jeux de données prioritaires' },
-          description: 'The assistant focuses its exploration on these datasets (without being strictly limited to them).',
-          'x-i18n-description': { fr: "L'assistant concentre ses explorations sur ces jeux de données (sans s'y limiter strictement)." },
+          deprecated: true,
+          description: 'Deprecated, ignored since agents 0.7 (a persona is now a configured agent, chosen by its id). Kept so existing configurations stay valid; to be removed in a future release.',
+          'x-i18n-description': { fr: 'Obsolète, ignoré depuis agents 0.7 (une persona est désormais un agent configuré, choisi par son identifiant). Conservé pour que les configurations existantes restent valides ; sera supprimé dans une prochaine version.' },
           type: 'array',
           items: {
             type: 'object',

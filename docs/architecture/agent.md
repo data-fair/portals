@@ -61,10 +61,16 @@ portal (Nuxt, <portal>.portals.<host>/...)           ← this repo's portal/
   the model on every turn. It used to be the chat's system prompt, which agents libs 0.7
   ignore (`hostInitConfig` drops the `systemPrompt` prop: a persona is a configured agent,
   chosen by `agentId`).
-- **Known regression since agents libs 0.7: the custom persona.** `agentChat.systemPrompt` and
-  the `custom-agent` page block's prompt, focus datasets and page containment are not applied;
-  their replacement needs an `agentId`-based configuration, to be decided
-  (`tests/features/portal-rendering/custom-agent-block.e2e.spec.ts` is `test.fixme` until then).
+- **Deprecated since agents libs 0.7: the custom persona.** `agentChat.systemPrompt` and the
+  `custom-agent` page block's `systemPrompt` and `focusDatasets` are ignored by the chat (agents
+  warns once in the console). They stay in the schemas, marked `deprecated` with a note in the
+  editors, only so that stored portal configurations and pages remain valid during the transition;
+  `agentChat.systemPrompt` lost its default. **Cleanable in a future release:** remove the three
+  fields from `api/types/portal-config-agent-chat/schema.js` and
+  `api/types/page-element-functional/schema.js`, with an upgrade script stripping them from stored
+  configurations (and drafts), and delete the `test.fixme` of
+  `tests/features/portal-rendering/custom-agent-block.e2e.spec.ts`. A persona, if one is wanted
+  again, is a configured agent chosen by `agentId`.
 - Tools are registered on every portal page, independent of whether the chat is shown.
 
 ## Manager tools (back-office)

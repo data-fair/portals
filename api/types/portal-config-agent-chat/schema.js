@@ -59,11 +59,15 @@ export default {
       default: 'Assistant IA',
       layout: { if: 'parent.data?.active' }
     },
+    // DEPRECATED (agents libs 0.7 ignore it, docs/architecture/agent.md): kept for existing configurations,
+    // no default any more; remove with an upgrade script in a future release.
     systemPrompt: {
       type: 'string',
       title: 'System prompt',
       'x-i18n-title': { fr: 'Prompt système' },
-      default: 'Vous êtes un assistant IA intégré à un portail de données. Aidez les utilisateurs à trouver et comprendre les jeux de données disponibles.',
+      deprecated: true,
+      description: 'Deprecated, ignored since agents 0.7 (a persona is now a configured agent, chosen by its id). Kept so existing configurations stay valid; to be removed in a future release.',
+      'x-i18n-description': { fr: 'Obsolète, ignoré depuis agents 0.7 (une persona est désormais un agent configuré, choisi par son identifiant). Conservé pour que les configurations existantes restent valides ; sera supprimé dans une prochaine version.' },
       layout: {
         comp: 'textarea',
         if: 'parent.data?.active'

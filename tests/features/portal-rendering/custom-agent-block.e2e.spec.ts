@@ -6,9 +6,9 @@ const user1 = await axiosAuth('test_admin@test.com')
 test.describe('custom agent block', () => {
   test.beforeEach(clean)
 
-  // Known regression since agents libs 0.7 (docs/architecture/agent.md, « the custom persona »):
-  // hostInitConfig drops the block's prompt, so the stored init config has no `prompt`. The
-  // replacement needs an agentId-based configuration: a user decision.
+  // The block's prompt is deprecated since agents libs 0.7 (docs/architecture/agent.md, « the custom
+  // persona »): hostInitConfig ignores it. Kept as fixme until the deprecated fields are cleaned,
+  // then delete this test.
   test.fixme('renders an inline agent iframe with composed title and prompt', async ({ page, goToPortal }) => {
     const portal = (await user1.post('/api/portals', {
       config: { title: 'Block Portal', menu: { children: [] }, agentChat: { active: false } }
