@@ -154,11 +154,13 @@ test.describe('GET /pages/:id/preview', () => {
     const { portal, page } = await seed(orgAdmin)
     await setIngressUrl(portal._id, 'http://127.0.0.1:1')
     const statuses: number[] = []
-    for (let i = 0; i < 31; i++) {
+    // defaultLimits.pagePreviews.nb
+    const nb = 20
+    for (let i = 0; i < nb + 1; i++) {
       statuses.push(await statusOf(orgContrib.get(`/api/pages/${page._id}/preview`, { params: { draft: false, fullPage: false } })))
     }
-    assert.ok(statuses.slice(0, 30).every(status => status !== 429), statuses.join())
-    assert.equal(statuses[30], 429)
+    assert.ok(statuses.slice(0, nb).every(status => status !== 429), statuses.join())
+    assert.equal(statuses[nb], 429)
     const refused = await orgContrib.get(`/api/pages/${page._id}/preview`, { validateStatus: () => true })
     assert.match(refused.headers['retry-after'], /^\d+$/)
   })

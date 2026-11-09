@@ -29,7 +29,7 @@ export default {
     nbPages: -1,
     nbDomains: -1,
     // renders of the preview of a page per user (expensive: a browser page each)
-    pagePreviews: { duration: 600, nb: 30 }
+    pagePreviews: { duration: 60, nb: 20 }
   },
   portalUrlPattern: undefined,
   privateIngressManagerUrl: undefined,
