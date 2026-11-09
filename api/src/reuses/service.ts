@@ -7,6 +7,7 @@ import eventsQueue from '@data-fair/lib-node/events-queue.js'
 import { renderMarkdown } from '@data-fair/portals-shared-markdown'
 import mongo from '#mongo'
 import { assertOwnerPortals } from '../portals/service.ts'
+import { transferResourceImages } from '../images/service.ts'
 
 const debug = debugModule('reuses')
 
@@ -80,20 +81,7 @@ export const patchReuse = async (
     }
 
     // Update ownership of associated images
-    await mongo.images.updateMany(
-      {
-        'owner.type': reuse.owner.type,
-        'owner.id': reuse.owner.id,
-        'resource.type': 'reuse',
-        'resource._id': reuse._id
-      },
-      {
-        $set: {
-          'owner.type': patch.owner.type,
-          'owner.id': patch.owner.id
-        }
-      }
-    )
+    await transferResourceImages({ type: 'reuse', _id: reuse._id }, reuse.owner, patch.owner)
   }
 
   const fullPatch = {

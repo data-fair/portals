@@ -7,7 +7,7 @@ import eventsQueue from '@data-fair/lib-node/events-queue.js'
 import { renderMarkdown } from '@data-fair/portals-shared-markdown'
 import { randomUUID } from 'node:crypto'
 import mongo from '#mongo'
-import { duplicateImage } from '../images/service.ts'
+import { duplicateImage, transferResourceImages } from '../images/service.ts'
 import { assertNbPagesLimit } from '../limits/service.ts'
 import { assertOwnerPortals } from '../portals/service.ts'
 import { traversePageElements, resolvePageAnchors } from './operations.ts'
@@ -206,7 +206,8 @@ export const patchPage = async (page: Page, patch: Partial<Page>, session: Sessi
   // Handle standard page type publication: auto-switch pages of same type on the same portal
   if (patch.portals && standardPageTypes.includes(page.type)) {
     if (addedPortals.length > 0) {
-      standardReplacements = await switchStandardPages(page, addedPortals)
+      // the pages of the owner it will have: a transfer and an attachment can come in one PATCH
+      standardReplacements = await switchStandardPages({ ...page, owner: patch.owner ?? page.owner }, addedPortals)
     }
   }
 
@@ -222,20 +223,7 @@ export const patchPage = async (page: Page, patch: Partial<Page>, session: Sessi
     assertAccountRole(session, page.owner, 'admin')
     assertAccountRole(session, patch.owner, 'admin')
     if (patch.owner.type !== page.owner.type || patch.owner.id !== page.owner.id) await assertNbPagesLimit(patch.owner)
-    await mongo.images.updateMany(
-      {
-        'owner.type': page.owner.type,
-        'owner.id': page.owner.id,
-        'resource.type': 'page',
-        'resource._id': page._id
-      },
-      {
-        $set: {
-          'owner.type': patch.owner.type,
-          'owner.id': patch.owner.id
-        }
-      }
-    )
+    await transferResourceImages({ type: 'page', _id: page._id }, page.owner, patch.owner)
   }
 
   const fullPatch = {

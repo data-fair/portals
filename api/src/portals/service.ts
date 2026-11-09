@@ -16,7 +16,7 @@ import { forEachFooterBlock, footerImageRefs, hasKoumoulMention } from '#types/p
 import mongo from '#mongo'
 import config from '#config'
 import log from '@data-fair/lib-node/log.js'
-import { duplicateImage } from '../images/service.ts'
+import { duplicateImage, transferResourceImages } from '../images/service.ts'
 import { getFontFamilyAssets } from '../fonts/service.ts'
 import { type SyncCredentials, assertCanSyncPortal, subscriptionRequests, syncPath, foreignPortalId, syncErrorStatus } from './operations.ts'
 
@@ -89,20 +89,7 @@ export const patchPortal = async (portal: Portal, patch: Partial<Portal>, sessio
   // Change of ownership - Check permissions and propagate to images
   if (patch.owner) {
     assertAccountRole(session, patch.owner, 'admin')
-    await mongo.images.updateMany(
-      {
-        'owner.type': portal.owner.type,
-        'owner.id': portal.owner.id,
-        'resource.type': 'portal',
-        'resource._id': portal._id
-      },
-      {
-        $set: {
-          'owner.type': patch.owner.type,
-          'owner.id': patch.owner.id
-        }
-      }
-    )
+    await transferResourceImages({ type: 'portal', _id: portal._id }, portal.owner, patch.owner)
   }
 
   const fullPatch = {
