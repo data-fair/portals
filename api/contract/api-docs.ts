@@ -404,7 +404,7 @@ const paths = {
         { in: 'query', name: 'portal', required: false, description: 'The portal whose theme the preview uses (draft) or that serves the page (draft=false), one of those the page is attached to or requested on (default: the first of its portals, else the first portal it is requested on).', schema: { type: 'string' } },
         { in: 'query', name: 'draft', required: false, description: 'Render the draft of the page as the page editor previews it (blocks with the theme of the portal, without header and footer, placeholder items in catalogs) instead of the published page on the portal. The published page needs the page to be attached to the portal.', schema: { type: 'boolean', default: true } },
         { in: 'query', name: 'viewport', required: false, description: 'Size of the simulated screen.', schema: { type: 'string', enum: ['desktop', 'mobile'], default: 'desktop' } },
-        { in: 'query', name: 'fullPage', required: false, description: 'Capture the whole height of the page instead of the visible screen only.', schema: { type: 'boolean', default: true } }
+        { in: 'query', name: 'fullPage', required: false, description: 'Capture the whole height of the page instead of the visible screen only. Off by default: a tall capture is shrunk before you see it, so its text becomes hard to read; the accessibility snapshot covers the whole page either way (shortened when very long).', schema: { type: 'boolean', default: false } }
       ],
       responses: ok('The screenshot and the report of the render.', {
         type: 'object',

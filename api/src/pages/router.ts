@@ -162,7 +162,7 @@ router.get('/:id/preview', requireOperationScope('previewPage'), async (req, res
 
   const query = req.query as Record<string, unknown>
   const draft = booleanQuery(query.draft, 'draft', true)
-  const fullPage = booleanQuery(query.fullPage, 'fullPage', true)
+  const fullPage = booleanQuery(query.fullPage, 'fullPage', false)
   if (query.viewport !== undefined && query.viewport !== 'desktop' && query.viewport !== 'mobile') throw httpError(400, 'query parameter "viewport" must be desktop or mobile')
   const portalId = query.portal ?? page.portals[0] ?? page.requestedPortals[0]
   if (!portalId) throw httpError(400, 'the page is attached to no portal and requested on none: there is nothing to render it on')
