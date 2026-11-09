@@ -47,16 +47,19 @@ export async function runAgentCase (
     afterRun: async ({ exports, error }) => {
       const parsed: ParsedExport[] = exports.map(parseConversationExport)
       let after: PortalsState | undefined
+      let readError = ''
       if (ids) {
         try {
           after = await readPortalsState(ids.portalId)
-        } catch {}
+        } catch (err: any) {
+          readError = ` (${err?.response ? `${err.response.status} ${String(err.response.data).slice(0, 200)}` : err instanceof Error ? err.message : String(err)})`
+        }
       }
       // a run that never reached the situation its case is about tested nothing: invalid, not judged
       const premiseError = error
         ? undefined
         : (!ids || !before || !after)
-            ? 'premise not checked: the portals state could not be read'
+            ? `premise not checked: the portals state could not be read${readError}`
             : !simCase.premise.holds({ exports: parsed, ids, before, after })
                 ? `premise not met: ${simCase.premise.description}`
                 : undefined
