@@ -101,12 +101,16 @@ test.describe('agent surface of the api docs', () => {
   test('member-written resources are closed world, reuses and the page preview stay open', async () => {
     const toolSet = await loadSurface()
     const openWorld = (name: string) => toolSet.tools.find(t => t.name === name)?.annotations?.openWorldHint
-    for (const name of ['list_portals', 'get_portal', 'list_pages', 'get_page', 'create_page', 'publish_page', 'upload_image']) {
+    for (const name of ['list_portals', 'get_portal', 'list_pages', 'get_page', 'create_page', 'publish_page', 'upload_image', 'page_config_getData', 'page_config_saveForm', 'portal_config_getData', 'portal_config_saveForm']) {
       assert.equal(openWorld(name), false, name)
     }
     // submitted by a portal's users from other accounts
     for (const name of ['list_reuses', 'get_reuse']) assert.notEqual(openWorld(name), false, name)
     assert.equal(openWorld('preview_portal_page'), true)
+    // the form tools' titles, an approval card's heading: the group's title and the verb (openapi-mcp 0.11)
+    const title = (name: string) => toolSet.tools.find(t => t.name === name)?.annotations?.title
+    assert.equal(title('page_config_saveForm'), 'Page draft content (published only by portals_publish_page) — save')
+    assert.equal(title('portal_config_setFieldValue'), 'Portal draft configuration (published only by portals_publish_portal_config) — set a field')
   })
 
   test('the page preview is a read tool returning the screenshot as an image and the report as text', async () => {
