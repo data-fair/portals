@@ -24,6 +24,7 @@ How a data portal is configured: its model (draft and live configuration, owner,
 - Reading a portal needs admin or contrib on its owner (or membership of one of its contributor departments). Editing its draft, publishing, settings, creation and deletion need **admin** of the portal's owner. A department is an owner of its own; an organization-level role covers every department.
 - An agent's token has a tier per family. The **write** tier *prepares*: edit and save the draft (portals_portal_config tools), discard it, upload images and font files. The **admin** tier *puts live or changes hands*: **portals_publish_portal_config**, **portals_update_portal_settings**, **portals_create_portal**, **portals_delete_portal**, **portals_delete_font_asset**.
 - With a write-tier token, prepare and save the draft, then tell the person what remains: publish the draft of portal *X* (id), and any settings change. Never claim a change is online when only the draft was saved.
+- Handing over to a person, name where they do it, with the link: the portal's screen in the back-office, `/portals-manager/portals/<id>` on the platform's address, where « Valider le brouillon », in the actions panel on the right, publishes the draft (« Annuler le brouillon » discards it). Give the draft address too (`<id>.draft` next to the portal's address) to look at it first.
 
 ## A portal created through the API has no pages
 
