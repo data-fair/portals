@@ -75,7 +75,8 @@ test.describe('header submenu accessibility', () => {
     await goToPortal(portal._id)
 
     const tabs = page.locator('.nav-tabs .v-tab')
-    await expect(tabs).toHaveCount(2)
+    // the server renders the drawer activator, the tabs only exist once hydrated
+    await expect(tabs).toHaveCount(2, { timeout: 10_000 })
     // VBtn wraps the slot in a <span>, so the patched slider must be phrasing content
     expect(await page.locator('.nav-tabs .v-tab__slider').first().evaluate((el) => el.tagName)).toBe('SPAN')
     // `value` mirrors the tabs' v-model but is not a valid attribute on <a>

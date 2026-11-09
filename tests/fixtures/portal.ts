@@ -22,6 +22,8 @@ export const test = base.extend<{
         // no followed redirect: the browser would show its target under the redirecting URL
         const response = await route.fetch({ timeout: 0, maxRedirects: 0 })
         const headers = response.headers()
+        // fulfill refuses a redirect status: a refresh makes the browser navigate, through this route again
+        if (headers.location) return route.fulfill({ contentType: 'text/html', body: `<meta http-equiv="refresh" content="0; url=${headers.location}">` })
         const csp = headers['content-security-policy']
         if (csp) headers['content-security-policy'] = csp.replace(/upgrade-insecure-requests;?\s*/, '')
         await route.fulfill({ response, headers })
