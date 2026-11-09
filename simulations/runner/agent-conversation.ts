@@ -42,7 +42,7 @@ export async function runAgentCase (
       ids = await setup()
       before = await readPortalsState(ids.portalId)
       // into the agent's organization: an instructor is resolved against the session's active account
-      await goToWithAuth(simCase.route, OWNER_ADMIN_ID, { org: OWNER.id })
+      await goToWithAuth(simCase.route, simCase.person ?? OWNER_ADMIN_ID, { org: OWNER.id })
     },
     afterRun: async ({ exports, error }) => {
       const parsed: ParsedExport[] = exports.map(parseConversationExport)

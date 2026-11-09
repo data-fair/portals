@@ -22,8 +22,9 @@ for (const simCase of selectOwnCases(agentCases)) {
     await runAgentCase(simCase, page, goToWithAuth, async () => {
       const ids = await seedAgentFixtures()
       await seedSettings(ASSISTANT_MODEL, TOOLS_MODEL)
-      await eraseConversations(OWNER_ADMIN_ID)
-      await seedAutonomousAgent(simCase.agent)
+      const person = simCase.person ?? OWNER_ADMIN_ID
+      await eraseConversations(person)
+      await seedAutonomousAgent(simCase.agent, undefined, undefined, person)
       await assertAgentTools(simCase.agent, simCase.tools.required, simCase.tools.forbidden)
       return ids
     })

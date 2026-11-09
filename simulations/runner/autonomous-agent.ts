@@ -76,6 +76,8 @@ export type RunState = { exports: ParsedExport[], ids: AgentSeedIds, before: Por
 export type AgentCase = SimulationCase & {
   surface: 'autonomous-agent',
   agent: AgentId,
+  /** The member of test_org1 who talks to the agent, and its instructor (default test_admin, an organization admin). */
+  person?: string,
   /** Checked before any model call (assertAgentTools): a run without them would test nothing. */
   tools: { required: string[], forbidden?: string[] },
   /** What must have happened for the run to have tested its case; an invalid run is never judged. */
@@ -94,11 +96,11 @@ const superAdmin = async () => {
 }
 
 /**
- * Create the agent afresh, enrolled with its NHI, instructed by test_admin. Deleted first, which
+ * Create the agent afresh, enrolled with its NHI, instructed by `instructor` (default test_admin). Deleted first, which
  * takes its conversations with it: the agents page reopens the agent's latest thread, so a kept
  * history would carry an earlier run's conversation into this one.
  */
-export async function seedAutonomousAgent (agentId: AgentId, nhi: string = AGENT_IDENTITIES[agentId].nhi, config: SimulatedAgentConfig = {}) {
+export async function seedAutonomousAgent (agentId: AgentId, nhi: string = AGENT_IDENTITIES[agentId].nhi, config: SimulatedAgentConfig = {}, instructor: string = OWNER_ADMIN_ID) {
   const admin = await superAdmin()
   await admin.delete(`${ROOT}/agents/api/autonomous-agents/${OWNER.type}/${OWNER.id}/${agentId}`, { validateStatus: status => status < 300 || status === 404 })
   await admin.post(`${ROOT}/agents/api/test-env/autonomous-agent`, {
@@ -110,7 +112,7 @@ export async function seedAutonomousAgent (agentId: AgentId, nhi: string = AGENT
     autonomousAgent: {
       ...DEFAULT_SIMULATED_AGENT,
       ...config,
-      instructors: [{ mode: 'member', type: 'user', id: OWNER_ADMIN_ID }],
+      instructors: [{ mode: 'member', type: 'user', id: instructor }],
       enabled: true
     }
   })
