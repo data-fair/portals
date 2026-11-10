@@ -109,6 +109,22 @@ test.describe('GET /pages/:id/preview', () => {
     assert.doesNotMatch(res.data.text, /Texte du brouillon/)
   })
 
+  test('a healthy published page renders without console errors, chat on and no favicon', async () => {
+    skipUnlessRenderable()
+    // the chat cannot open in the GET-only pseudo session of a preview, and a portal without favicon used to
+    // let the browser request /favicon.ico: both logged errors that made every render look broken
+    const portal = (await orgAdmin.post('/api/portals', { config: { title: 'P', menu: { children: [] }, agentChat: { active: true, visibleTo: ['admin'] } } })).data
+    const page = (await orgAdmin.post('/api/pages', {
+      type: 'generic',
+      config: { title: 'Healthy', elements: [{ type: 'text', content: 'Un texte.' }], genericMetadata: { slug: 'healthy' } },
+      portals: [portal._id]
+    })).data
+    const res = await orgAdmin.get(`/api/pages/${page._id}/preview`, { params: { draft: false } })
+    assert.equal(res.status, 200)
+    assert.deepEqual(res.data.report.consoleErrors, [], JSON.stringify(res.data.report.consoleErrors))
+    assert.ok(!res.data.report.failedRequests.some((r: any) => /agent-session|favicon/.test(r.url)), JSON.stringify(res.data.report.failedRequests))
+  })
+
   test('draft=false is refused for a page that is only requested on the portal', async () => {
     const { portal } = await seed()
     const page = (await orgAdmin.post('/api/pages', { type: 'generic', config: { title: 'Requested', elements: [], genericMetadata: { slug: 'requested' } } })).data

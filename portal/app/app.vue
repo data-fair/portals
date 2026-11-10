@@ -6,7 +6,8 @@
       <ClientOnly><UiNotif /></ClientOnly>
       <ClientOnly><AcceptCookies /></ClientOnly>
     </NuxtLayout>
-    <ClientOnly>
+    <!-- a pseudo session (the agents' page previews) is GET-only: the chat could not open, it would only log errors -->
+    <ClientOnly v-if="!session.state.user?.pseudoSession">
       <AgentChat
         :portal-config="$portal.config"
         :portal-id="$portal._id"
@@ -60,7 +61,10 @@ const meta = [
   { name: 'color-scheme', content: $portal.config.theme.dark ? 'light dark' : 'light' }
 ]
 if ($portal.draft || !$portal.config.allowRobots) meta.push({ name: 'robots', content: 'noindex' })
-const link = $portal.config.favicon ? [{ rel: 'icon' as const, type: 'image/png', href: getPortalImageSrc($portal.config.favicon, false) }] : []
+// without a favicon, an empty icon: else every browser requests /favicon.ico and logs its 404
+const link = $portal.config.favicon
+  ? [{ rel: 'icon' as const, type: 'image/png', href: getPortalImageSrc($portal.config.favicon, false) }]
+  : [{ rel: 'icon' as const, href: 'data:,' }]
 
 useHead({
   title: $portal.config.title,
