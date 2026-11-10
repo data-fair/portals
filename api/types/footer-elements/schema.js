@@ -231,14 +231,14 @@ const elementButtons = {
       title: 'Button style',
       'x-i18n-title': { fr: 'Style des boutons' },
       description: 'The "Tonal" style is not recommended for accessibility: the contrast between the text and its tinted background may be insufficient.',
-      'x-i18n-description': { fr: "Le style « Teinté » est déconseillé pour l'accessibilité : le contraste entre le texte et son fond teinté peut être insuffisant." },
+      'x-i18n-description': { fr: "Le style « Avec fond teinté » est déconseillé pour l'accessibilité : le contraste entre le texte et son fond teinté peut être insuffisant." },
       default: 'text',
       oneOf: [
-        { const: 'text', title: 'Text', 'x-i18n-title': { fr: 'Texte' } },
-        { const: 'outlined', title: 'Outlined', 'x-i18n-title': { fr: 'Contour' } },
-        { const: 'tonal', title: 'Tonal', 'x-i18n-title': { fr: 'Teinté' } },
-        { const: 'flat', title: 'Filled', 'x-i18n-title': { fr: 'Plein' } },
-        { const: 'elevated', title: 'Elevated', 'x-i18n-title': { fr: 'Surélevé' } }
+        { const: 'text', title: 'Text', 'x-i18n-title': { fr: 'Texte seul' } },
+        { const: 'outlined', title: 'Outlined', 'x-i18n-title': { fr: 'Avec bordure' } },
+        { const: 'tonal', title: 'Tonal', 'x-i18n-title': { fr: 'Avec fond teinté' } },
+        { const: 'flat', title: 'Filled', 'x-i18n-title': { fr: 'Avec fond coloré' } },
+        { const: 'elevated', title: 'Elevated', 'x-i18n-title': { fr: 'Avec élévation' } }
       ]
     },
     items: linksList('Add a button', 'Ajouter un bouton'),
