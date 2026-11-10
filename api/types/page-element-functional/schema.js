@@ -626,8 +626,8 @@ export default {
           layout: 'switch',
           title: 'Show the social network links',
           'x-i18n-title': { fr: 'Afficher les liens de réseaux sociaux' },
-          description: 'No link is shown until a social network is set in the portal configuration ("General settings › Social networks").',
-          'x-i18n-description': { fr: "Aucun lien n'est affiché tant qu'aucun réseau social n'est renseigné dans la configuration du portail (« Paramètres généraux › Réseaux sociaux »)." }
+          description: 'No link is shown until a social network is set in the portal configuration ("Contact › Social networks").',
+          'x-i18n-description': { fr: "Aucun lien n'est affiché tant qu'aucun réseau social n'est renseigné dans la configuration du portail (« Contact › Réseaux sociaux »)." }
         },
         mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' },
         sendButton: {

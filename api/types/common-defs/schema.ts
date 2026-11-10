@@ -84,6 +84,8 @@ export default {
       type: 'string',
       title: 'Density',
       'x-i18n-title': { fr: 'Densité' },
+      description: 'Height of buttons, fields and labels. Does not change the text size.',
+      'x-i18n-description': { fr: 'Hauteur des boutons, champs et étiquettes. Ne change pas la taille du texte.' },
       oneOf: [
         { const: 'default', title: 'Spacious', 'x-i18n-title': { fr: 'Aérée' } },
         { const: 'comfortable', title: 'Normal', 'x-i18n-title': { fr: 'Normale' } },

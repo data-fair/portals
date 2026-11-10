@@ -2,7 +2,7 @@ export default {
   $id: 'https://github.com/data-fair/portals/portal-config-analytics-tracker',
   'x-exports': [],
   type: 'object',
-  oneOfLayout: { emptyData: true },
+  oneOfLayout: { emptyData: true, label: 'Audience measurement tool', 'x-i18n-label': { fr: "Outil de mesure d'audience" } },
   discriminator: { propertyName: 'type' },
   default: {
     type: 'none'
@@ -39,7 +39,8 @@ export default {
           additionalProperties: false,
           properties: {
             measurementIds: {
-              title: 'Google Analytics MEASUREMENT IDs',
+              title: 'Google Analytics measurement IDs',
+              'x-i18n-title': { fr: 'Identifiants de mesure Google Analytics' },
               type: 'array',
               items: {
                 type: 'string'
@@ -110,7 +111,8 @@ export default {
             },
             collectDomain: {
               type: 'string',
-              title: 'Collect Domain'
+              title: 'Collection domain',
+              'x-i18n-title': { fr: 'Domaine de collecte' }
             }
           }
         },

@@ -519,8 +519,8 @@ export default {
           type: 'string',
           layout: {
             slots: {
-              before: '**Important**: for the iframe integration to work properly, you must add the domain name of the URL in **Portal configuration** → **General settings** → **Security**.',
-              'x-i18n-before': { fr: "**Important** : Pour que l'intégration IFrame fonctionne correctement, vous devez ajouter le nom de domaine de l'URL dans la **Configuration du portail** → **Paramètres généraux** → **Sécurité**." }
+              before: '**Important**: for the iframe integration to work properly, you must add the domain name of the URL in **Portal configuration** → **Access and distribution** → **Iframe integration**.',
+              'x-i18n-before': { fr: "**Important** : Pour que l'intégration IFrame fonctionne correctement, vous devez ajouter le nom de domaine de l'URL dans la **Configuration du portail** → **Accès et diffusion** → **Intégration en iframe**." }
             }
           }
         },
