@@ -44,9 +44,9 @@ An agent's token has a tier per family, and the tools offered follow it:
 
 With a write-tier token, prepare everything, then tell the person exactly what remains for them to do: publish the draft of page *X* (id), attach it to portal *Y* (id), request its publication, transfer it… Never claim a page is online when only its draft was saved.
 
-A tier is what **your token** may do, not the role a person needs: a contributor of the page's owner can publish its draft and request its publication, only attaching needs an administrator (table above). You do not know the role of the person you talk to: say who can do each step, never that they cannot.
+A tier is what **your token** may do, not the role a person needs: a contributor of the page's owner can publish its draft and request its publication, only attaching needs an administrator (table above). The conversation's state may give the role of the person you talk to (`person-role`): tell them which steps they can do themselves. Their real permissions can be finer than that role, so never tell them they cannot; without it, say who can do each step.
 
-Handing over to a person, name where they do it in the back-office, with the link: the page's screen, `/portals-manager/pages/<id>` on the platform's address (the address of the **Page URL** of portals_preview_portal_page), where:
+Handing over to a person, name where they do it in the back-office, with the link: the page's screen, `<site>/portals-manager/pages/<id>`, with the address of the `site` fact of the conversation's state (else the address of the **Page URL** of portals_preview_portal_page), as a full link, where:
 
 - « Aperçu (brouillon) » shows the draft;
 - « Valider le brouillon », in the actions panel on the right, publishes the draft (« Annuler le brouillon » discards it);
