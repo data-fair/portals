@@ -36,7 +36,7 @@
     <!-- List of reuses -->
     <v-row
       v-else
-      class="d-flex align-stretch"
+      class="d-flex align-stretch df-card-grid"
     >
       <v-col
         v-for="reuse in displayReuses"
@@ -45,7 +45,10 @@
         sm="6"
         cols="12"
       >
-        <reuse-card-ui :reuse="reuse" />
+        <reuse-card-ui
+          :reuse="reuse"
+          :portals-by-id="portalsById"
+        />
       </v-col>
     </v-row>
 
@@ -64,6 +67,7 @@
 <script setup lang="ts">
 import { mdiPageNext } from '@mdi/js'
 import type { ReusesGetRes, ReusesFacets } from '#api/doc/reuses/get-res'
+import type { Portal } from '#api/types/portal'
 
 const showAll = useBooleanSearchParam('showAll')
 const search = useStringSearchParam('q')
@@ -76,7 +80,7 @@ const reusesParams = computed(() => {
   const params: Record<string, any> = {
     size: 10000,
     sort: sort.value,
-    select: '_id,title,owner,requestedPortals'
+    select: '_id,title,owner,submitter,createdAt,updatedAt,portals,requestedPortals,config.author,config.datasets'
   }
   if (portals.value.length) params.portal = portals.value.join(',')
   if (requestedPortals.value.length) params.requestedPortal = requestedPortals.value.join(',')
@@ -86,6 +90,18 @@ const reusesParams = computed(() => {
 
 const reusesFetch = useFetch<ReusesGetRes>($apiPath + '/reuses', { query: reusesParams })
 const facets = computed<ReusesFacets>(() => reusesFetch.data.value?.facets ?? { portals: {}, requestedPortals: {} })
+
+// title and url of the portals for the publication sites of the cards
+const portalsLookupFetch = useFetch<{ results: Pick<Portal, '_id' | 'title' | 'ingress'>[] }>($apiPath + '/portals', {
+  query: computed(() => ({ select: '_id,title,ingress', size: 10000, showAll: showAll.value || undefined }))
+})
+const portalsById = computed(() => {
+  const map: Record<string, { title: string, url: string }> = {}
+  for (const portal of portalsLookupFetch.data.value?.results ?? []) {
+    map[portal._id] = { title: portal.title, url: portal.ingress?.url || $uiConfig.portalUrlPattern.replace('{subdomain}', portal._id) }
+  }
+  return map
+})
 const isFiltered = computed(() => !!search.value || portals.value.length > 0 || requestedPortals.value.length > 0)
 const displayReuses = computed(() => {
   const reuses = (reusesFetch.data.value?.results ?? [])

@@ -36,7 +36,7 @@
     <!-- List of pages -->
     <v-row
       v-else
-      class="d-flex align-stretch"
+      class="d-flex align-stretch df-card-grid"
     >
       <v-col
         v-for="page in displayPages"
@@ -48,6 +48,7 @@
         <page-card
           :page="page"
           :portal-id="portals.length === 1 ? portals[0] : undefined"
+          :portals-by-id="portalsById"
         />
       </v-col>
     </v-row>
@@ -72,6 +73,7 @@ import { mdiViewDashboardEdit } from '@mdi/js'
 import { useAgentState } from '@data-fair/lib-vue-agents'
 import { PAGES_LIST_GUIDANCE } from '~/utils/agent-editor-guidance'
 import type { Page } from '#api/types/page'
+import type { Portal } from '#api/types/portal'
 import type { PagesGetRes, PagesFacets } from '#api/doc/pages/get-res'
 
 const session = useSessionAuthenticated()
@@ -99,7 +101,7 @@ const owners = useStringsArraySearchParam('owner')
 const pagesParams = computed(() => {
   const params: Record<string, any> = {
     size: 1000,
-    select: '_id,title,type,owner,config.description,config.genericMetadata'
+    select: '_id,title,type,owner,createdAt,updatedAt,portals,requestedPortals,config.genericMetadata'
   }
   if (q.value) params.q = q.value
   else params.sort = sort.value
@@ -112,6 +114,18 @@ const pagesParams = computed(() => {
 })
 const pagesFetch = useFetch<PagesGetRes>($apiPath + '/pages', { query: pagesParams })
 const facets = computed<PagesFacets>(() => pagesFetch.data.value?.facets ?? { types: {}, groups: {} })
+
+// title and url of the portals for the publication sites of the cards
+const portalsLookupFetch = useFetch<{ results: Pick<Portal, '_id' | 'title' | 'ingress'>[] }>($apiPath + '/portals', {
+  query: computed(() => ({ select: '_id,title,ingress', size: 10000, showAll: showAll.value || undefined }))
+})
+const portalsById = computed(() => {
+  const map: Record<string, { title: string, url: string }> = {}
+  for (const portal of portalsLookupFetch.data.value?.results ?? []) {
+    map[portal._id] = { title: portal.title, url: portal.ingress?.url || $uiConfig.portalUrlPattern.replace('{subdomain}', portal._id) }
+  }
+  return map
+})
 
 const displayPages = computed(() => {
   const pages = (pagesFetch.data.value?.results ?? [])

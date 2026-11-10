@@ -1,84 +1,59 @@
 <template>
   <custom-router-link :to="pageLink">
-    <v-card
-      class="h-100"
-      link
+    <card-shell
+      :title="page.title"
+      :owner="showAll || !!(page.owner.department && !session.state.account.department) ? page.owner : undefined"
     >
-      <v-card-item class="text-primary">
-        <template #title>
-          <span
-            :title="page.title"
-            class="font-weight-bold"
-          >
-            {{ page.title }}
-          </span>
-        </template>
+      <!-- Page type and group -->
+      <div
+        class="d-flex ga-4"
+        style="min-width: 0"
+      >
+        <card-meta-line
+          v-if="page.type"
+          :icon="mdiInformationOutline"
+          :text="t('pageType.' + page.type)"
+        />
+        <card-meta-line
+          v-if="page.config.genericMetadata?.group"
+          :icon="mdiFolderInformationOutline"
+          :text="page.config.genericMetadata.group.title"
+        />
+      </div>
 
-        <!-- Owner -->
-        <template #append>
-          <owner-avatar
-            v-if="showAll || !!(page.owner.department && !session.state.account.department)"
-            :owner="page.owner"
-          />
-        </template>
-      </v-card-item>
-      <v-divider />
-      <v-card-text class="pa-0">
-        <v-list
-          density="compact"
-          style="background-color: inherit;"
-        >
-          <!-- Page type -->
-          <v-list-item v-if="page.type">
-            <template #prepend>
-              <v-icon
-                :icon="mdiInformationOutline"
-                :title="t('pageType.title')"
-              />
-            </template>
-            <v-list-item-title>
-              {{ t('pageType.' + page.type) }}
-            </v-list-item-title>
-          </v-list-item>
+      <!-- Page portals/requested portals -->
+      <card-sites
+        :sites="sites(page.portals)"
+        :requested="sites(page.requestedPortals)"
+      />
 
-          <!-- Page group -->
-          <v-list-item v-if="page.config.genericMetadata?.group">
-            <template #prepend>
-              <v-icon
-                :icon="mdiFolderInformationOutline"
-                :title="t('pageType.group')"
-              />
-            </template>
-            <v-list-item-title>
-              {{ page.config.genericMetadata.group.title }}
-            </v-list-item-title>
-          </v-list-item>
-
-          <!-- Description (wrapped after 2 lines)-->
-          <v-list-item v-if="page.config.description">
-            <span class="text-two-lines">
-              {{ page.config.description }}
-            </span>
-          </v-list-item>
-        </v-list>
-      </v-card-text>
-    </v-card>
+      <template #footer>
+        <!-- Modification and creation dates -->
+        <card-dates
+          :updated-at="page.updatedAt"
+          :created-at="page.createdAt"
+        />
+      </template>
+    </card-shell>
   </custom-router-link>
 </template>
 
 <script setup lang="ts">
 import type { Page } from '#api/types/page'
-import ownerAvatar from '@data-fair/lib-vuetify/owner-avatar.vue'
 import { mdiFolderInformationOutline, mdiInformationOutline } from '@mdi/js'
 
 const { t } = useI18n()
 const session = useSessionAuthenticated()
 const showAll = useBooleanSearchParam('showAll')
 
-const { page, portalId } = defineProps<{
+const { page, portalId, portalsById = {} } = defineProps<{
   page: Page
   portalId?: string
+  // title and url of the portals, fetched once by the list
+  portalsById?: Record<string, { title: string, url: string }>
 }>()
+
+const sites = (ids?: string[]) => (ids ?? []).map(id => portalsById[id]).filter(p => !!p)
 
 const pageLink = computed(() => {
   const base = `/pages/${page._id}`
@@ -90,8 +65,6 @@ const pageLink = computed(() => {
 <i18n lang="yaml">
   en:
     pageType:
-      title: Page Type
-      group: Group
       home: Home
       contact: Contact
       accessibility: Accessibility
@@ -109,8 +82,6 @@ const pageLink = computed(() => {
       generic: Custom content
   fr:
     pageType:
-      title: Type de page
-      group: Groupe
       home: Accueil
       contact: Contact
       accessibility: Accessibilité

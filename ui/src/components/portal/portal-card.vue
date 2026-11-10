@@ -1,73 +1,40 @@
 <template>
   <custom-router-link :to="`/portals/${portal._id}`">
-    <v-card
-      class="h-100"
-      link
+    <card-shell
+      :title="portal.config.title"
+      :owner="showOwner ? portal.owner : undefined"
     >
-      <v-card-item class="text-primary">
-        <template #title>
-          <span
-            :title="portal.config.title"
-            class="font-weight-bold"
-          >
-            {{ portal.config.title }}
-          </span>
-        </template>
+      <!-- Portal url -->
+      <card-meta-line
+        :icon="mdiWeb"
+        icon-color="primary"
+        :text="url.replace(/^https?:\/\//, '')"
+      />
 
-        <!-- Owner -->
-        <template #append>
-          <owner-avatar
-            v-if="showOwner"
-            :owner="portal.owner"
-          />
-        </template>
-      </v-card-item>
-      <v-divider />
-      <v-card-text class="pa-0">
-        <v-list
-          density="compact"
-          style="background-color: inherit;"
-        >
-          <!-- Domain name -->
-          <v-list-item v-if="portal.ingress?.url">
-            <template #prepend>
-              <v-icon :icon="mdiWeb" />
-            </template>
-            {{ portal.ingress.url.replace(/^https?:\/\//, '') }}
-          </v-list-item>
+      <!-- Portal description -->
+      <div
+        v-if="portal.config.description"
+        class="df-card-desc text-body-medium"
+      >
+        {{ portal.config.description }}
+      </div>
 
-          <!-- Private / Public -->
-          <v-list-item v-if="portal.config.authentication === 'required'">
-            <template #prepend>
-              <v-icon :icon="mdiLock" />
-            </template>
-            {{ t('private') }}
-          </v-list-item>
-          <v-list-item v-else>
-            <template #prepend>
-              <v-icon :icon="mdiLockOpen" />
-            </template>
-            {{ t('public') }}
-          </v-list-item>
-
-          <!-- Description (wrapped after 2 lines)-->
-          <v-list-item v-if="portal.config.description">
-            <span class="text-two-lines">
-              {{ portal.config.description }}
-            </span>
-          </v-list-item>
-        </v-list>
-      </v-card-text>
-    </v-card>
+      <template #footer>
+        <!-- Access -->
+        <card-visibility
+          :visibility="isPrivate ? 'private' : 'public'"
+          :help="t(isPrivate ? 'privateHelp' : 'publicHelp')"
+        />
+      </template>
+    </card-shell>
   </custom-router-link>
 </template>
 
 <script setup lang="ts">
 import type { Portal } from '#api/types/portal'
-import ownerAvatar from '@data-fair/lib-vuetify/owner-avatar.vue'
-import { mdiWeb, mdiLockOpen, mdiLock } from '@mdi/js'
+import { mdiWeb } from '@mdi/js'
 
-defineProps({
+const props = defineProps({
   portal: {
     type: Object as () => Portal,
     default: null
@@ -77,13 +44,16 @@ defineProps({
 
 const { t } = useI18n()
 
+const isPrivate = computed(() => props.portal.config.authentication === 'required')
+// same rule as the "open the portal" action
+const url = computed(() => props.portal.ingress?.url || $uiConfig.portalUrlPattern.replace('{subdomain}', props.portal._id))
 </script>
 
 <i18n lang="yaml">
   en:
-    private: Private
-    public: Public
+    privateHelp: Login required to view the portal.
+    publicHelp: Portal available without login.
   fr:
-    private: Privé
-    public: Public
+    privateHelp: Connexion requise pour consulter le portail.
+    publicHelp: Portail accessible sans connexion.
 </i18n>

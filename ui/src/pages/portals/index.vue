@@ -35,7 +35,7 @@
 
     <!-- List of portals -->
     <template v-else>
-      <v-row class="d-flex align-stretch">
+      <v-row class="d-flex align-stretch df-card-grid">
         <v-col
           v-for="portal in displayPortals"
           :key="portal._id"
