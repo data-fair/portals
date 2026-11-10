@@ -26,7 +26,7 @@ services:
   #####
 
   simple-directory:
-    # SD_IMAGE: another simple-directory build (the pseudo sessions of the page preview need SECRET_PSEUDO_SESSION support)
+    # SD_IMAGE: another simple-directory build (master has the pseudo sessions of the page preview since #194)
     image: ${SD_IMAGE:-ghcr.io/data-fair/simple-directory:master}
     network_mode: host
     depends_on:
