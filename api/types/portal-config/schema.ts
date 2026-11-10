@@ -324,38 +324,38 @@ export default {
       oneOf: [
         {
           const: 'none',
-          title: 'None',
-          'x-i18n-title': { fr: 'Aucune' }
+          title: 'No login, public portal',
+          'x-i18n-title': { fr: 'Pas de connexion, portail public' }
         },
         {
           const: 'optional',
-          title: 'Optional to view protected content, configure notifications, etc',
-          'x-i18n-title': { fr: 'Optionnelle pour voir les contenus protégés, configurer des notifications, etc' }
+          title: 'Optional login (restricted content, notifications…)',
+          'x-i18n-title': { fr: 'Connexion possible (contenus réservés, notifications…)' }
         },
         {
           const: 'required',
-          title: 'Required to access the portal',
-          'x-i18n-title': { fr: 'Requise pour accéder au portail' }
+          title: 'Required login, private portal',
+          'x-i18n-title': { fr: 'Connexion obligatoire, portail privé' }
         }
       ],
-      title: 'Authentication',
-      'x-i18n-title': { fr: 'Authentification' },
+      title: 'Visitor login',
+      'x-i18n-title': { fr: 'Connexion des visiteurs' },
       default: 'optional'
     },
     allowedFrameAncestors: {
       type: 'array',
-      title: 'Domains allowed to embed this portal in an iframe',
-      'x-i18n-title': { fr: 'Domaines autorisés à intégrer ce portail en iframe' },
-      description: 'List of domains (e.g. https://example.com) allowed to display this portal in an iframe. Leave empty to forbid any iframe embedding.',
-      'x-i18n-description': { fr: 'Liste des domaines (ex: https://example.com) autorisés à afficher ce portail dans une iframe. Laissez vide pour interdire toute intégration en iframe.' },
+      title: 'Sites allowed to show this portal in their pages',
+      'x-i18n-title': { fr: 'Sites autorisés à afficher ce portail dans leurs pages' },
+      description: 'List of sites (e.g. https://example.com) allowed to display this portal in an iframe. Leave empty to forbid any iframe embedding.',
+      'x-i18n-description': { fr: 'Liste des sites (ex : https://example.com) autorisés à afficher ce portail dans une iframe. Laissez vide pour interdire toute intégration en iframe.' },
       items: { type: 'string' }
     },
     allowedFrameSources: {
       type: 'array',
-      title: 'Domains allowed for iframes embedded in this portal',
-      'x-i18n-title': { fr: 'Domaines autorisés pour les iframes intégrées dans ce portail' },
-      description: 'List of domains (e.g. https://example.com) whose content can be displayed in iframes on this portal. Leave empty to forbid any external iframe.',
-      'x-i18n-description': { fr: 'Liste des domaines (ex: https://example.com) dont les contenus peuvent être affichés dans des iframes sur ce portail. Laissez vide pour interdire toute iframe externe.' },
+      title: 'Sites this portal can show in its pages',
+      'x-i18n-title': { fr: 'Sites que ce portail peut afficher dans ses pages' },
+      description: 'List of sites (e.g. https://example.com) whose content can be displayed in iframes on this portal. Leave empty to forbid any external iframe.',
+      'x-i18n-description': { fr: 'Liste des sites (ex : https://example.com) dont les contenus peuvent être affichés dans des iframes sur ce portail. Laissez vide pour interdire toute iframe externe.' },
       items: { type: 'string' }
     },
     theme: { $ref: 'https://github.com/data-fair/lib/theme' },
