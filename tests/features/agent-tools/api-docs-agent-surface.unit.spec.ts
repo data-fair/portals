@@ -109,8 +109,8 @@ test.describe('agent surface of the api docs', () => {
     assert.equal(openWorld('preview_portal_page'), true)
     // the form tools' titles, an approval card's heading: the group's title and the verb (openapi-mcp 0.11)
     const title = (name: string) => toolSet.tools.find(t => t.name === name)?.annotations?.title
-    assert.equal(title('page_config_saveForm'), 'Page draft content (published only by portals_publish_page) — save')
-    assert.equal(title('portal_config_setFieldValue'), 'Portal draft configuration (published only by portals_publish_portal_config) — set a field')
+    assert.equal(title('page_config_saveForm'), 'Page draft content (not live until published) — save')
+    assert.equal(title('portal_config_setFieldValue'), 'Portal draft configuration (not live until published) — set a field')
   })
 
   test('the page preview is a read tool returning the screenshot as an image and the report as text', async () => {

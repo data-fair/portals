@@ -111,7 +111,8 @@ const declaredOperations: Partial<Record<ScopedOperationId | keyof typeof imageO
   },
   putPortalDraftConfig: {
     name: 'portal_config',
-    title: { en: 'Portal draft configuration (published only by portals_publish_portal_config)', fr: 'Brouillon de configuration de portail (publié seulement par portals_publish_portal_config)' },
+    // the approval card shows this title to the person: no tool name, but the draft is still said to be unpublished
+    title: { en: 'Portal draft configuration (not live until published)', fr: 'Brouillon de configuration du portail (non visible avant publication)' },
     editor: { schemaOperation: 'getPortalConfigSchema', readOperation: 'getPortalDraftConfig' }
   },
   listFontAssets: {
@@ -232,7 +233,8 @@ const declaredOperations: Partial<Record<ScopedOperationId | keyof typeof imageO
   },
   putPageDraftConfig: {
     name: 'page_config',
-    title: { en: 'Page draft content (published only by portals_publish_page)', fr: 'Brouillon de contenu de page (publié seulement par portals_publish_page)' },
+    // the approval card shows this title to the person: no tool name, but the draft is still said to be unpublished
+    title: { en: 'Page draft content (not live until published)', fr: 'Brouillon de page (non visible avant publication)' },
     editor: { schemaOperation: 'getPageConfigSchema', readOperation: 'getPageDraftConfig' }
   },
   listGroups: {
