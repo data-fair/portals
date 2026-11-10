@@ -53,8 +53,8 @@ export default {
       type: 'boolean',
       title: 'Show link-type attachments',
       'x-i18n-title': { fr: 'Afficher les pièces jointes de type lien' },
-      description: "Displays link-type attachments directly on the page in an iframe.\n\n**Important**: For the IFrame integration to work correctly, you must add the URL's domain name in **General settings** → **Security**.",
-      'x-i18n-description': { fr: "Affiche directement sur la page en iframe les pièces jointes de type lien.\n\n**Important** : Pour que l'intégration IFrame fonctionne correctement, vous devez ajouter le nom de domaine de l'URL dans **Paramètres généraux** → **Sécurité**." },
+      description: "Displays link-type attachments directly on the page in an iframe.\n\n**Important**: For the IFrame integration to work correctly, you must add the URL's domain name in **Access and distribution** → **Iframe integration**.",
+      'x-i18n-description': { fr: "Affiche directement sur la page en iframe les pièces jointes de type lien.\n\n**Important** : Pour que l'intégration IFrame fonctionne correctement, vous devez ajouter le nom de domaine de l'URL dans **Accès et diffusion** → **Intégration en iframe**." },
       layout: 'switch'
     },
 

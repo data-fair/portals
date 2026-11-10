@@ -41,8 +41,8 @@ export default {
       type: 'boolean',
       title: 'Show social network links',
       'x-i18n-title': { fr: 'Afficher les liens de réseaux sociaux' },
-      description: 'No link is shown until a social network is set in "General settings › Social networks".',
-      'x-i18n-description': { fr: "Aucun lien n'est affiché tant qu'aucun réseau social n'est renseigné dans « Paramètres généraux › Réseaux sociaux »." },
+      description: 'No link is shown until a social network is set in "Contact › Social networks".',
+      'x-i18n-description': { fr: "Aucun lien n'est affiché tant qu'aucun réseau social n'est renseigné dans « Contact › Réseaux sociaux »." },
       layout: {
         if: 'parent.data?.show',
         comp: 'switch'

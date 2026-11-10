@@ -259,8 +259,8 @@ const elementSocial = {
       type: 'string',
       title: 'Title above the icons',
       'x-i18n-title': { fr: 'Titre au-dessus des icônes' },
-      description: 'Leave empty for the default title "Find us on social media". The networks shown are those from "General settings › Social networks".',
-      'x-i18n-description': { fr: 'Laissez vide pour le titre par défaut « Retrouvez-nous sur les réseaux sociaux ». Les réseaux affichés sont ceux de « Paramètres généraux › Réseaux sociaux ».' }
+      description: 'Leave empty for the default title "Find us on social media". The networks shown are those from "Contact › Social networks".',
+      'x-i18n-description': { fr: 'Laissez vide pour le titre par défaut « Retrouvez-nous sur les réseaux sociaux ». Les réseaux affichés sont ceux de « Contact › Réseaux sociaux ».' }
     },
     mb
   }

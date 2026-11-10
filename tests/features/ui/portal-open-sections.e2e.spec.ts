@@ -4,7 +4,7 @@ import { axiosAuth, clean } from '../../support/axios.ts'
 const user1 = await axiosAuth('test_admin@test.com')
 
 // Judged simulations: the assistant's form tools changed the menu while the person stayed on
-// « Paramètres généraux », the form sub-agent claimed « Barre de navigation » was open, and the
+// the first tab, the form sub-agent claimed « Barre de navigation » was open, and the
 // person went looking for the change. A tool's write now opens the tab that shows it, and says so.
 test.describe('open sections of the portal editor', () => {
   // the vjsf page / portal editor loads in 10-25 s on a busy dev env
@@ -14,7 +14,7 @@ test.describe('open sections of the portal editor', () => {
   test('a form tool writing in another tab opens that tab', async ({ page, goToWithAuth }) => {
     const portal = (await user1.post('/api/portals', { config: { title: 'Sections Portal', menu: { children: [] } } })).data
     await goToWithAuth(`/portals-manager/portals/${portal._id}`, 'test_admin')
-    await expect(page.getByRole('tab', { name: 'Paramètres généraux' })).toHaveAttribute('aria-selected', 'true', { timeout: 30_000 })
+    await expect(page.getByRole('tab', { name: 'Identité' })).toHaveAttribute('aria-selected', 'true', { timeout: 30_000 })
     await page.waitForFunction(() => (navigator as any).modelContext?.listTools?.().some((t: any) => t.name === 'portalConfig_editArray'), null, { timeout: 15_000 })
 
     const text = await page.evaluate(async () => {
@@ -29,7 +29,7 @@ test.describe('open sections of the portal editor', () => {
   test('a form tool opens the tab the assistant wants to show', async ({ page, goToWithAuth }) => {
     const portal = (await user1.post('/api/portals', { config: { title: 'Show Portal', menu: { children: [] } } })).data
     await goToWithAuth(`/portals-manager/portals/${portal._id}`, 'test_admin')
-    await expect(page.getByRole('tab', { name: 'Paramètres généraux' })).toHaveAttribute('aria-selected', 'true', { timeout: 30_000 })
+    await expect(page.getByRole('tab', { name: 'Identité' })).toHaveAttribute('aria-selected', 'true', { timeout: 30_000 })
     await page.waitForFunction(() => (navigator as any).modelContext?.listTools?.().some((t: any) => t.name === 'portalConfig_openSection'), null, { timeout: 15_000 })
     const text = await page.evaluate(async () => {
       const result = await (navigator as any).modelContext.callTool({ name: 'portalConfig_openSection', arguments: { path: '/menu/children' } })
