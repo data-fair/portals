@@ -1,13 +1,24 @@
 import { test, expect } from '@playwright/test'
 // lib-vue-agents is a dependency of the ui and portal workspaces, installed at the root
 import { EVENT_DETAIL_MAX_CHARS } from '@data-fair/lib-vue-agents/host-events.js'
-import { editorGuidance, draftState, draftSaveState, formCompletenessState, pagePublicationState, pageDraftValidatedDetail, PAGE_CREATION_GUIDANCE as STEPS, PAGE_CREATION_AFTER, PAGES_LIST_GUIDANCE, pageCreationStep } from '../../../ui/src/utils/agent-editor-guidance.ts'
+import { editorGuidance, draftState, draftSaveState, formCompletenessState, pagePublicationState, pageViewGuidance, pageDraftValidatedDetail, PAGE_CREATION_GUIDANCE as STEPS, PAGE_CREATION_AFTER, PAGES_LIST_GUIDANCE, pageCreationStep } from '../../../ui/src/utils/agent-editor-guidance.ts'
 
 // Judged simulations showed the assistant, in both editors, inventing an
 // « Enregistrer » button or an « Actions ⋮ » menu, never knowing that edits land in
 // a draft, and never finding where the portal menu is edited. These texts are what
 // the editors now publish to the chat as host state.
 test.describe('agent editor guidance', () => {
+  // judged runs on the page screen navigated to that same screen to add blocks, and doubted the
+  // published page's address while « Voir sur … » was on screen
+  test('page view guidance names the editor, the link to the published page, and that the preview is not shown', () => {
+    const text = pageViewGuidance('abc')
+    expect(text).toContain('/pages/abc/edit-config')
+    expect(text).toContain('« Éditer le brouillon »')
+    expect(text).toContain('« Voir sur <portal> »')
+    expect(text).toContain('never sees its screenshot')
+    expect(text.length).toBeLessThan(EVENT_DETAIL_MAX_CHARS)
+  })
+
   test('page editor guidance explains the draft and hands validation to the person', () => {
     const text = Object.values(editorGuidance('page')).join('\n')
     // no sub-agent anymore: the form tools and the skill that guides them

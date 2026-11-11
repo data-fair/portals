@@ -91,6 +91,18 @@ export function formCompletenessState (valid: boolean | null, hadIncomplete: boo
  * portal menu yet. With the way to each portal's editor: judged runs opened the portals list,
  * not the portal, though it was known.
  */
+/**
+ * What the screen of a page (its view, not its editor) is, for the assistant: judged runs navigated
+ * to the screen the person was already on to have them add blocks there, and doubted the address of
+ * the published page while a « Voir sur … » link was on screen.
+ */
+export function pageViewGuidance (pageId: string): string {
+  return 'Page screen (view, not the editor): it shows the page with its « Aperçu (brouillon) » and « Publications » tabs and an actions panel on the right. ' +
+    `Its content is edited in the page editor: « Éditer le brouillon » in the actions panel, or navigate to /pages/${pageId}/edit-config. ` +
+    '« Voir sur <portal> » in the actions panel opens the published page on that portal, in a new tab: that is how the person sees it themselves. ' +
+    'preview_page renders the page for you only: the person never sees its screenshot, describe what it shows and point them to « Aperçu (brouillon) » or « Voir sur <portal> » to see it.'
+}
+
 export function pagePublicationState (portals: Array<{ id: string, title: string }>): string {
   return portals.length
     ? `published on: ${portals.map(p => `${p.title} (its editor, where its menu is edited: navigate to /portals/${p.id})`).join(', ')}`
