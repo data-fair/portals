@@ -66,7 +66,7 @@ test('toolsMismatch names the missing tools and the forbidden ones offered', () 
 
 test.describe('the case registry', () => {
   test('names are unique, filesystem-safe and distinct from the in-page cases', () => {
-    const names = ['page-de-contenu', 'publier-et-accueil', 'hors-de-portee', 'page-avec-donnees', 'parametres-du-portail']
+    const names = ['page-de-contenu', 'publier-et-accueil', 'hors-de-portee', 'page-avec-donnees', 'parametres-du-portail', 'verifier-affichage']
     assert.deepEqual(agentCases.map(c => c.name), names)
     for (const c of agentCases) assert.match(c.name, /^[a-z0-9-]+$/)
     assert.equal(new Set([...cases, ...agentCases].map(c => c.name)).size, cases.length + agentCases.length)

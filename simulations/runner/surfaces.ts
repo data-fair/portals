@@ -10,7 +10,7 @@
  * portal — the public Nuxt portal renders its own chat drawer, for an anonymous visitor.
  */
 import type { Page } from '@playwright/test'
-import type { PerceptionRoot, SimulationCase } from '@data-fair/lib-agents-sim'
+import type { PerceptionRoot, SimulationCase, ParsedExport } from '@data-fair/lib-agents-sim'
 import type { SeedIds } from './fixtures.ts'
 import { OWNER, OWNER_ADMIN_EMAIL, ROOT } from './settings.ts'
 
@@ -18,7 +18,11 @@ import { OWNER, OWNER_ADMIN_EMAIL, ROOT } from './settings.ts'
  * `host`, not `surface`: lib-agents-sim (0.12) names `surface` what a case is dispatched as
  * (in-page chat, autonomous agent, unattended); every case here is an in-page chat.
  */
-export type SimCase = SimulationCase & { host: 'backoffice' | 'portal' }
+export type SimCase = SimulationCase & {
+  host: 'backoffice' | 'portal',
+  /** What must have happened for the run to have tested its case (as the autonomous-agent cases): an invalid run is never judged. */
+  premise?: { description: string, holds: (exports: ParsedExport[]) => boolean }
+}
 
 export type Surface = {
   goto: (ids: SeedIds) => Promise<void>

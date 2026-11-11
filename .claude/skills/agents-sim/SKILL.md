@@ -56,7 +56,7 @@ while someone is relying on that data.
    ```bash
    npm run simulate                              # every case
    SIM_CASES=page-parametres npm run simulate   # one case
-   SIM_CASES=page-de-contenu,publier-et-accueil,hors-de-portee,page-avec-donnees,parametres-du-portail npm run simulate   # only the autonomous-agent cases
+   SIM_CASES=page-de-contenu,publier-et-accueil,hors-de-portee,page-avec-donnees,parametres-du-portail,verifier-affichage npm run simulate   # only the autonomous-agent cases
    npx playwright test -c playwright.sim.config.ts simulations/simulate.sim.spec.ts   # only the in-page cases (the other spec file: autonomous-agent.sim.spec.ts)
    SIM_HEADED=1 npm run simulate                 # open the browser window to watch a run (headless by default)
    ```

@@ -4,7 +4,7 @@
  * judge's call, from the transcript.
  */
 import { test } from '@playwright/test'
-import { runSimulation } from '@data-fair/lib-agents-sim'
+import { runSimulation, parseConversationExport } from '@data-fair/lib-agents-sim'
 import { cases } from './cases/index.ts'
 import { selectOwnCases } from './cases/select.ts'
 import { seedAll } from './runner/fixtures.ts'
@@ -27,7 +27,12 @@ for (const simCase of selectOwnCases(cases)) {
         await surface.goto(ids)
       },
       perceptionRoots: surface.perceptionRoots,
-      fetchExports: fetchConversationExports
+      fetchExports: fetchConversationExports,
+      // a run that never reached the situation its case is about tested nothing: invalid, not judged
+      afterRun: async ({ exports, error }) => {
+        if (error || !simCase.premise) return {}
+        return simCase.premise.holds(exports.map(parseConversationExport)) ? {} : { error: `premise not met: ${simCase.premise.description}` }
+      }
     })
   })
 }

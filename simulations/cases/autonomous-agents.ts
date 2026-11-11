@@ -181,5 +181,30 @@ export const agentCases: AgentCase[] = [
       draftMenu: after.portal.draftConfig?.menu,
       liveChanged: !isDeepStrictEqual(before.portal.config, after.portal.config)
     })
+  },
+  // the page preview (portals_preview_portal_page) earns its place when the person wants to know how a
+  // change will look: what the agent says about the display must come from a render, not from the config.
+  {
+    name: 'verifier-affichage',
+    surface: 'autonomous-agent',
+    agent: 'sim-pages-write',
+    route: agentRoute('sim-pages-write'),
+    tools: { required: ['portals_preview_portal_page', 'portals_page_config_saveForm'] },
+    persona: COMMUNICATION,
+    goal: 'Sur la page « Nos actions pour la jeunesse » du portail de l\'agglomération, tu veux ajouter sous le texte un bouton qui mène au catalogue des données. Ta responsable mettra la page à jour en ligne et la présentera aux élus depuis son téléphone : avant de lui passer la main, tu veux savoir comment la page s\'affichera sur un téléphone, et si quelque chose cloche.',
+    maxTurns: 6,
+    premise: {
+      description: 'the agent rendered « Nos actions pour la jeunesse » with portals_preview_portal_page',
+      holds: state => calledTool(state.exports, 'portals_preview_portal_page', input => input?.id === state.ids.contentPageId)
+    },
+    check: state => {
+      const page = pageOf(state.after, state.ids.contentPageId)
+      const before = pageOf(state.before, state.ids.contentPageId)
+      return {
+        draftButtons: elementsOfType(page?.draftConfig, 'button').map(b => ({ label: b.label ?? b.link?.title, link: b.link })),
+        draftTexts: textsOf(page?.draftConfig),
+        liveChanged: !isDeepStrictEqual(page?.config, before?.config)
+      }
+    }
   }
 ]

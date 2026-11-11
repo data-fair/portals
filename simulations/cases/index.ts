@@ -15,6 +15,7 @@
  * largest are "Piscine Olympique" (800) and "Piscine du Centre" (520).
  */
 import type { SimCase } from '../runner/surfaces.ts'
+import { calledTool } from '../runner/autonomous-agent.ts'
 
 const MANAGER = 'Tu es chargé de communication dans une petite collectivité. Tu gères le portail de données de la collectivité, mais tu n\'es pas informaticien : tu ne sais pas ce qu\'est un schéma, un composant ou un JSON, et tu n\'emploieras jamais ces mots. Si on te dit que c\'est fait sans que tu voies quoi que ce soit à l\'écran, tu le dis. Tu ne prétends jamais avoir cliqué sur un bouton sans l\'avoir fait. Quand on t\'indique un bouton ou un champ, tu cliques ou tu saisis toi-même : c\'est ton outil de travail.'
 
@@ -42,6 +43,20 @@ export const cases: SimCase[] = [
     persona: MANAGER,
     goal: 'Sur la page « Nos actions pour la jeunesse », tu veux ajouter en haut un court paragraphe d\'introduction, puis en dessous la liste des données publiées sur le portail. Tu veux voir le résultat à l\'écran avant d\'enregistrer, et que ce soit enregistré à la fin.',
     maxTurns: 8
+  },
+  // The page preview as a WebMCP tool of the page screens (preview_page): the person cannot see the page
+  // on a phone from the back-office, what the assistant says about it must come from a render.
+  {
+    name: 'page-affichage-mobile',
+    host: 'backoffice',
+    route: '/data-fair/pages/{pageId}',
+    persona: MANAGER,
+    goal: 'Ta collègue présentera demain la page « Nos actions pour la jeunesse » aux élus depuis son téléphone. Tu veux savoir comment la page s\'affiche sur un téléphone, telle que les visiteurs la voient en ligne, et s\'il y a quelque chose qui cloche.',
+    maxTurns: 5,
+    premise: {
+      description: 'the assistant rendered the page with preview_page',
+      holds: exports => calledTool(exports, 'preview_page')
+    }
   },
   // Portal config through the portalConfig_ form tools and the portal-config-form skill.
   {
