@@ -14,7 +14,7 @@
       <!-- Portal description -->
       <div
         v-if="portal.config.description"
-        class="df-card-desc text-body-medium"
+        class="df-card-desc px-1 text-body-medium"
       >
         {{ portal.config.description }}
       </div>
