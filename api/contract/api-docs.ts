@@ -418,7 +418,7 @@ const paths = {
               mediaType: { type: 'string', description: 'Type of the image, for example image/png.' }
             }
           },
-          text: { type: 'string', description: 'Readable report: page, console errors, failed requests and accessibility snapshot of the page.' },
+          text: { type: 'string', description: 'Readable report: page, console errors, failed requests and accessibility snapshot of the page. Console warnings are only counted: they are noise, not a problem of the page.' },
           report: { type: 'object', description: 'Structured report of the render (url, finalUrl, verdict, blockedFrames, failedRequests...).', additionalProperties: true }
         }
       })
