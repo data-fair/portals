@@ -45,8 +45,8 @@ if (!preview) {
 } else {
   displayedEvents = computed(() => {
     return Array.from({ length: element.mode === 'custom' ? (element.events?.length || 1) : element.limit }, (_, i) => ({
-      title: element.events?.[i]?.title || `Événement ${i + 1}`,
-      description: 'Exemple d\'événement pour la prévisualisation.',
+      title: element.events?.[i]?.title || `Lorem ipsum ${i + 1}`,
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
       eventMetadata: { slug: element.events?.[i]?.slug || `event-${i + 1}`, startDate: new Date().toISOString() }
     }))
   })

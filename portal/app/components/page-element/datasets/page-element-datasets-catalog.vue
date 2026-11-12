@@ -116,13 +116,13 @@ const {
     return Array.from({ length: 6 }, (_, i) => ({
       id: `dataset-${i + 1}`,
       slug: `dataset-${i + 1}`,
-      title: `Dataset ${i + 1}`,
-      summary: 'Exemple de jeu de données pour la prévisualisation.',
+      title: `Lorem ipsum ${i + 1}`,
+      summary: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
       dataUpdatedAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       owner: session.account.value,
       extras: {},
-      topics: [{ id: 'topic-1', title: 'Thématique exemple', color: '#45d31d' }],
+      topics: [{ id: 'topic-1', title: 'Lorem', color: '#45d31d' }],
       isMetaOnly: false,
     }))
   }

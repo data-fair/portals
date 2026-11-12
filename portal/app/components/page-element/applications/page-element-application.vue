@@ -70,7 +70,7 @@ const { preview } = usePortalStore()
 if (element.syncParams === 'shared-filters' && element.uuid) {
   usePageFilterDescribeTool({
     uuid: element.uuid,
-    title: `Filtres : ${element.application?.title ?? 'visualisation'}`,
+    title: t('filtersTool', { title: element.application?.title ?? t('application') }),
     description: `This page has a visualization "${element.application?.title ?? ''}" that reflects all page filters: concept filters (keys starting with "_c") and every dataset filter (keys starting with "_d_"). Use pageFilters_set to drive it.`
   })
 }
@@ -145,7 +145,9 @@ const unavailable = computed(() => isContentUnavailable(applicationFetch.error?.
   en:
     application: Application
     previewTooltip: For performance reasons, the preview only shows a screenshot of the visualization
+    filtersTool: 'Filters: {title}'
   fr:
     application: Application
     previewTooltip: Pour des raisons de performance, l'aperçu affiche uniquement une capture de la visualisation
+    filtersTool: 'Filtres : {title}'
 </i18n>
