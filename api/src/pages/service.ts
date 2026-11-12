@@ -3,14 +3,13 @@ import type { Page, PageElement, PageConfig } from '#types/page/index.ts'
 import debugModule from 'debug'
 import slug from 'slugify'
 import { assertAccountRole, httpError, type SessionStateAuthenticated } from '@data-fair/lib-express'
-import eventsQueue from '@data-fair/lib-node/events-queue.js'
+import eventsQueue, { type PushEvent } from '@data-fair/lib-node/events-queue.js'
 import { renderMarkdown } from '@data-fair/portals-shared-markdown'
 import { randomUUID } from 'node:crypto'
 import mongo from '#mongo'
 import { duplicateImage } from '../images/service.ts'
 import { assertNbPagesLimit } from '../limits/service.ts'
 import { traversePageElements, resolvePageAnchors } from './operations.ts'
-import { type EventAction, type EventText, eventText, joinEventTexts } from '../utils/event-texts.ts'
 
 const debug = debugModule('pages')
 
@@ -135,22 +134,28 @@ export const createPage = async (page: Page, sourcePageId?: string) => {
   page.config._toc = await resolvePageAnchors(page.config)
   await mongo.pages.insertOne(page)
 
-  const details: EventText[] = []
-  details.push(eventText('pageType', { type: page.type }))
+  const details = [{ en: `Type: ${page.type}`, fr: `Type : ${page.type}` }]
   if (page.type === 'generic' && page.config.genericMetadata?.group) {
-    details.push(eventText('pageGroup', { group: page.config.genericMetadata.group.title }))
+    const group = page.config.genericMetadata.group.title
+    details.push({ en: `Group: ${group}`, fr: `Groupe : ${group}` })
   }
   // Duplication info
   if (sourcePageId) {
     const sourcePage = await mongo.pages.findOne({ _id: sourcePageId })
     if (sourcePage?.isReference) {
-      details.push(eventText('duplicatedFromReferencePage', { title: sourcePage.title, id: sourcePageId }))
+      details.push({
+        en: `Duplicated from the reference page "${sourcePage.title}" (${sourcePageId})`,
+        fr: `Dupliquée depuis la page de référence "${sourcePage.title}" (${sourcePageId})`
+      })
     } else if (sourcePage) {
-      details.push(eventText('duplicatedFromPage', { title: sourcePage.title, id: sourcePageId }))
+      details.push({
+        en: `Duplicated from the page "${sourcePage.title}" (${sourcePageId})`,
+        fr: `Dupliquée depuis la page "${sourcePage.title}" (${sourcePageId})`
+      })
     }
   }
 
-  return joinEventTexts(details, '; ')
+  return { en: details.map(d => d.en).join('; '), fr: details.map(d => d.fr).join('; ') }
 }
 
 export const patchPage = async (page: Page, patch: Partial<Page>, session: SessionStateAuthenticated, skipEvents = false) => {
@@ -171,12 +176,12 @@ export const patchPage = async (page: Page, patch: Partial<Page>, session: Sessi
   // Track portal additions/removals
   const addedPortals = patch.portals ? patch.portals.filter(portalId => !page.portals.includes(portalId)) : []
   const removedPortals = patch.portals ? page.portals.filter(portalId => !patch.portals!.includes(portalId)) : []
-  let standardReplacements: Record<string, EventText> = {}
+  let replacedPages: Record<string, string[]> = {}
 
   // Handle standard page type publication: auto-switch pages of same type on the same portal
   if (patch.portals && ['home', 'contact', 'accessibility', 'terms-of-service', 'legal-notice', 'privacy-policy', 'cookie-policy', 'datasets', 'applications', 'reuses', 'event-catalog', 'news-catalog'].includes(page.type)) {
     if (addedPortals.length > 0) {
-      standardReplacements = await switchStandardPages(page, addedPortals)
+      replacedPages = await switchStandardPages(page, addedPortals)
     }
   }
 
@@ -239,13 +244,25 @@ export const patchPage = async (page: Page, patch: Partial<Page>, session: Sessi
 
     // Publish events for added portals
     for (const portalId of addedPortals) {
-      const publishBody = standardReplacements[portalId] ?? eventText('pagePublished', { portal: portalId })
+      const replaced = replacedPages[portalId]
+      const publishBody = replaced
+        ? {
+            en: replaced.map(title => `The page "${title}" was replaced by the page "${page.title}" on the portal: ${portalId}`).join(' | '),
+            fr: replaced.map(title => `La page "${title}" a été remplacée par la page "${page.title}" sur le portail : ${portalId}`).join(' | ')
+          }
+        : {
+            en: `The page was published on the portal: ${portalId}`,
+            fr: `La page a été publiée sur le portail : ${portalId}`
+          }
       sendPageEvent(updatedPage, 'publish', session, publishBody)
     }
 
     // Unpublish events for removed portals
     for (const portalId of removedPortals) {
-      sendPageEvent(updatedPage, 'unpublish', session, eventText('pageUnpublished', { portal: portalId }))
+      sendPageEvent(updatedPage, 'unpublish', session, {
+        en: `The page was unpublished from the portal: ${portalId}`,
+        fr: `La page a été dépubliée du portail : ${portalId}`
+      })
     }
 
     // Generic patch event only if other fields changed beyond portals/draft
@@ -284,19 +301,29 @@ export const cancelPageDraft = async (page: Page, session: SessionStateAuthentic
   return updatedPage
 }
 
+const pageTitles = {
+  create: (title: string) => ({ en: `The page ${title} was created`, fr: `La page ${title} a été créée` }),
+  patch: (title: string) => ({ en: `The page ${title} was updated`, fr: `La page ${title} a été modifiée` }),
+  delete: (title: string) => ({ en: `The page ${title} was deleted`, fr: `La page ${title} a été supprimée` }),
+  publish: (title: string) => ({ en: `The page ${title} was published on a portal`, fr: `La page ${title} a été publiée sur un portail` }),
+  unpublish: (title: string) => ({ en: `The page ${title} was unpublished from a portal`, fr: `La page ${title} a été dépubliée d'un portail` }),
+  'draft-validate': (title: string) => ({ en: `The draft of the page ${title} was validated`, fr: `Le brouillon de la page ${title} a été validé` }),
+  'draft-discard': (title: string) => ({ en: `The draft of the page ${title} was discarded`, fr: `Le brouillon de la page ${title} a été annulé` })
+}
+
 /**
- * Helper function to send events related to pages
- * @param topicAction The action part of the topic key, it also selects the event title (e.g. "create", "draft-validate")
- * @param body Optional additional information to include in the event
+ * Send an event about a page.
+ * @param topicAction The action part of the topic key, it also selects the event title
+ * @param body Details of the event
  */
 export const sendPageEvent = (
   page: Page,
-  topicAction: EventAction<'page'>,
+  topicAction: keyof typeof pageTitles,
   sessionState?: SessionStateAuthenticated,
-  body?: EventText
+  body?: PushEvent['body']
 ) => {
   eventsQueue.pushEvent({
-    title: eventText(`page-${topicAction}`, { title: page.title }),
+    title: pageTitles[topicAction](page.title),
     topic: { key: `pages:page-${topicAction}:${page._id}` },
     sender: page.owner,
     resource: {
@@ -370,8 +397,9 @@ const validateMetadata = (page: Page, patch?: Partial<Page>) => {
   }
 }
 
-const switchStandardPages = async (page: Page, addedPortals: string[]): Promise<Record<string, EventText>> => {
-  const replacements: Record<string, EventText[]> = {}
+/** Unpublish the pages of the same type from the added portals, returns their titles by portal. */
+const switchStandardPages = async (page: Page, addedPortals: string[]) => {
+  const replacedPages: Record<string, string[]> = {}
 
   // Find other pages of the same type already published on these portals
   const conflictingPages = await mongo.pages.find({
@@ -396,11 +424,11 @@ const switchStandardPages = async (page: Page, addedPortals: string[]): Promise<
 
     for (const portalId of addedPortals) {
       if (conflictingPage.portals.includes(portalId)) {
-        replacements[portalId] ??= []
-        replacements[portalId].push(eventText('pageReplaced', { replaced: conflictingPage.title, title: page.title, portal: portalId }))
+        replacedPages[portalId] ??= []
+        replacedPages[portalId].push(conflictingPage.title)
       }
     }
   }
 
-  return Object.fromEntries(Object.entries(replacements).map(([portalId, texts]) => [portalId, joinEventTexts(texts, ' | ')!]))
+  return replacedPages
 }

@@ -3,10 +3,9 @@ import type { Portal } from '#types/portal/index.ts'
 import debugModule from 'debug'
 import slug from 'slugify'
 import { type SessionStateAuthenticated, assertAccountRole, httpError } from '@data-fair/lib-express'
-import eventsQueue from '@data-fair/lib-node/events-queue.js'
+import eventsQueue, { type PushEvent } from '@data-fair/lib-node/events-queue.js'
 import { renderMarkdown } from '@data-fair/portals-shared-markdown'
 import mongo from '#mongo'
-import { type EventAction, type EventText, eventText } from '../utils/event-texts.ts'
 
 const debug = debugModule('reuses')
 
@@ -108,11 +107,17 @@ export const patchReuse = async (
 
   // Send events for portal publication changes
   for (const portalId of addedPortals) {
-    sendReuseEvent(updatedReuse, 'publish', session, eventText('reusePublished', { portal: portalId }))
+    sendReuseEvent(updatedReuse, 'publish', session, {
+      en: `The reuse was published on the portal: ${portalId}`,
+      fr: `La réutilisation a été publiée sur le portail : ${portalId}`
+    })
   }
 
   for (const portalId of removedPortals) {
-    sendReuseEvent(updatedReuse, 'unpublish', session, eventText('reuseUnpublished', { portal: portalId }))
+    sendReuseEvent(updatedReuse, 'unpublish', session, {
+      en: `The reuse was unpublished from the portal: ${portalId}`,
+      fr: `La réutilisation a été dépubliée du portail : ${portalId}`
+    })
   }
 
   return updatedReuse
@@ -156,19 +161,30 @@ const cleanUnusedImages = async (reuse: Reuse) => {
   await mongo.images.deleteMany(deleteFilter)
 }
 
+const reuseTitles = {
+  create: (title: string) => ({ en: `The reuse ${title} was created`, fr: `La réutilisation ${title} a été créée` }),
+  patch: (title: string) => ({ en: `The reuse ${title} was updated`, fr: `La réutilisation ${title} a été modifiée` }),
+  delete: (title: string) => ({ en: `The reuse ${title} was deleted`, fr: `La réutilisation ${title} a été supprimée` }),
+  publish: (title: string) => ({ en: `The reuse ${title} was published on a portal`, fr: `La réutilisation ${title} a été publiée sur un portail` }),
+  unpublish: (title: string) => ({ en: `The reuse ${title} was unpublished from a portal`, fr: `La réutilisation ${title} a été dépubliée d'un portail` }),
+  submit: (title: string) => ({ en: `The reuse ${title} was submitted for validation`, fr: `La réutilisation ${title} a été soumise pour validation` }),
+  'draft-validate': (title: string) => ({ en: `The draft of the reuse ${title} was validated`, fr: `Le brouillon de la réutilisation ${title} a été validé` }),
+  'draft-discard': (title: string) => ({ en: `The draft of the reuse ${title} was discarded`, fr: `Le brouillon de la réutilisation ${title} a été annulé` })
+}
+
 /**
- * Helper function to send events related to reuses
- * @param topicAction The action part of the topic key, it also selects the event title (e.g. "create", "draft-validate")
- * @param body Optional additional information to include in the event
+ * Send an event about a reuse.
+ * @param topicAction The action part of the topic key, it also selects the event title
+ * @param body Details of the event
  */
 export const sendReuseEvent = (
   reuse: Reuse,
-  topicAction: EventAction<'reuse'>,
+  topicAction: keyof typeof reuseTitles,
   sessionState?: SessionStateAuthenticated,
-  body?: EventText
+  body?: PushEvent['body']
 ) => {
   eventsQueue.pushEvent({
-    title: eventText(`reuse-${topicAction}`, { title: reuse.title }),
+    title: reuseTitles[topicAction](reuse.title),
     topic: { key: `reuses:reuse-${topicAction}:${reuse._id}` },
     sender: reuse.owner,
     resource: {
@@ -227,7 +243,10 @@ export const submitReuse = async (reuse: Reuse, portalId: string, session: Sessi
 
   const portalTitle = portal.title || portal.config?.title || portal._id
   const portalUrlOrId = portal.ingress?.url || portal._id
-  sendReuseEvent(updatedReuse, 'submit', session, eventText('reuseSubmitted', { portal: portalTitle, url: portalUrlOrId }))
+  sendReuseEvent(updatedReuse, 'submit', session, {
+    en: `Submitted on the portal: ${portalTitle} (${portalUrlOrId})`,
+    fr: `Soumise sur le portail : ${portalTitle} (${portalUrlOrId})`
+  })
 
   return updatedReuse
 }

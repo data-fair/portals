@@ -9,7 +9,7 @@ import { type SessionStateAuthenticated, assertAccountRole, assertAdminMode, get
 // origin, which only our ingress routes here — the private instance (lib-node refuses non public
 // addresses in the default one, which is for URLs a user can influence)
 import { privateAxiosInstance as axios } from '@data-fair/lib-node/axios.js'
-import eventsQueue from '@data-fair/lib-node/events-queue.js'
+import eventsQueue, { type PushEvent } from '@data-fair/lib-node/events-queue.js'
 import { defaultTheme, fillTheme } from '@data-fair/lib-common-types/theme/index.js'
 import { renderMarkdown } from '@data-fair/portals-shared-markdown'
 import { forEachFooterBlock, footerImageRefs, hasKoumoulMention } from '#types/portal-config-footer/walk.ts'
@@ -17,7 +17,6 @@ import mongo from '#mongo'
 import config from '#config'
 import { duplicateImage } from '../images/service.ts'
 import { getFontFamilyAssets } from '../fonts/service.ts'
-import { type EventAction, type EventText, eventText } from '../utils/event-texts.ts'
 
 const debug = debugModule('portals')
 const debugSyncPortal = debugModule('sync-portal')
@@ -393,19 +392,30 @@ const cleanUnusedImages = async (portal: Portal) => {
   await mongo.images.deleteMany(deleteFilter)
 }
 
+const portalTitles = {
+  create: (title: string) => ({ en: `The portal ${title} was created`, fr: `Le portail ${title} a été créé` }),
+  patch: (title: string) => ({ en: `The portal ${title} was updated`, fr: `Le portail ${title} a été modifié` }),
+  delete: (title: string) => ({ en: `The portal ${title} was deleted`, fr: `Le portail ${title} a été supprimé` }),
+  'draft-validate': (title: string) => ({ en: `The draft of the portal ${title} was validated`, fr: `Le brouillon du portail ${title} a été validé` }),
+  'draft-discard': (title: string) => ({ en: `The draft of the portal ${title} was discarded`, fr: `Le brouillon du portail ${title} a été annulé` })
+}
+
+/** Body of a portal event that lists the changed keys of its configuration. */
+export const changesBody = (keys: string[]) => ({ en: `Changes: ${keys.join(', ')}`, fr: `Modifications : ${keys.join(', ')}` })
+
 /**
- * Helper function to send events related to portals
- * @param topicAction The action part of the topic key, it also selects the event title (e.g. "create", "draft-validate")
- * @param body Optional additional information to include in the event
+ * Send an event about a portal.
+ * @param topicAction The action part of the topic key, it also selects the event title
+ * @param body Details of the event
  */
 export const sendPortalEvent = (
   portal: Portal,
-  topicAction: EventAction<'portal'>,
+  topicAction: keyof typeof portalTitles,
   sessionState?: SessionStateAuthenticated,
-  body?: EventText
+  body?: PushEvent['body']
 ) => {
   eventsQueue.pushEvent({
-    title: eventText(`portal-${topicAction}`, { title: portal.title }),
+    title: portalTitles[topicAction](portal.title),
     topic: { key: `portals:portal-${topicAction}:${portal._id}` },
     sender: portal.owner,
     resource: {
@@ -417,7 +427,7 @@ export const sendPortalEvent = (
   }, sessionState)
 }
 
-const getChangesKeys = (obj1: Record<string, any>, obj2: Record<string, any>): EventText => {
+const getChangesKeys = (obj1: Record<string, any>, obj2: Record<string, any>) => {
   const allKeys = new Set([...Object.keys(obj1), ...Object.keys(obj2)])
   const modifiedKeys: string[] = []
 
@@ -425,7 +435,7 @@ const getChangesKeys = (obj1: Record<string, any>, obj2: Record<string, any>): E
     if (!equal(obj1[key], obj2[key])) modifiedKeys.push(key)
   }
 
-  return eventText('changes', { keys: modifiedKeys.join(', ') })
+  return changesBody(modifiedKeys)
 }
 
 /**
@@ -438,7 +448,7 @@ export const duplicatePortalConfig = async (
   sourcePortalId: string,
   newPortalId: string,
   newOwner: Portal['owner']
-): Promise<{ config: PortalConfig; eventDetails: EventText }> => {
+): Promise<{ config: PortalConfig; eventDetails: PushEvent['body'] }> => {
   const sourcePortal = await mongo.portals.findOne({ _id: sourcePortalId })
   if (!sourcePortal) throw httpError(404, `portal "${sourcePortalId}" not found for duplication`)
 
@@ -481,7 +491,9 @@ export const duplicatePortalConfig = async (
     for (const topic of duplicatedConfig.topics) rewrite(topic.thumbnail)
   }
 
-  const eventDetails = eventText(sourcePortal.isReference ? 'duplicatedFromReferencePortal' : 'duplicatedFromPortal', { title: sourcePortal.title, id: sourcePortalId })
+  const eventDetails = sourcePortal.isReference
+    ? { en: `Duplicated from the reference portal "${sourcePortal.title}" (${sourcePortalId})`, fr: `Dupliqué depuis le portail de référence "${sourcePortal.title}" (${sourcePortalId})` }
+    : { en: `Duplicated from the portal "${sourcePortal.title}" (${sourcePortalId})`, fr: `Dupliqué depuis le portail "${sourcePortal.title}" (${sourcePortalId})` }
 
   return { config: duplicatedConfig, eventDetails }
 }
