@@ -79,7 +79,7 @@ Pourquoi les échecs :
 
 ## Agents autonomes
 
-Cinq cas (`simulations/autonomous-agent.sim.spec.ts`, `simulations/cases/autonomous-agents.ts`) : un agent de l'organisation `test_org1`, qui agit sous sa propre identité (NHI), utilise les outils `portals_*` et `datafair_*` du serveur mcp. Chaque cas choisit ses droits en choisissant son agent. La personne ne voit que la page de discussion de l'agent. Le juge lit le transcript et l'état stocké des portails et des pages (`hostState`).
+Six cas (`simulations/autonomous-agent.sim.spec.ts`, `simulations/cases/autonomous-agents.ts`) : un agent de l'organisation `test_org1`, qui agit sous sa propre identité (NHI), utilise les outils `portals_*` et `datafair_*` du serveur mcp. Chaque cas choisit ses droits en choisissant son agent. La personne ne voit que la page de discussion de l'agent. Le juge lit le transcript et l'état stocké des portails et des pages (`hostState`).
 
 Référence du 09/11/2026, branche `feat-autonomous-agents`. Images : `agents:main` (1c2850b, agents #90 inclus), `mcp:main` (9c71695, openapi-mcp 0.11), `data-fair:master` (9abebab). `@data-fair/lib-agents-sim` 0.14.0 (`runSimulation`). Assistant Sonnet, outils Haiku, persona Sonnet. Deux passes, **10 runs sur 10 réussissent**. Entre parenthèses : le nombre de frictions relevées par le juge.
 
@@ -103,6 +103,23 @@ Le résultat stocké est juste dans tous les runs (`hostState`) : rien n'est mis
 - **L'agent** affirme parfois une vérification qu'il n'a pas faite (« je viens de relire la page », « visible par le public » après un aperçu en échec). Il n'annonce pas toujours ce qu'il a publié sous approbation automatique.
 
 Prérequis : le profil `agents` (conteneurs agents et mcp, `npx --no df-dev up agents`), et de préférence `events` pour que l'aperçu de la page d'accueil aboutisse, et le pont Claude Code, que seul l'utilisateur démarre. Dans un worktree existant, ajouter `MCP_PORT` à `.env` à la main. Le cas des données enregistre une application de base depuis cdn.jsdelivr (accès internet depuis le conteneur data-fair). Hors de `npm test` et de la CI.
+
+### Aperçu de page
+
+Deux cas vérifient que ce que l'assistant dit de l'affichage vient d'un rendu : `verifier-affichage` (agent autonome, `portals_preview_portal_page`) et `page-affichage-mobile` (back-office, outil WebMCP `preview_page`). Chaque cas exige un appel à l'aperçu ; sans lui, le run est invalide. Images `agents` 143f8ec (agents #94), `mcp` 7f397fc, `@data-fair/lib-agents-sim` 0.15.0, 11 et 12/11/2026.
+
+| Cas | Avant les corrections | Après |
+| --- | --- | --- |
+| `verifier-affichage` | ✓ ✓ | ✓ ✓ |
+| `page-affichage-mobile` | ✓ ✗ | ✓ ✓ |
+
+L'aperçu sert : il a trouvé un vrai défaut sur téléphone (le bouton collé au texte), corrigé puis vérifié, et il fonde le diagnostic « page presque vide ». Ce qu'il a fait corriger :
+
+- La vue d'une page ne disait pas à l'assistant où la page s'édite ni ce qu'ouvre « Voir sur … » : il « ouvrait l'éditeur » en restant sur la même vue (`pageViewGuidance`).
+- La capture est pour l'assistant, par choix : la personne voit la page elle-même avec « Aperçu (brouillon) » ou « Voir sur … ». Les descriptions des outils le disent, et disent d'ignorer les avertissements de la console, que l'assistant renvoyait vers F12.
+- L'agent listait comme « non vérifié » ce que ses outils pouvaient vérifier (page en ligne avec son en-tête, page cible du bouton, jeux de données publics) et ne le faisait qu'à la demande : la skill `pages` lui demande de faire ces vérifications d'abord.
+
+Restent hors de portails : dans `code_mode`, un script qui appelle l'aperçu ne reçoit ni le texte ni l'image (service agents, en cours) ; la revue des actions juge « incertaine » une écriture sûre et sa raison inquiète la personne.
 
 ## Limites et prochaines étapes
 
