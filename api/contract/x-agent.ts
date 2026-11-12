@@ -22,7 +22,8 @@ const editorTools = (name: string) => ['describeState', 'getData', 'setFieldValu
 
 // the bodies are agent-skills/<name>.md, served next to this document (/api/agents/skills/<name>.md).
 // A skill is offered while one of its tools is: upload_image is left out of both lists, it would offer
-// the portal skill to a pages or reuses token. The page design knowledge (layouts, composition, visual
+// the portal skill to a pages or reuses token. list_portals and get_portal are left out of the config list for
+// the same reason: pages and reuses admin tokens reach them to attach to portals. The page design knowledge (layouts, composition, visual
 // review) lives in skills of the platform registry, not here.
 export const root: AgentRoot = {
   skills: [{
@@ -39,7 +40,7 @@ export const root: AgentRoot = {
     description: 'The model of a portal configuration and what its schema does not say: draft and live configuration, publication, settings (staging, contributor departments, owner), what a write or an admin token may do, the standard pages a new portal lacks, what a save syncs to data-fair and simple-directory and the delays that follow, theme and assisted colours, fonts, images, menu and navigation bar, footer and its mandatory mention, cards and dataset pages whose defaults are not applied, contact, social links, robots and iframe sources. Read it before creating, configuring or publishing a portal; the form mechanics are in portals-portal-config.',
     href: 'agents/skills/config.md',
     tools: [
-      'list_portals', 'get_portal', 'create_portal', 'update_portal_settings', 'delete_portal', 'publish_portal_config', 'cancel_portal_config_draft',
+      'create_portal', 'update_portal_settings', 'delete_portal', 'publish_portal_config', 'cancel_portal_config_draft',
       ...editorTools('portal_config'),
       'list_font_assets', 'upload_font_asset', 'delete_font_asset'
     ]
@@ -57,7 +58,7 @@ const idParam = (what: string) => ({ id: { description: `Id of the ${what} (_id)
 // Checked labels (openapi-mcp labels): a write naming its target by an opaque id also takes that target's
 // title, which the tool reads (with the call's own token) and compares before the call, refusing it on a
 // mismatch. The approval card and the agents' reviewer then show what the id names as a checked fact.
-// A portal title is read with getPortal: a pages or reuses token attaching to portals needs portals:read.
+// A portal title is read with getPortal, which the pages and reuses admin tiers may call (alsoAccepted in api/src/scopes.ts).
 type LabelRead = 'getPortal' | 'getPage' | 'getReuse' | 'getGroup'
 const titleLabel = (input: string, name: string, operation: LabelRead) => ({ [input]: { name, operation, field: '/title' } })
 const portalLabel = titleLabel('id', 'portalTitle', 'getPortal')

@@ -89,10 +89,20 @@ test.describe('scope enforcement', () => {
 
   test('a scope of another family is refused', async () => {
     const pagesAdmin = await scoped('pages:admin')
-    assert.equal(await statusOf(pagesAdmin.get('/api/portals')), 403)
     assert.equal(await statusOf(pagesAdmin.get('/api/reuses')), 403)
     assert.equal(await statusOf(pagesAdmin.get('/api/font-assets')), 403)
     assert.equal(await statusOf((await scoped('reuses:admin')).get('/api/groups')), 403)
+  })
+
+  test('the pages and reuses admin tiers read the portals they attach to, nothing more of them', async () => {
+    const portal = await createPortal(orgAdmin)
+    for (const scope of ['pages:admin', 'reuses:admin']) {
+      const ax = await scoped(scope)
+      assert.equal(await statusOf(ax.get('/api/portals')), 200, scope)
+      assert.equal(await statusOf(ax.get(`/api/portals/${portal.data._id}`)), 200, scope)
+      assert.equal(await statusOf(ax.get(`/api/portals/${portal.data._id}/draft-config`)), 403, scope)
+    }
+    assert.equal(await statusOf((await scoped('pages:write')).get('/api/portals')), 403)
   })
 
   test('images: the family is the one of the resource, from the body and from the stored image', async () => {

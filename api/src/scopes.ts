@@ -31,7 +31,7 @@ export const vocabulary = defineScopes({
       umbrella: { fr: 'Tous les droits sur les pages', en: 'All pages scopes' },
       read: { fr: 'Lire les pages et les groupes de pages du compte ; la prévisualisation d\'une page affiche son contenu (jeux de données, applications, réutilisations) avec les droits du rôle', en: "Read the account's pages and page groups; the page preview renders the page's content (datasets, applications, reuses) with the role's permissions" },
       write: { fr: 'Créer des pages et des groupes de pages, modifier leur brouillon', en: 'Create pages and page groups, edit their draft' },
-      admin: { fr: 'Publier et supprimer les pages, choisir les portails où elles sont publiées et leur propriétaire', en: 'Publish and delete pages, choose the portals they are published on and their owner' }
+      admin: { fr: 'Publier et supprimer les pages, choisir les portails où elles sont publiées (en lisant la liste des portails du compte) et leur propriétaire', en: "Publish and delete pages, choose the portals they are published on (reading the list of the account's portals) and their owner" }
     }
   },
   reuses: {
@@ -40,7 +40,7 @@ export const vocabulary = defineScopes({
       umbrella: { fr: 'Tous les droits sur les réutilisations', en: 'All reuses scopes' },
       read: { fr: 'Lire les réutilisations du compte', en: "Read the account's reuses" },
       write: { fr: 'Créer des réutilisations et modifier leur brouillon', en: 'Create reuses and edit their draft' },
-      admin: { fr: 'Publier, soumettre et supprimer les réutilisations, choisir les portails où elles sont publiées et leur propriétaire', en: 'Publish, submit and delete reuses, choose the portals they are published on and their owner' }
+      admin: { fr: 'Publier, soumettre et supprimer les réutilisations, choisir les portails où elles sont publiées (en lisant la liste des portails du compte) et leur propriétaire', en: "Publish, submit and delete reuses, choose the portals they are published on (reading the list of the account's portals) and their owner" }
     }
   }
 })
@@ -56,12 +56,18 @@ export type ScopedOperation = {
   tier: ScopeTier,
   // body properties that raise the tier when present
   bodyTiers?: Partial<Record<string, ScopeTier>>
+  // scopes of other families also accepted at the declared tier: what another family's work needs to read
+  alsoAccepted?: string[]
 }
 
+const portalReadersOfOtherFamilies = [...new Set([...acceptedScopes('pages', 'admin'), ...acceptedScopes('reuses', 'admin')])]
+
 export const scopedOperations = {
-  listPortals: { method: 'get', path: '/portals', family: 'portals', tier: 'read' },
+  // attaching a page or a reuse to portals, or requesting its publication there, needs to find the portals
+  // and read their titles (the checked labels of those tools, api/contract/x-agent.ts)
+  listPortals: { method: 'get', path: '/portals', family: 'portals', tier: 'read', alsoAccepted: portalReadersOfOtherFamilies },
   createPortal: { method: 'post', path: '/portals', family: 'portals', tier: 'admin' },
-  getPortal: { method: 'get', path: '/portals/{id}', family: 'portals', tier: 'read' },
+  getPortal: { method: 'get', path: '/portals/{id}', family: 'portals', tier: 'read', alsoAccepted: portalReadersOfOtherFamilies },
   updatePortal: { method: 'patch', path: '/portals/{id}', family: 'portals', tier: 'write', bodyTiers: { owner: 'admin', staging: 'admin', contributorDepartments: 'admin' } },
   deletePortal: { method: 'delete', path: '/portals/{id}', family: 'portals', tier: 'admin' },
   publishPortalDraft: { method: 'post', path: '/portals/{id}/draft', family: 'portals', tier: 'admin' },
@@ -113,6 +119,10 @@ export const operationTier = (operation: ScopedOperation, body: unknown): ScopeT
   return tier
 }
 
+// the scopes a token may hold to call the operation at this tier (the declared tier also accepts alsoAccepted)
+export const operationScopes = (operation: ScopedOperation, tier: ScopeTier = operation.tier): string[] =>
+  tier === operation.tier && operation.alsoAccepted ? [...new Set([...acceptedScopes(operation.family, tier), ...operation.alsoAccepted])] : acceptedScopes(operation.family, tier)
+
 // the scope guard of a route, tagged so the coverage test can tell which route checks what
 const scopeGuardKey = Symbol('scope-guard')
 const tagGuard = (handler: Guard, tag: string): Guard => Object.assign(handler, { [scopeGuardKey]: tag })
@@ -127,7 +137,7 @@ export const requireOperationScope = (operationId: ScopedOperationId): Guard => 
   const operation: ScopedOperation | undefined = scopedOperations[operationId]
   if (!operation) throw new Error(`unknown scoped operation ${operationId}`)
   return tagGuard(async (req, res, next) => {
-    await session.reqWithScope(req, acceptedScopes(operation.family, operationTier(operation, req.body)), res)
+    await session.reqWithScope(req, operationScopes(operation, operationTier(operation, req.body)), res)
     next()
   }, `operation:${operationId}`)
 }

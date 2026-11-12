@@ -57,8 +57,7 @@ Their inputs carry `x-checked`, which the agents' approval card and reviewer sho
 "page « Accueil » on portal « Portail de test »" rather than two uuids. Labelled: the publish,
 cancel-draft, delete, transfer, attach and publication-request tools of portals, pages and reuses,
 `update_portal_settings`, `create_page_on_portals`, `submit_reuse` and `delete_group`. A portal title is
-read with `getPortal`: a pages or reuses token that attaches to portals or requests a publication needs
-`portals:read` as well, otherwise those calls are refused (the portal cannot be read).
+read with `getPortal`, which the pages and reuses admin tiers may call ([scopes.md](scopes.md)).
 
 List tools fix `select` and declare a concise view (`response.concise`); tags `Portals`, `Pages`
 and `Reuses` carry a guide (`tagGuides`) on the draft / live model.

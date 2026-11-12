@@ -42,6 +42,11 @@ What each tier means, per family:
 | `pages` | pages and page groups, draft config and schema | create pages and groups, edit the draft, discard it | publish, delete, attach to portals (`portals`, `requestedPortals`), transfer (`owner`) |
 | `reuses` | reuses | create, edit the draft, discard it | publish, submit, delete, attach to portals, transfer, edit the live `config` |
 
+The pages and reuses admin tiers also list and read the portals (`listPortals`, `getPortal`, through
+`alsoAccepted` in the operations table, not their draft config): attaching to portals means finding
+them, and the attach and publication-request tools check the portals' titles (checked labels,
+[api-docs.md](api-docs.md#tools)).
+
 ## The operations table is the source
 
 `scopedOperations` in `api/src/scopes.ts` lists every scoped operation by operationId: method,

@@ -18,7 +18,7 @@
  */
 import { oauth2SecurityScheme, oauth2Alternatives, type ScopeLocale } from '@data-fair/lib-common-types/scopes.js'
 import accountSchema from '@data-fair/lib-common-types/account/schema.js'
-import { vocabulary, acceptedScopes, scopedOperations, imageOperations, type ScopedOperationId } from '../src/scopes.ts'
+import { vocabulary, acceptedScopes, operationScopes, scopedOperations, imageOperations, type ScopedOperationId } from '../src/scopes.ts'
 import { operations as agentOperations, root as agentRoot, tagGuides } from './x-agent.ts'
 import partialSchema from '../types/partial/schema.js'
 import portalSchema from '../types/portal/schema.js'
@@ -167,8 +167,7 @@ const listParam = (name: string, description: string, items: JsonSchema = { type
 const selectParam = { in: 'query', name: 'select', required: false, description: 'Fields to return, separated by commas.', schema: { type: 'string' } }
 
 const scopedSecurity = (operationId: ScopedOperationId) => {
-  const { family, tier } = scopedOperations[operationId]
-  return [{ sdCookie: [] }, ...oauth2Alternatives(acceptedScopes(family, tier))]
+  return [{ sdCookie: [] }, ...oauth2Alternatives(operationScopes(scopedOperations[operationId]))]
 }
 // an any-scope route that still needs a session (allowAnyScope, then reqSessionAuthenticated): the
 // cookie, or a token whatever its scopes (an oauth2 requirement with no scope)
