@@ -56,8 +56,8 @@
     "@data-fair/lib-dev": "^0.1.0",
     "@data-fair/lib-node": "^3.0.0",
     "@data-fair/lib-utils": "^1.14.0",
-    "@data-fair/openapi-mcp": "^0.11.0",
-    "@json-layout/agents": "^0.4.0",
+    "@data-fair/openapi-mcp": "^0.12.0",
+    "@json-layout/agents": "^0.5.1",
     "@koumoul/vjsf-compiler": "~1.6.0",
     "@koumoul/vjsf-markdown": "^0.5.2",
     "@modelcontextprotocol/sdk": "^1.31.0",
@@ -91,7 +91,10 @@
     "mermaid": {
       "katex": "0.18.10"
     },
-    "xss": "1.0.15"
+    "xss": "1.0.15",
+    "@json-layout/agents": {
+      "@json-layout/core": "~2.14.0"
+    }
   },
   "relativeDependencies": {
     "@data-fair/lib-vue": "../lib/packages/vue",
