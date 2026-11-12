@@ -121,6 +121,22 @@ L'aperçu sert : il a trouvé un vrai défaut sur téléphone (le bouton collé 
 
 Restent hors de portails : dans `code_mode`, un script qui appelle l'aperçu ne reçoit ni le texte ni l'image (service agents, en cours) ; la revue des actions juge « incertaine » une écriture sûre et sa raison inquiète la personne.
 
+### Après les versions du 12/11/2026
+
+Une passe sur les quatre cas où la revue des actions, les outils de formulaire et l'aperçu coûtaient le plus. Images `agents` 2052db1 (agents #95 et #96), `mcp` cc44aa5 (openapi-mcp 0.12.1), `@json-layout/agents` 0.5.1, `@data-fair/lib-vue-agents` et `@data-fair/lib-vuetify-agents` 0.7.0. **3 runs sur 4 réussissent.**
+
+| Cas | Résultat |
+| --- | --- |
+| `publier-et-accueil` | ✗ : l'agenda est en ligne, mais l'invitation de l'accueil reste en brouillon à la fin du budget de tours |
+| `page-avec-donnees` | ✓ : un tableau des équipements, après l'échec de l'aperçu du graphique |
+| `verifier-affichage` | ✓ : un bouton, après deux fausses alertes de doublon |
+| `page-affichage-mobile` | ✓ |
+
+- **La revue des actions** reste la première cause de tours perdus. Elle demande ou non l'approbation de la même action d'un tour à l'autre. Elle doute de l'identifiant d'un portail que l'outil précédent venait de nommer. Elle compte comme déjà fait un ajout non enregistré puis annulé, et annonce deux fois un bouton en double : la personne refuse une action juste.
+- **L'agent** renvoie toute la liste des blocs avec `setData` au lieu d'insérer un bloc (`editArray`). Il montre une fois une note en anglais écrite pour lui-même comme seule réponse.
+- **Environnement de dev** : data-fair n'avait pas l'adresse du service capture. La vignette d'une application répondait 502 et `datafair_preview_application` 501, si bien que le graphique de `page-avec-donnees` ne pouvait pas être vérifié. Corrigé dans `docker-compose.yml` (`PRIVATE_CAPTURE_URL`, à recréer avec `docker compose up -d data-fair`).
+- **La vue d'une page** ne nommait pas l'onglet « Aperçu », ouvert par défaut. La personne le regardait et doutait que l'assistant ait vu le site public. Le guidage nomme maintenant tous les onglets et demande de dire quelle version a été rendue.
+
 ## Limites et prochaines étapes
 
 1. **Publier les dépendances**, dans cet ordre :

@@ -100,6 +100,8 @@ services:
       - PRIVATE_EVENTS_URL=http://localhost:${EVENTS_PORT}
       # turns on the back-office agent chat (agentsIntegration), needed by the simulations
       - PRIVATE_AGENTS_URL=http://localhost:${AGENTS_PORT}
+      # application thumbnails and datafair_preview_application (502 / 501 without it), with the capture profile
+      - PRIVATE_CAPTURE_URL=http://localhost:${CAPTURE_PORT}
       - MONGO_URL=mongodb://localhost:${MONGO_PORT}/data-fair
       - ES_HOST=http://localhost:${ES_PORT}
       # single dev node: a replica would stay unassigned, the cluster yellow and /ping 500
