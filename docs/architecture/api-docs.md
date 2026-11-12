@@ -48,6 +48,18 @@ fields (`bodyFields`); the views offering an admin field are narrowed to the adm
 | `PATCH /pages/{id}` | `update_page` (title) | `attach_page_to_portals`, `request_page_publication`, `transfer_page` |
 | `PATCH /reuses/{id}` | `update_reuse` (draftConfig) | `attach_reuse_to_portals`, `request_reuse_publication`, `transfer_reuse` |
 
+The writes that name their target by an opaque id carry checked labels (openapi-mcp `labels`, 0.13):
+beside `id` the tool takes the target's title (`pageTitle`, `portalTitle`, `reuseTitle`, `groupTitle`),
+beside `portals` / `requestedPortals` the portals' titles in the same order. Before the call the tool
+reads each target (`getPage`, `getPortal`, `getReuse`, `getGroup`, with the call's own token) and
+refuses the call, nothing sent, on a title mismatch; the API receives the call without the labels.
+Their inputs carry `x-checked`, which the agents' approval card and reviewer show as a checked fact:
+"page « Accueil » on portal « Portail de test »" rather than two uuids. Labelled: the publish,
+cancel-draft, delete, transfer, attach and publication-request tools of portals, pages and reuses,
+`update_portal_settings`, `create_page_on_portals`, `submit_reuse` and `delete_group`. A portal title is
+read with `getPortal`: a pages or reuses token that attaches to portals or requests a publication needs
+`portals:read` as well, otherwise those calls are refused (the portal cannot be read).
+
 List tools fix `select` and declare a concise view (`response.concise`); tags `Portals`, `Pages`
 and `Reuses` carry a guide (`tagGuides`) on the draft / live model.
 
@@ -100,7 +112,10 @@ registry's skills, not here.
 
 Paths become `/portals-manager/api/...`, operationIds and tool names `portals_<name>`, the root
 skills `portals-pages` and `portals-config` (`href`s resolved against the public document path);
-openapi-mcp names the editor groups' skills after their merged tool names, `portals-page-config`
+The label reads (`labels.*.operation`) name operationIds, so they must follow the same prefix
+(`portals_getPage`), like the editor's `schemaOperation` / `readOperation`; data-fair keeps the
+`labels` key only from a version that knows it (an older merge drops it with a warning, and the tools
+work unlabelled). openapi-mcp names the editor groups' skills after their merged tool names, `portals-page-config`
 and `portals-portal-config`.
 
 ## Testing

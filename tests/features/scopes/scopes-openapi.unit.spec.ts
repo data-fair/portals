@@ -11,7 +11,7 @@ const sessionAnyScopePaths = ['/fonts']
 // The x-agent keys data-fair's platform merge keeps (agentEntryKeys / agentTagKeys / agentSkillKeys
 // of its api/contract/platform-api-docs.ts, pinned there to openapi-mcp's vocabulary): a key
 // outside them is removed from this document by the merge, with a warning.
-const agentEntryKeys = ['name', 'title', 'description', 'examples', 'annotations', 'params', 'fixed', 'body', 'bodyFields', 'bodyRequired', 'response', 'editor', 'security']
+const agentEntryKeys = ['name', 'title', 'description', 'examples', 'annotations', 'params', 'fixed', 'body', 'bodyFields', 'bodyRequired', 'response', 'editor', 'security', 'labels']
 const agentTagKeys = ['guide']
 const agentSkillKeys = ['name', 'description', 'href', 'body', 'tools']
 
