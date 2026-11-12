@@ -12,6 +12,7 @@ import { httpError, reqSessionAuthenticated, assertAccountRole, assertAdminMode,
 import { defaultTheme, fillTheme } from '@data-fair/lib-common-types/theme/index.js'
 import { hasKoumoulMention } from '#types/portal-config-footer/walk.ts'
 import { createPortal, validatePortalDraft, cancelPortalDraft, getPortal, getPortalAsAdmin, patchPortal, deletePortal, sendPortalEvent, duplicatePortalConfig } from './service.ts'
+import { type EventText, eventText } from '../utils/event-texts.ts'
 
 const router = Router()
 export default router
@@ -61,7 +62,7 @@ router.post('', async (req, res, next) => {
       background: { color: 'primary' },
       rows: [{
         columns: 1,
-        blocks: [{ type: 'links', align: 'center', display: 'inline', items: [{ type: 'standard', subtype: 'sitemap', title: 'Plan du site' }] }]
+        blocks: [{ type: 'links', align: 'center', display: 'inline', items: [{ type: 'standard', subtype: 'sitemap' }] }]
       }]
     },
     datasets: {
@@ -98,7 +99,7 @@ router.post('', async (req, res, next) => {
   const owner = body.owner ?? session.account
 
   // Handle portal duplication if sourcePortalId is provided
-  let duplicationEventDetails: string | undefined
+  let duplicationEventDetails: EventText | undefined
   if (body.sourcePortalId) {
     const { config: duplicatedConfig, eventDetails } = await duplicatePortalConfig(session, body.sourcePortalId, portalId, owner)
     config = { ...config, ...duplicatedConfig }
@@ -122,7 +123,7 @@ router.post('', async (req, res, next) => {
   assertAccountRole(session, portal.owner, 'admin')
 
   await createPortal(portal, reqOrigin(req), req.headers.cookie)
-  sendPortalEvent(portal, 'a été créé', 'create', session, duplicationEventDetails)
+  sendPortalEvent(portal, 'create', session, duplicationEventDetails)
   res.status(201).json(portal)
 })
 
@@ -158,7 +159,7 @@ router.patch('/:id', async (req, res, next) => {
   // Send patch event only if not just draft changed
   const onlyDraftChanged = Object.keys(body).length === 1 && body.draftConfig
   if (!onlyDraftChanged) {
-    sendPortalEvent(updatedPortal, 'a été modifié', 'patch', session, 'Modifications : ' + Object.keys(body).join(', '))
+    sendPortalEvent(updatedPortal, 'patch', session, eventText('changes', { keys: Object.keys(body).join(', ') }))
   }
 
   res.send(updatedPortal)
@@ -168,7 +169,7 @@ router.delete('/:id', async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
   const portal = await getPortalAsAdmin(session, req.params.id)
   await deletePortal(portal, reqOrigin(req), req.headers.cookie)
-  sendPortalEvent(portal, 'a été supprimé', 'delete', session)
+  sendPortalEvent(portal, 'delete', session)
   res.status(204).send()
 })
 
