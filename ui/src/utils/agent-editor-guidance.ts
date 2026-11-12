@@ -35,7 +35,7 @@ const GUIDING = (subAgent: string) => `To guide the person click by click, have 
 const GUIDANCE: Record<EditorKind, Record<string, string>> = {
   page: {
     editor: 'Portal page editor: edit the page (title, description, blocks) with the pageConfig_form sub-agent. The page title and description show only in the editor\'s fields, not in the draft preview, nor in the breadcrumb until the draft is validated. Pages have no topic (thématique). ' +
-      'Lists of datasets, events or news are drawn as placeholders (« Dataset 1 », …). « Liste de jeux de données » shows the 3 latest datasets; for all of them, « Catalogue de données ».',
+      'Lists of datasets, events or news are drawn as placeholders (« Lorem ipsum 1 », …). « Liste de jeux de données » shows the 3 latest datasets; for all of them, « Catalogue de données ».',
     'editor-drafts': DRAFT,
     'editor-guiding': GUIDING('pageConfig_form'),
     'editor-previews': 'The editor itself has no « Aperçu (brouillon) » tab: the person sees the draft in the editor, and in that tab of the page view (the page title in the breadcrumb). There is no preview of the draft with real data: both draw lists as placeholders, « Portail de prévisualisation » only picks which portal\'s look they take, and « Voir sur … » opens the published page, without the draft. ' +

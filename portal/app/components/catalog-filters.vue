@@ -332,13 +332,13 @@ const previewFacets: Facets = {
     { value: 'concept-b', count: 2 }
   ],
   'base-application': [
-    { value: { url: 'https://example.com/app-1/', title: 'Application 1' }, count: 3 },
-    { value: { url: 'https://example.com/app-2/', title: 'Application 2' }, count: 5 }
+    { value: { url: 'https://example.com/app-1/', title: 'Lorem ipsum 1' }, count: 3 },
+    { value: { url: 'https://example.com/app-2/', title: 'Lorem ipsum 2' }, count: 5 }
   ],
   topics: [
-    { value: { id: 'topic-1', title: 'Thématique exemple', color: '#45d31d', icon: { svgPath: mdiHome } }, count: 5 },
-    { value: { id: 'topic-2', title: 'Autre thématique', color: '#1d6bd3', icon: { svgPath: mdiBook } }, count: 3 },
-    { value: { id: 'topic-3', title: 'Dernière thématique', color: '#d31d6b' }, count: 2 }
+    { value: { id: 'topic-1', title: 'Lorem', color: '#45d31d', icon: { svgPath: mdiHome } }, count: 5 },
+    { value: { id: 'topic-2', title: 'Ipsum', color: '#1d6bd3', icon: { svgPath: mdiBook } }, count: 3 },
+    { value: { id: 'topic-3', title: 'Dolor', color: '#d31d6b' }, count: 2 }
   ],
   keywords: [
     { value: 'keyword-1', count: 6 },
@@ -346,7 +346,7 @@ const previewFacets: Facets = {
   ],
   owner: [
     { value: { type: 'organization', id: 'test_org1', name: 'Test Org 1' }, count: 4 },
-    { value: { type: 'organization', id: 'test_org1', name: 'Test Org 1', department: 'dep1', departmentName: 'Department 1' }, count: 2 }
+    { value: { type: 'organization', id: 'test_org1', name: 'Test Org 1', department: 'dep1', departmentName: 'Lorem ipsum' }, count: 2 }
   ]
 }
 const facets = computed(() => preview ? previewFacets : (catalogFetch?.data.value?.facets ?? { concepts: [], 'base-application': [], topics: [], keywords: [], owner: [] }))

@@ -24,8 +24,8 @@ if (!preview) {
   }, { immediate: true })
 } else {
   eventPageConfig = ref({
-    title: element.event?.title || 'Événement 1',
-    description: "Exemple d'événement pour la prévisualisation.",
+    title: element.event?.title || 'Lorem ipsum 1',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
     eventMetadata: { slug: element.event?.slug || 'event-1', startDate: new Date().toISOString() }
   })
 }

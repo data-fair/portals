@@ -66,7 +66,7 @@
                 <v-autocomplete
                   v-else-if="field.type === 'application'"
                   v-model="additionalData[index]"
-                  :label="field.label || t('application')"
+                  :label="field.label || t('applications')"
                   :items="applicationsFetch?.data.value?.results ?? []"
                   :loading="applicationsFetch?.status.value === 'pending'"
                   :rules="field.required ? [rules.required()] : []"
@@ -253,9 +253,9 @@ if (element.additionalFields?.some(field => field.type === 'dataset') && !previe
   datasetsFetch = {
     data: ref({
       results: [
-        { id: 'dataset-1', title: 'Jeu de données exemple 1' },
-        { id: 'dataset-2', title: 'Jeu de données exemple 2' },
-        { id: 'dataset-3', title: 'Jeu de données exemple 3' }
+        { id: 'dataset-1', title: 'Lorem ipsum 1' },
+        { id: 'dataset-2', title: 'Lorem ipsum 2' },
+        { id: 'dataset-3', title: 'Lorem ipsum 3' }
       ]
     }),
     status: ref('success')
@@ -282,9 +282,9 @@ if (element.additionalFields?.some(field => field.type === 'application') && !pr
   applicationsFetch = {
     data: ref({
       results: [
-        { id: 'app-1', title: 'Visualisation exemple 1' },
-        { id: 'app-2', title: 'Visualisation exemple 2' },
-        { id: 'app-3', title: 'Visualisation exemple 3' }
+        { id: 'app-1', title: 'Lorem ipsum 1' },
+        { id: 'app-2', title: 'Lorem ipsum 2' },
+        { id: 'app-3', title: 'Lorem ipsum 3' }
       ]
     }),
     status: ref('success')
@@ -343,7 +343,7 @@ const sendMessage = useAsyncAction(async () => {
           let label = field.label
           if (!label) {
             if (field.type === 'dataset') label = t('dataset')
-            else if (field.type === 'application') label = t('application')
+            else if (field.type === 'application') label = t('applications')
             else label = `field_${index}`
           }
           const formattedValue = Array.isArray(value) ? value.join(', ') : value

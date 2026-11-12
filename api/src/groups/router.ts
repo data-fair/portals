@@ -46,7 +46,7 @@ router.post('', async (req, res) => {
   }
 
   await createGroup(group)
-  sendGroupEvent(group, 'a été créé', 'create', session)
+  sendGroupEvent(group, 'create', session)
   res.status(201).json(group)
 })
 
@@ -66,7 +66,7 @@ router.patch('/:id', async (req, res) => {
 
   const body = patchReqBody.returnValid(req.body, { name: 'body' })
   const updatedGroup = await patchGroup(group, body, session)
-  sendGroupEvent(updatedGroup, 'a été modifié', 'patch', session)
+  sendGroupEvent(updatedGroup, 'patch', session)
   res.send(updatedGroup)
 })
 
@@ -76,6 +76,6 @@ router.delete('/:id', async (req, res) => {
   if (!group) throw httpError(404, `Group "${req.params.id}" not found`)
   assertAccountRole(session, group.owner, 'admin')
   await mongo.groups.deleteOne({ _id: req.params.id })
-  sendGroupEvent(group, 'a été supprimé', 'delete', session)
+  sendGroupEvent(group, 'delete', session)
   res.status(204).send()
 })

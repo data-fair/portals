@@ -43,8 +43,8 @@ if (!preview) {
 } else {
   displayedNews = computed(() => {
     return Array.from({ length: element.mode === 'custom' ? (element.news?.length || 1) : element.limit }, (_, i) => ({
-      title: element.news?.[i]?.title || `Actualité ${i + 1}`,
-      description: 'Exemple d\'actualité pour la prévisualisation.',
+      title: element.news?.[i]?.title || `Lorem ipsum ${i + 1}`,
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
       newsMetadata: { slug: element.news?.[i]?.slug || `news-${i + 1}`, date: new Date().toISOString() }
     }))
   })

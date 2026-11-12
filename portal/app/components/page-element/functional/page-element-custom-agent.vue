@@ -6,7 +6,7 @@
       variant="tonal"
       :class="element.mb !== 0 && `mb-${element.mb ?? 4}`"
     >
-      Cet assistant IA n'est pas disponible pour votre profil.
+      {{ t('notAvailable') }}
     </v-alert>
     <div
       v-else-if="owner"
@@ -37,6 +37,7 @@ const { portal, portalConfig } = usePortalStore()
 const owner = computed(() => portal.value.owner)
 
 const session = useSession()
+const { t } = useI18n()
 
 const viewerBucket = computed<'admin' | 'contrib' | 'user' | 'external' | 'anonymous'>(() => {
   if (!session.state.user) return 'anonymous'
@@ -63,3 +64,10 @@ const systemPrompt = computed(() => {
   return parts.filter(Boolean).join('\n')
 })
 </script>
+
+<i18n lang="yaml">
+  en:
+    notAvailable: This AI assistant is not available for your profile.
+  fr:
+    notAvailable: Cet assistant IA n'est pas disponible pour votre profil.
+</i18n>

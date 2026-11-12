@@ -70,11 +70,11 @@ const {
   mockDataFactory: () => Array.from({ length: 6 }, (_, i) => ({
     _id: `reuse-${i + 1}`,
     slug: `reuse-${i + 1}`,
-    title: `Réutilisation ${i + 1}`,
+    title: `Lorem ipsum ${i + 1}`,
     config: {
-      title: `Réutilisation ${i + 1}`,
-      summary: 'Exemple de réutilisation pour la prévisualisation.',
-      author: 'Auteur exemple'
+      title: `Lorem ipsum ${i + 1}`,
+      summary: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      author: 'Lorem Ipsum'
     },
     updatedAt: new Date().toISOString()
   }))
