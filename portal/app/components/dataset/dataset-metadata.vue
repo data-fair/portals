@@ -22,8 +22,8 @@
         <div class="text-body-small text-medium-emphasis">
           {{ t('size') }}
         </div>
-        {{ t('records', { count: (dataset.count || 0), formatted: (dataset.count || 0).toLocaleString('fr') }) }} {{ dataset.storage?.indexed?.size ? ' - ' +
-          formatBytes(dataset.storage.indexed.size) : '' }}
+        {{ t('records', { count: (dataset.count || 0), formatted: (dataset.count || 0).toLocaleString(locale) }) }} {{ dataset.storage?.indexed?.size ? ' - ' +
+          formatBytes(dataset.storage.indexed.size, locale) : '' }}
       </v-col>
 
       <!-- Origin (Link to source or producer label) -->
