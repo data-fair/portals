@@ -247,10 +247,10 @@ test.describe('agent editor guidance', () => {
     }
   })
 
-  test('the portal editor says the menu preview comes before the menu card', () => {
-    // a judged run told the person the card « Éléments du menu de navigation » was above the
-    // preview, from guidance that only said the preview was « below the menu settings »
-    expect(editorGuidance('portal').editor).toContain('« Options », the preview, then « Éléments du menu de navigation »')
+  test('the portal editor says the menu card comes before the menu preview', () => {
+    // a judged run told the person the card « Éléments du menu de navigation » was in the wrong
+    // place, from guidance that only said the preview was « below the menu settings »
+    expect(editorGuidance('portal').editor).toContain('« Éléments du menu de navigation », then « Options » and the preview')
   })
 
   test('both editors say how seeing the result first and validating fit together', () => {

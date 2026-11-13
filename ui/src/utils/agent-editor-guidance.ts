@@ -35,7 +35,7 @@ const GUIDING = (prefix: string) => `To guide the person click by click, describ
 const GUIDANCE: Record<EditorKind, Record<string, string>> = {
   page: {
     editor: 'Portal page editor: edit the page (title, description, blocks) with the pageConfig_ form tools, following the page-config-form skill. The page title and description show only in the editor\'s fields, not in the draft preview, nor in the breadcrumb until the draft is validated. Pages have no topic (thématique). ' +
-      'Lists of datasets, events or news are drawn as placeholders (« Dataset 1 », …). « Liste de jeux de données » shows the 3 latest datasets; for all of them, « Catalogue de données ».',
+      'Lists of datasets, events or news are drawn as placeholders (« Lorem ipsum 1 », …). « Liste de jeux de données » shows the 3 latest datasets; for all of them, « Catalogue de données ».',
     'editor-drafts': DRAFT,
     'editor-guiding': GUIDING('pageConfig_'),
     'editor-previews': 'The editor itself has no « Aperçu (brouillon) » tab: the person sees the draft in the editor, and in that tab of the page view (the page title in the breadcrumb). There is no preview of the draft with real data: both draw lists as placeholders, « Portail de prévisualisation » only picks which portal\'s look they take, and « Voir sur … » opens the published page, without the draft. ' +
@@ -45,7 +45,7 @@ const GUIDANCE: Record<EditorKind, Record<string, string>> = {
   portal: {
     editor: 'Portal editor: edit the configuration (colours in « Apparence », menu in « Barre de navigation » > « Éléments du menu de navigation », header, footer, …) with the portalConfig_ form tools, following the portal-config-form skill. ' +
       'In the menu, a free page is a « Page libre » item, picked among the suggestions; a catalog page (« Catalogue de données », « Catalogue d\'événements », …) or a standard one (contact, legal notice, …) is a « Page standard (Accueil, Contact,...) » item with its « Page »; give a catalog item a « Libellé » (the page title), or the menu shows a generic one. ' +
-      'The editor shows changes at once: colours in « Apparence » > « Couleurs », the menu and its preview « Aperçu - Entête & Barre de navigation » in « Barre de navigation », in that order down the tab: « Options », the preview, then « Éléments du menu de navigation ».',
+      'The editor shows changes at once: colours in « Apparence » > « Couleurs », the menu and its preview « Aperçu - Entête & Barre de navigation » in « Barre de navigation », in that order down the tab: « Éléments du menu de navigation », then « Options » and the preview.',
     'editor-drafts': DRAFT,
     'editor-guiding': GUIDING('portalConfig_'),
     'editor-menu-options': MENU_OPTIONS,

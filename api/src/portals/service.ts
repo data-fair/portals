@@ -9,7 +9,7 @@ import { type SessionStateAuthenticated, assertAccountRole, assertAdminMode, get
 // origin, which only our ingress routes here — the private instance (lib-node refuses non public
 // addresses in the default one, which is for URLs a user can influence)
 import { privateAxiosInstance as axios } from '@data-fair/lib-node/axios.js'
-import eventsQueue from '@data-fair/lib-node/events-queue.js'
+import eventsQueue, { type PushEvent } from '@data-fair/lib-node/events-queue.js'
 import { defaultTheme, fillTheme } from '@data-fair/lib-common-types/theme/index.js'
 import { renderMarkdown } from '@data-fair/portals-shared-markdown'
 import { forEachFooterBlock, footerImageRefs, hasKoumoulMention } from '#types/portal-config-footer/walk.ts'
@@ -79,7 +79,7 @@ export const patchPortal = async (portal: Portal, patch: Partial<Portal>, sessio
 
   const whiteLabel = patch.whiteLabel ?? portal.whiteLabel
   if (patch.draftConfig && !whiteLabel && !hasKoumoulMention(patch.draftConfig.footer)) {
-    throw httpError(400, 'Le pied de page doit afficher la mention Koumoul : activez la ligne de copyright ou ajoutez le logo Koumoul dans un bloc images.')
+    throw httpError(400, 'The footer must show the Koumoul mention: enable the copyright line or add the Koumoul logo in an images block.')
   }
 
   if (patch.contributorDepartments && patch.contributorDepartments.length && portal.owner.department) {
@@ -144,7 +144,7 @@ export const validatePortalDraft = async (portal: Portal, session: SessionStateA
   debug('validatePortalDraft', portal)
   const updatedPortal = await patchPortal(portal, { config: portal.draftConfig, title: portal.draftConfig.title }, session, reqOrigin, [], headers)
   await cleanUnusedImages(updatedPortal)
-  sendPortalEvent(portal, 'a été validé', 'draft-validate', session, getChangesKeys(portal.config, updatedPortal.config))
+  sendPortalEvent(portal, 'draft-validate', session, getChangesKeys(portal.config, updatedPortal.config))
   return updatedPortal
 }
 
@@ -152,7 +152,7 @@ export const cancelPortalDraft = async (portal: Portal, session: SessionStateAut
   debug('cancelPortalDraft', portal)
   const updatedPortal = await patchPortal(portal, { draftConfig: portal.config }, session, reqOrigin, [], headers)
   await cleanUnusedImages(updatedPortal)
-  sendPortalEvent(portal, 'a été annulé', 'draft-discard', session)
+  sendPortalEvent(portal, 'draft-discard', session)
   return updatedPortal
 }
 
@@ -439,27 +439,30 @@ const cleanUnusedImages = async (portal: Portal) => {
   await mongo.images.deleteMany(deleteFilter)
 }
 
+const portalTitles = {
+  create: (title: string) => ({ en: `The portal ${title} was created`, fr: `Le portail ${title} a été créé` }),
+  patch: (title: string) => ({ en: `The portal ${title} was updated`, fr: `Le portail ${title} a été modifié` }),
+  delete: (title: string) => ({ en: `The portal ${title} was deleted`, fr: `Le portail ${title} a été supprimé` }),
+  'draft-validate': (title: string) => ({ en: `The draft of the portal ${title} was validated`, fr: `Le brouillon du portail ${title} a été validé` }),
+  'draft-discard': (title: string) => ({ en: `The draft of the portal ${title} was discarded`, fr: `Le brouillon du portail ${title} a été annulé` })
+}
+
+/** Body of a portal event that lists the changed keys of its configuration. */
+export const changesBody = (keys: string[]) => ({ en: `Changes: ${keys.join(', ')}`, fr: `Modifications : ${keys.join(', ')}` })
+
 /**
- * Helper function to send events related to portals
- * @param portal The portal object
- * @param actionText The text describing the action (e.g. "a été validé")
- * @param topicAction The action part of the topic key (e.g. "draft-validate", "draft-discard")
- * @param sessionState Optional session state for authentication
- * @param body Optional additional information to include in the event
+ * Send an event about a portal.
+ * @param topicAction The action part of the topic key, it also selects the event title
+ * @param body Details of the event
  */
 export const sendPortalEvent = (
   portal: Portal,
-  actionText: string,
-  topicAction: string,
+  topicAction: keyof typeof portalTitles,
   sessionState?: SessionStateAuthenticated,
-  body?: string
+  body?: PushEvent['body']
 ) => {
-  const title = topicAction.includes('draft-')
-    ? `Le brouillon du portail ${portal.title} ${actionText}`
-    : `Le portail ${portal.title} ${actionText}`
-
   eventsQueue.pushEvent({
-    title,
+    title: portalTitles[topicAction](portal.title),
     topic: { key: `portals:portal-${topicAction}:${portal._id}` },
     sender: portal.owner,
     resource: {
@@ -471,7 +474,7 @@ export const sendPortalEvent = (
   }, sessionState)
 }
 
-const getChangesKeys = (obj1: Record<string, any>, obj2: Record<string, any>): string => {
+const getChangesKeys = (obj1: Record<string, any>, obj2: Record<string, any>) => {
   const allKeys = new Set([...Object.keys(obj1), ...Object.keys(obj2)])
   const modifiedKeys: string[] = []
 
@@ -479,7 +482,7 @@ const getChangesKeys = (obj1: Record<string, any>, obj2: Record<string, any>): s
     if (!equal(obj1[key], obj2[key])) modifiedKeys.push(key)
   }
 
-  return 'Modifications : ' + modifiedKeys.join(', ')
+  return changesBody(modifiedKeys)
 }
 
 /**
@@ -492,7 +495,7 @@ export const duplicatePortalConfig = async (
   sourcePortalId: string,
   newPortalId: string,
   newOwner: Portal['owner']
-): Promise<{ config: PortalConfig; eventDetails: string }> => {
+): Promise<{ config: PortalConfig; eventDetails: PushEvent['body'] }> => {
   const sourcePortal = await mongo.portals.findOne({ _id: sourcePortalId })
   if (!sourcePortal) throw httpError(404, `portal "${sourcePortalId}" not found for duplication`)
 
@@ -535,8 +538,9 @@ export const duplicatePortalConfig = async (
     for (const topic of duplicatedConfig.topics) rewrite(topic.thumbnail)
   }
 
-  let eventDetails = `Dupliqué depuis le portail "${sourcePortal.title}" (${sourcePortalId})`
-  if (sourcePortal?.isReference) eventDetails = `Dupliqué depuis le portail de référence "${sourcePortal.title}" (${sourcePortalId})`
+  const eventDetails = sourcePortal.isReference
+    ? { en: `Duplicated from the reference portal "${sourcePortal.title}" (${sourcePortalId})`, fr: `Dupliqué depuis le portail de référence "${sourcePortal.title}" (${sourcePortalId})` }
+    : { en: `Duplicated from the portal "${sourcePortal.title}" (${sourcePortalId})`, fr: `Dupliqué depuis le portail "${sourcePortal.title}" (${sourcePortalId})` }
 
   return { config: duplicatedConfig, eventDetails }
 }

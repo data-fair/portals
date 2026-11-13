@@ -85,7 +85,7 @@ router.post('', requireOperationScope('createReuse'), async (req, res, next) => 
 
   await createReuse(reuse)
 
-  sendReuseEvent(reuse, 'a été créée', 'create', session)
+  sendReuseEvent(reuse, 'create', session)
   res.status(201).json(reuse)
 })
 
@@ -106,7 +106,7 @@ router.patch('/:id', requireOperationScope('updateReuse'), async (req, res, next
   if (!onlyDraftChanged) {
     const hasOtherChanges = Object.keys(body).some(key => key !== 'portals' && key !== 'draftConfig')
     if (hasOtherChanges) {
-      sendReuseEvent(updatedReuse, 'a été modifiée', 'patch', session)
+      sendReuseEvent(updatedReuse, 'patch', session)
     }
   }
 
@@ -116,7 +116,7 @@ router.patch('/:id', requireOperationScope('updateReuse'), async (req, res, next
 router.delete('/:id', requireOperationScope('deleteReuse'), async (req, res, next) => {
   const reuse = await getReuseAsAdmin(reqSessionAuthenticated(req), req.params.id)
   await deleteReuse(reuse)
-  sendReuseEvent(reuse, 'a été supprimée', 'delete', reqSessionAuthenticated(req))
+  sendReuseEvent(reuse, 'delete', reqSessionAuthenticated(req))
   res.status(204).send()
 })
 

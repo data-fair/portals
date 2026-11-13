@@ -105,7 +105,7 @@ router.post('', requireOperationScope('createPage'), async (req, res, next) => {
   }
 
   const creationDetails = await createPage(page, body.sourcePageId)
-  sendPageEvent(page, 'a été créée', 'create', session, creationDetails)
+  sendPageEvent(page, 'create', session, creationDetails)
 
   res.status(201).json(page)
 })
@@ -131,7 +131,7 @@ router.delete('/:id', requireOperationScope('deletePage'), async (req, res, next
   if (!page) throw httpError(404, `page "${req.params.id}" not found`)
   assertAccountRole(session, page.owner, 'admin')
   await deletePage(page)
-  sendPageEvent(page, 'a été supprimée', 'delete', session)
+  sendPageEvent(page, 'delete', session)
   res.status(204).send()
 })
 

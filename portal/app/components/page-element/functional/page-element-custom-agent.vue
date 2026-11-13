@@ -6,7 +6,7 @@
       variant="tonal"
       :class="element.mb !== 0 && `mb-${element.mb ?? 4}`"
     >
-      Cet assistant IA n'est pas disponible pour votre profil.
+      {{ t('notAvailable') }}
     </v-alert>
     <div
       v-else-if="owner"
@@ -35,6 +35,7 @@ const { portal } = usePortalStore()
 const owner = computed(() => portal.value.owner)
 
 const session = useSession()
+const { t } = useI18n()
 
 const viewerBucket = computed<'admin' | 'contrib' | 'user' | 'external' | 'anonymous'>(() => {
   if (!session.state.user) return 'anonymous'
@@ -52,3 +53,10 @@ const canSee = computed(() => {
 // applied (a persona is a configured agent, chosen by agentId: docs/architecture/agent.md). The
 // portal's built-in guidance reaches the chat as host state (composables/agent/use-portal-agent-host.ts).
 </script>
+
+<i18n lang="yaml">
+  en:
+    notAvailable: This AI assistant is not available for your profile.
+  fr:
+    notAvailable: Cet assistant IA n'est pas disponible pour votre profil.
+</i18n>

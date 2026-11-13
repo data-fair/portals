@@ -28,9 +28,9 @@ if (!preview) {
     _id: 'reuse-preview',
     slug: element.reuse?.slug || 'reuse-1',
     config: {
-      title: element.reuse?.title || 'Réutilisation 1',
-      summary: 'Exemple de réutilisation pour la prévisualisation.',
-      author: 'Auteur exemple'
+      title: element.reuse?.title || 'Lorem ipsum 1',
+      summary: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      author: 'Lorem Ipsum'
     },
     updatedAt: new Date().toISOString()
   })

@@ -51,6 +51,7 @@ const { element, context } = defineProps<{
 }>()
 const { portal, portalConfig } = usePortalStore()
 const { t } = useI18n()
+provideCatalogStaticFilters('applications', () => element.staticFilters)
 
 const {
   displayedItems, itemsCount, loading, currentPage, totalPages,
@@ -92,15 +93,15 @@ const {
       return {
         id: slug,
         slug,
-        title: `Application ${i + 1}`,
-        summary: 'Exemple d\'application pour la prévisualisation.',
+        title: `Lorem ipsum ${i + 1}`,
+        summary: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
         updatedAt: new Date().toISOString(),
         image: undefined,
         url: `/applications/${slug}`,
         href: `/applications/${slug}`,
         exposedUrl: `/applications/${slug}`,
         owner: session.account.value,
-        topics: [{ id: 'topic-1', title: 'Thématique exemple', color: '#45d31d' }]
+        topics: [{ id: 'topic-1', title: 'Lorem', color: '#45d31d' }]
       }
     })
   }

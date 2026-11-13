@@ -1,4 +1,6 @@
 import { inheritedStyleLayout } from '../common-defs/schema.ts'
+import { datasetsStaticFilters } from '../page-element-datasets/schema.js'
+import { applicationsStaticFilters } from '../page-element-applications/schema.js'
 
 export default {
   $id: 'https://github.com/data-fair/portals/page-element-functional',
@@ -217,6 +219,24 @@ export default {
             // Hidden when several sources are selected: we can only redirect to a single catalog.
             if: '!Array.isArray(parent.data?.mode) || parent.data?.mode.length <= 1'
           }
+        },
+        datasetsStaticFilters: {
+          ...datasetsStaticFilters,
+          additionalProperties: false,
+          title: 'Datasets static filters',
+          'x-i18n-title': { fr: 'Filtres statiques des jeux de données' },
+          description: "Restrict the topics displayed and their counts. Inside a datasets catalog, the block uses the catalog's static filters by default; filling these filters replaces them.",
+          'x-i18n-description': { fr: 'Restreignent les thématiques affichées et leurs compteurs. Dans un catalogue de données, le bloc reprend par défaut les filtres statiques du catalogue ; renseigner ces filtres les remplace.' },
+          layout: { comp: 'card', if: '!parent.data?.mode || parent.data.mode.includes("datasets")' }
+        },
+        applicationsStaticFilters: {
+          ...applicationsStaticFilters,
+          additionalProperties: false,
+          title: 'Applications static filters',
+          'x-i18n-title': { fr: 'Filtres statiques des visualisations' },
+          description: "Restrict the topics displayed and their counts. Inside an applications catalog, the block uses the catalog's static filters by default; filling these filters replaces them.",
+          'x-i18n-description': { fr: 'Restreignent les thématiques affichées et leurs compteurs. Dans un catalogue de visualisations, le bloc reprend par défaut les filtres statiques du catalogue ; renseigner ces filtres les remplace.' },
+          layout: { comp: 'card', if: 'parent.data?.mode?.includes("applications")' }
         },
         centered: {
           type: 'boolean',
@@ -630,8 +650,8 @@ export default {
           layout: 'switch',
           title: 'Show the social network links',
           'x-i18n-title': { fr: 'Afficher les liens de réseaux sociaux' },
-          description: 'No link is shown until a social network is set in the portal configuration ("General settings › Social networks").',
-          'x-i18n-description': { fr: "Aucun lien n'est affiché tant qu'aucun réseau social n'est renseigné dans la configuration du portail (« Paramètres généraux › Réseaux sociaux »)." }
+          description: 'No link is shown until a social network is set in the portal configuration ("Contact › Social networks").',
+          'x-i18n-description': { fr: "Aucun lien n'est affiché tant qu'aucun réseau social n'est renseigné dans la configuration du portail (« Contact › Réseaux sociaux »)." }
         },
         mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' },
         sendButton: {

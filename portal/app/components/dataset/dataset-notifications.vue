@@ -37,7 +37,7 @@ const { portalConfig } = usePortalStore()
 
 const src = computed(() => {
   const keys = [`data-fair:dataset-data-updated:${dataset.id}`, `data-fair:dataset-breaking-change:${dataset.id}`]
-  const titles = ['Mise à jour des données', 'Rupture de compatibilité des données']
+  const titles = [t('dataUpdated'), t('breakingChange')]
   const urlTemplate = '/datasets/' + dataset.id
   let sender = `${dataset.owner.type}:${dataset.owner.id}`
   if (dataset.owner.department) sender += ':' + dataset.owner.department
@@ -50,8 +50,12 @@ const src = computed(() => {
     title: Notifications
     text: Notifications
     tooltip: Open the notification settings in a dialog
+    dataUpdated: Data update
+    breakingChange: Breaking change in the data
   fr:
     title: Notifications
     text: Notifications
     tooltip: Ouvrir les notifications dans une boîte de dialogue
+    dataUpdated: Mise à jour des données
+    breakingChange: Rupture de compatibilité des données
 </i18n>

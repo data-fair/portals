@@ -43,6 +43,31 @@ test.describe('pages management', () => {
     assert.deepEqual(events.draftConfig.elements[0].filters, { position: 'top', items: ['search', 'include-past', 'sort'] })
   })
 
+  test('should store the static filters of a topics list per source', async () => {
+    const element = {
+      type: 'topics',
+      datasetsStaticFilters: { includedTopics: [{ id: 't1', title: 'T1' }], types: ['file'] },
+      applicationsStaticFilters: { includedBaseApplications: [{ id: 'https://app/', title: 'App' }] }
+    }
+    const page = (await user1.post('/api/pages', {
+      type: 'generic',
+      config: { title: 'Topics page', elements: [element], genericMetadata: { slug: 'topics-page' } }
+    })).data
+    assert.deepEqual(page.config.elements[0].datasetsStaticFilters, element.datasetsStaticFilters)
+    assert.deepEqual(page.config.elements[0].applicationsStaticFilters, element.applicationsStaticFilters)
+  })
+
+  test('should reject an applications static filter in the datasets group of a topics list', async () => {
+    await assert.rejects(user1.post('/api/pages', {
+      type: 'generic',
+      config: {
+        title: 'Topics page',
+        elements: [{ type: 'topics', datasetsStaticFilters: { includedBaseApplications: [{ id: 'https://app/' }] } }],
+        genericMetadata: { slug: 'topics-page-invalid' }
+      }
+    }), (err: any) => err.status === 400)
+  })
+
   test('should duplicate a page with an image', async () => {
     const sourcePageConfig: PageConfig = {
       title: 'Source page',

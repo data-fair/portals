@@ -40,10 +40,10 @@ const { portal, portalConfig } = usePortalStore()
 const notifyUrl = computed(() => {
   if (!topics.value) return
   const keys = [`data-fair:dataset-published:data-fair-portals:${portal.value._id}`]
-  const titles = ['Nouveau jeu de données sur ' + portalConfig.value.title]
+  const titles = [t('datasetPublished', { portal: portalConfig.value.title })]
   for (const topic of topics.value) {
     keys.push(`data-fair:dataset-published-topic:data-fair-portals:${portal.value._id}:${topic.value.id}`)
-    titles.push(`Nouveau jeu de données dans la thématique ${topic.value.title} sur ${portalConfig.value.title}`)
+    titles.push(t('datasetPublishedTopic', { topic: topic.value.title, portal: portalConfig.value.title }))
   }
   const icon = `/simple-directory/api/avatars/${portal.value.owner.type}/${portal.value.owner.id}/avatar.png`
   const urlTemplate = '/datasets/{id}'
@@ -74,10 +74,14 @@ useHead({ title: t('notifications') })
     notifications: Notifications
     notificationsInfo: You can configure here global notifications on this data portal.
     notificationsAlert: For targeted notifications on datasets visit their individual pages and click the bell.
+    datasetPublished: 'New dataset on {portal}'
+    datasetPublishedTopic: 'New dataset in the topic {topic} on {portal}'
   fr:
     devices: Appareils configurés
     devicesInfo: Appareils configurés pour recevoir vos notifications
     notifications: Notifications
     notificationsInfo: Vous pouvez configurer ici des notifications globales sur ce portail de données.
     notificationsAlert: Pour des notifications ciblées sur des jeux de données visitez leurs pages individuelles et cliquez sur la cloche.
+    datasetPublished: 'Nouveau jeu de données sur {portal}'
+    datasetPublishedTopic: 'Nouveau jeu de données dans la thématique {topic} sur {portal}'
 </i18n>

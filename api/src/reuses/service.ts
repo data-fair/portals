@@ -3,7 +3,7 @@ import type { Portal } from '#types/portal/index.ts'
 import debugModule from 'debug'
 import slug from 'slugify'
 import { type SessionStateAuthenticated, assertAccountRole, httpError } from '@data-fair/lib-express'
-import eventsQueue from '@data-fair/lib-node/events-queue.js'
+import eventsQueue, { type PushEvent } from '@data-fair/lib-node/events-queue.js'
 import { renderMarkdown } from '@data-fair/portals-shared-markdown'
 import mongo from '#mongo'
 import { assertOwnerPortals } from '../portals/service.ts'
@@ -99,11 +99,17 @@ export const patchReuse = async (
 
   // Send events for portal publication changes
   for (const portalId of addedPortals) {
-    sendReuseEvent(updatedReuse, 'a été publiée sur un portail', 'publish', session, `La réutilisation a été publiée sur le portail : ${portalId}`)
+    sendReuseEvent(updatedReuse, 'publish', session, {
+      en: `The reuse was published on the portal: ${portalId}`,
+      fr: `La réutilisation a été publiée sur le portail : ${portalId}`
+    })
   }
 
   for (const portalId of removedPortals) {
-    sendReuseEvent(updatedReuse, "a été dépubliée d'un portail", 'unpublish', session, `La réutilisation a été dépubliée du portail : ${portalId}`)
+    sendReuseEvent(updatedReuse, 'unpublish', session, {
+      en: `The reuse was unpublished from the portal: ${portalId}`,
+      fr: `La réutilisation a été dépubliée du portail : ${portalId}`
+    })
   }
 
   return updatedReuse
@@ -147,25 +153,30 @@ const cleanUnusedImages = async (reuse: Reuse) => {
   await mongo.images.deleteMany(deleteFilter)
 }
 
+const reuseTitles = {
+  create: (title: string) => ({ en: `The reuse ${title} was created`, fr: `La réutilisation ${title} a été créée` }),
+  patch: (title: string) => ({ en: `The reuse ${title} was updated`, fr: `La réutilisation ${title} a été modifiée` }),
+  delete: (title: string) => ({ en: `The reuse ${title} was deleted`, fr: `La réutilisation ${title} a été supprimée` }),
+  publish: (title: string) => ({ en: `The reuse ${title} was published on a portal`, fr: `La réutilisation ${title} a été publiée sur un portail` }),
+  unpublish: (title: string) => ({ en: `The reuse ${title} was unpublished from a portal`, fr: `La réutilisation ${title} a été dépubliée d'un portail` }),
+  submit: (title: string) => ({ en: `The reuse ${title} was submitted for validation`, fr: `La réutilisation ${title} a été soumise pour validation` }),
+  'draft-validate': (title: string) => ({ en: `The draft of the reuse ${title} was validated`, fr: `Le brouillon de la réutilisation ${title} a été validé` }),
+  'draft-discard': (title: string) => ({ en: `The draft of the reuse ${title} was discarded`, fr: `Le brouillon de la réutilisation ${title} a été annulé` })
+}
+
 /**
- * Helper function to send events related to reuses
- * @param reuse The reuse object
- * @param actionText The text describing the action (e.g. "a été créé")
- * @param topicAction The action part of the topic key (e.g. "create", "patch", "delete")
- * @param sessionState Optional session state for authentication
- * @param body Optional additional information to include in the event
+ * Send an event about a reuse.
+ * @param topicAction The action part of the topic key, it also selects the event title
+ * @param body Details of the event
  */
 export const sendReuseEvent = (
   reuse: Reuse,
-  actionText: string,
-  topicAction: string,
+  topicAction: keyof typeof reuseTitles,
   sessionState?: SessionStateAuthenticated,
-  body?: string
+  body?: PushEvent['body']
 ) => {
-  const title = `La réutilisation ${reuse.title} ${actionText}`
-
   eventsQueue.pushEvent({
-    title,
+    title: reuseTitles[topicAction](reuse.title),
     topic: { key: `reuses:reuse-${topicAction}:${reuse._id}` },
     sender: reuse.owner,
     resource: {
@@ -182,7 +193,7 @@ export const validateReuseDraft = async (reuse: Reuse, session: SessionStateAuth
   debug('validateReuseDraft', reuse)
   const updatedReuse = await patchReuse(reuse, { config: reuse.draftConfig, title: reuse.draftConfig.title }, session)
   await cleanUnusedImages(updatedReuse)
-  sendReuseEvent(reuse, 'a été validé', 'draft-validate', session)
+  sendReuseEvent(reuse, 'draft-validate', session)
   return updatedReuse
 }
 
@@ -190,7 +201,7 @@ export const cancelReuseDraft = async (reuse: Reuse, session: SessionStateAuthen
   debug('cancelReuseDraft', reuse)
   const updatedReuse = await patchReuse(reuse, { draftConfig: reuse.config }, session)
   await cleanUnusedImages(updatedReuse)
-  sendReuseEvent(reuse, 'a été annulé', 'draft-discard', session)
+  sendReuseEvent(reuse, 'draft-discard', session)
   return updatedReuse
 }
 
@@ -224,7 +235,10 @@ export const submitReuse = async (reuse: Reuse, portalId: string, session: Sessi
 
   const portalTitle = portal.title || portal.config?.title || portal._id
   const portalUrlOrId = portal.ingress?.url || portal._id
-  sendReuseEvent(updatedReuse, 'a été soumise pour validation', 'submit', session, `Soumise sur le portail : ${portalTitle} (${portalUrlOrId})`)
+  sendReuseEvent(updatedReuse, 'submit', session, {
+    en: `Submitted on the portal: ${portalTitle} (${portalUrlOrId})`,
+    fr: `Soumise sur le portail : ${portalTitle} (${portalUrlOrId})`
+  })
 
   return updatedReuse
 }

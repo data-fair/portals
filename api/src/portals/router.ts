@@ -1,4 +1,5 @@
 import type { Portal, PortalConfig } from '#types/portal/index.ts'
+import { type PushEvent } from '@data-fair/lib-node/events-queue.js'
 
 import { randomUUID } from 'node:crypto'
 import { Router } from 'express'
@@ -11,7 +12,7 @@ import * as postIngressReqBody from '#types/portal-ingress/index.ts'
 import { httpError, reqSessionAuthenticated, assertAccountRole, assertAdminMode, reqOrigin, allowAnyScope } from '@data-fair/lib-express'
 import { defaultTheme, fillTheme } from '@data-fair/lib-common-types/theme/index.js'
 import { hasKoumoulMention } from '#types/portal-config-footer/walk.ts'
-import { createPortal, validatePortalDraft, cancelPortalDraft, getPortal, getPortalAsAdmin, patchPortal, deletePortal, sendPortalEvent, duplicatePortalConfig } from './service.ts'
+import { createPortal, validatePortalDraft, cancelPortalDraft, getPortal, getPortalAsAdmin, patchPortal, deletePortal, sendPortalEvent, changesBody, duplicatePortalConfig } from './service.ts'
 import { requireOperationScope } from '../scopes.ts'
 import { syncHeaders } from './operations.ts'
 
@@ -64,7 +65,7 @@ router.post('', requireOperationScope('createPortal'), async (req, res, next) =>
       background: { color: 'primary' },
       rows: [{
         columns: 1,
-        blocks: [{ type: 'links', align: 'center', display: 'inline', items: [{ type: 'standard', subtype: 'sitemap', title: 'Plan du site' }] }]
+        blocks: [{ type: 'links', align: 'center', display: 'inline', items: [{ type: 'standard', subtype: 'sitemap' }] }]
       }]
     },
     datasets: {
@@ -101,7 +102,7 @@ router.post('', requireOperationScope('createPortal'), async (req, res, next) =>
   const owner = body.owner ?? session.account
 
   // Handle portal duplication if sourcePortalId is provided
-  let duplicationEventDetails: string | undefined
+  let duplicationEventDetails: PushEvent['body']
   if (body.sourcePortalId) {
     const { config: duplicatedConfig, eventDetails } = await duplicatePortalConfig(session, body.sourcePortalId, portalId, owner)
     config = { ...config, ...duplicatedConfig }
@@ -125,7 +126,7 @@ router.post('', requireOperationScope('createPortal'), async (req, res, next) =>
   assertAccountRole(session, portal.owner, 'admin')
 
   await createPortal(portal, reqOrigin(req), { session, headers: syncHeaders(req) })
-  sendPortalEvent(portal, 'a été créé', 'create', session, duplicationEventDetails)
+  sendPortalEvent(portal, 'create', session, duplicationEventDetails)
   res.status(201).json(portal)
 })
 
@@ -161,7 +162,7 @@ router.patch('/:id', requireOperationScope('updatePortal'), async (req, res, nex
   // Send patch event only if not just draft changed
   const onlyDraftChanged = Object.keys(body).length === 1 && body.draftConfig
   if (!onlyDraftChanged) {
-    sendPortalEvent(updatedPortal, 'a été modifié', 'patch', session, 'Modifications : ' + Object.keys(body).join(', '))
+    sendPortalEvent(updatedPortal, 'patch', session, changesBody(Object.keys(body)))
   }
 
   res.send(updatedPortal)
@@ -171,7 +172,7 @@ router.delete('/:id', requireOperationScope('deletePortal'), async (req, res, ne
   const session = reqSessionAuthenticated(req)
   const portal = await getPortalAsAdmin(session, req.params.id)
   await deletePortal(portal, reqOrigin(req), { session, headers: syncHeaders(req) })
-  sendPortalEvent(portal, 'a été supprimé', 'delete', session)
+  sendPortalEvent(portal, 'delete', session)
   res.status(204).send()
 })
 
