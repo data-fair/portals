@@ -51,6 +51,7 @@ const { element, context } = defineProps<{
 }>()
 const { portal, portalConfig } = usePortalStore()
 const { t } = useI18n()
+provideCatalogStaticFilters('applications', () => element.staticFilters)
 
 const {
   displayedItems, itemsCount, loading, currentPage, totalPages,

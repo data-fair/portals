@@ -53,7 +53,13 @@ let topicsItems: TopicItem[] | ComputedRef<TopicItem[]>
 let unavailable: ComputedRef<boolean>
 
 if (!preview) {
-  const fetches = modes.value.map(m => useLocalFetch<{
+  const parentCatalog = useParentCatalogStaticFilters()
+  const sources = modes.value.map(m => {
+    const own = m === 'datasets' ? element.datasetsStaticFilters : element.applicationsStaticFilters
+    const inherited = parentCatalog?.source === m ? parentCatalog.filters() : undefined
+    return { mode: m, filters: resolveStaticFilters(own, inherited) }
+  })
+  const fetches = sources.map(({ mode: m, filters }) => useLocalFetch<{
     facets: {
       topics: {
         value: Omit<TopicItem, 'count'>,
@@ -65,14 +71,18 @@ if (!preview) {
       facets: 'topics',
       size: 0,
       publicationSites: 'data-fair-portals:' + portal.value._id,
+      ...staticFiltersQuery(filters)
     }
   }))
   unavailable = computed(() => fetches.some(fetch => isContentUnavailable(fetch.error.value)))
   topicsItems = computed(() => {
     // Merge topics from every source, summing counts for topics that appear in several catalogs.
     const merged = new Map<string, TopicItem>()
-    for (const fetch of fetches) {
+    for (const [i, fetch] of fetches.entries()) {
+      // the facets of a field ignore the filter on this same field
+      const includedTopics = sources[i]!.filters?.includedTopics
       for (const facet of fetch.data.value?.facets.topics ?? []) {
+        if (!isStaticFilterAllowed(facet.value.id, includedTopics)) continue
         const existing = merged.get(facet.value.id)
         if (existing) existing.count += facet.count
         else merged.set(facet.value.id, { ...facet.value, count: facet.count })
