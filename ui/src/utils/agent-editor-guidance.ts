@@ -100,7 +100,7 @@ export function pageViewGuidance (pageId: string): string {
   return 'Page screen (view, not the editor): its tabs are « Aperçu » (open by default: the validated content, without the portal\'s header and footer), « Aperçu (brouillon) » (the draft), « Publications » and « Informations », with an actions panel on the right. ' +
     `Its content is edited in the page editor: « Éditer le brouillon » in the actions panel, or navigate to /pages/${pageId}/edit-config. ` +
     '« Voir sur <portal> » in the actions panel opens the published page on that portal, in a new tab: that is how the person sees it themselves. ' +
-    'preview_page renders the page for you only: the person never sees its screenshot, describe what it shows, say which you rendered (the published page on the portal\'s public address, with its header and footer, or the draft), and point them to « Aperçu (brouillon) » or « Voir sur <portal> » to see it (to see it on a phone, they open the address « Voir sur <portal> » opens on their phone).'
+    'preview_page renders the page for you only: the person never sees its screenshot, so say you looked at it (« d\'après mon rendu »), never that you displayed it (« j\'ai affiché » sends them looking for it on screen), describe what it shows, say which you rendered (the published page on the portal\'s public address, with its header and footer, or the draft), and point them to « Aperçu (brouillon) » or « Voir sur <portal> » to see it (to see it on a phone, they open the address « Voir sur <portal> » opens on their phone). When the answer may differ in the draft, render it too (draft) rather than leaving that check to them.'
 }
 
 export function pagePublicationState (portals: Array<{ id: string, title: string }>): string {
