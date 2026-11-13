@@ -1,12 +1,14 @@
 <template>
   <!--
     active false => remove overlay when the `to` props is the current route
+    In the editor preview the button keeps its address (a link to read, for people and for the
+    assistant's page preview) but does not navigate.
   -->
   <v-hover v-slot="{ isHovering, props: hoverProps }">
     <v-btn
       v-bind="{ ...$attrs, ...hoverProps }"
       :to="!preview && !isExternalLink(link) ? resolveLink(link) : undefined"
-      :href="!preview && isExternalLink(link) ? resolveLink(link) : undefined"
+      :href="preview ? resolveMenuLink(link) : (isExternalLink(link) ? resolveLink(link) : undefined)"
       :target="link.target ? '_blank' : undefined"
       :rel="linkRel(resolveLink(link), link.target)"
       :title="link.target ? resolveLinkTitle(link, locale) + ' - ' + t('newWindow') : undefined"
@@ -18,6 +20,7 @@
       :class="{ 'text-uppercase': config?.uppercase, 'bg-surface': !btnHover.color(isHovering, config?.color) }"
       :style="btnHover.style(isHovering)"
       :active="false"
+      @click="preview && $event.preventDefault()"
     >
       <!--
         Show icon in prepend, not directly in default slot with start props
@@ -41,6 +44,8 @@
 <script setup lang="ts">
 import type { LinkItem } from '#api/types/page-elements/index.ts'
 import type { ButtonConfig } from '#api/types/common-defs/index.ts'
+// pure, unlike the navigation store's resolveLink, which the manager UI's preview stubs
+import { resolveMenuLink } from '../../utils/nav-active'
 
 defineOptions({
   inheritAttrs: false
