@@ -7,9 +7,10 @@
  *   UI (this repo's dev server) in a d-frame; the chat drawer belongs to the shell
  *   and the tools are registered by the manager UI inside the frame. That is the
  *   production topology, iframe changes included.
- * portal — the public Nuxt portal renders its own chat drawer, for an anonymous visitor.
+ * portal — the public Nuxt portal renders its own chat drawer, for a visitor signed in with no
+ *   organization (an anonymous visitor's conversation is never reviewable, so not exportable).
  */
-import type { Page } from '@playwright/test'
+import { request, type Page } from '@playwright/test'
 import type { PerceptionRoot, SimulationCase, ParsedExport } from '@data-fair/lib-agents-sim'
 import type { SeedIds } from './fixtures.ts'
 import { OWNER, OWNER_ADMIN_EMAIL, ROOT } from './settings.ts'
@@ -37,6 +38,37 @@ export function portalUrl (portalId: string) {
   return `http://${portalId}.portals.${process.env.DEV_HOST}:${process.env.NGINX_PORT}`
 }
 
+/**
+ * The portal cases' visitor: signed in, with no organization. Since agents #80 an anonymous visitor's
+ * conversation is never reviewable, so it could not be exported and the run was invalid.
+ */
+export const PORTAL_VISITOR = { id: 'test_alone', email: 'test_alone@test.com' } as const
+
+/**
+ * The visitor signed in on the portal's own domain, through simple-directory's API as the e2e fixtures
+ * do (tests/fixtures/login.ts): through the login form, the portal's single-use token callback was
+ * opened twice and refused (error=invalidToken). The keepalive is held off so that no page load rotates
+ * the exchange token.
+ */
+async function portalVisitorLogin (page: Page, portal: string) {
+  const ctx = await request.newContext()
+  try {
+    const res = await ctx.post(`${portal}/simple-directory/api/auth/password`, {
+      params: { redirect: `${portal}/` },
+      data: { email: PORTAL_VISITOR.email, password: 'passwd' }
+    })
+    if (!res.ok()) throw new Error(`portal visitor login failed: ${res.status()} ${await res.text()}`)
+    const callback = await ctx.get(await res.text(), { maxRedirects: 0 })
+    if (callback.status() !== 302) throw new Error(`portal visitor login callback failed: ${callback.headers().location}`)
+    await page.context().addCookies((await ctx.storageState()).cookies)
+  } finally {
+    await ctx.dispose()
+  }
+  await page.context().addInitScript(() => {
+    window.localStorage.setItem('sd-keepalive', String(Date.now() + 365 * 86400_000))
+  })
+}
+
 /** simple-directory keeps the active organization from the login's `org` parameter. */
 async function login (page: Page, target: string) {
   await page.goto(`${ROOT}/simple-directory/login?redirect=${encodeURIComponent(target)}&org=${OWNER.id}`)
@@ -60,7 +92,10 @@ export function createSurface (simCase: SimCase, page: Page): Surface {
     }
   }
   return {
-    goto: async ids => { await page.goto(portalUrl(ids.portalId) + resolveRoute(simCase.route, ids), { waitUntil: 'domcontentloaded' }) },
+    goto: async ids => {
+      await portalVisitorLogin(page, portalUrl(ids.portalId))
+      await page.goto(portalUrl(ids.portalId) + resolveRoute(simCase.route, ids), { waitUntil: 'domcontentloaded' })
+    },
     // The portal embeds data-fair's own views (table, map, …) in an iframe: a root
     // that stopped at it had a person on a table page showing exactly the 8 rows asked
     // for report "un cadre vide". This one sees through it, and through the chat frame.

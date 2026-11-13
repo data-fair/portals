@@ -139,7 +139,7 @@ Une passe sur les quatre cas où la revue des actions, les outils de formulaire 
 
 ### Passe complète du 13/11/2026
 
-Tous les cas, sur les images publiées : `agents` 3b48773 (agents #101), `mcp` 78cbf8b (`@json-layout/core` 2.14.1, openapi-mcp 0.13), `data-fair` d9937c77d (libellés vérifiés), `@data-fair/lib-agents-sim` 0.15.1. **11 runs valides sur 11 réussissent.** Les deux cas du chat du portail (`portail-lien-filtre`, `portail-question-donnees`) sont invalides : depuis agents #80, la conversation d'un visiteur anonyme n'est jamais relisible, donc pas exportable. L'assistant y a pourtant répondu.
+Tous les cas, sur les images publiées : `agents` 3b48773 (agents #101), `mcp` 78cbf8b (`@json-layout/core` 2.14.1, openapi-mcp 0.13), `data-fair` d9937c77d (libellés vérifiés), `@data-fair/lib-agents-sim` 0.15.1. **Les 13 cas réussissent.** Les deux cas du chat du portail (`portail-lien-filtre`, `portail-question-donnees`) étaient d'abord invalides : depuis agents #80, la conversation d'un visiteur anonyme n'est jamais relisible, donc pas exportable. Relancés avec un visiteur connecté sans organisation, ils réussissent sans friction ; seule une note de l'assistant pour lui-même s'affiche (« Taille = capacité, faute de surface. »).
 
 Corrigé entre les deux passes, en faisant tourner agents, mcp et json-layout depuis des copies locales, validé sur 14 runs de `verifier-affichage` et `page-affichage-mobile` :
 - **Les écritures nommant leur cible par un identifiant portent son titre vérifié** (openapi-mcp 0.13, `labels`) : la carte d'approbation et la revue voient « la page « Accueil » sur le portail « … » », plus deux identifiants. Les rôles admin des pages et des réutilisations lisent la liste des portails pour cela.
@@ -150,7 +150,7 @@ Corrigé entre les deux passes, en faisant tourner agents, mcp et json-layout de
 Ce que la passe montre encore :
 - **`setData` renvoyant toute la liste des blocs** (`verifier-affichage`, `publier-et-accueil`) : la revue y lit un remplacement et la carte inquiète la personne, qui refuse ou annule.
 - **Une écriture par position sans `item`** (`page-avec-donnees`) est encore jugée douteuse, une fois refusée.
-- **« Voir le brouillon » de l'éditeur de portail** a ouvert un onglet « le jeton n'est pas valide » (`portail-configuration`). Le portail brouillon est sur son propre sous-domaine, atteint par un échange de jeton de simple-directory : à vérifier à la main, ce peut être le jeton à usage unique que les sessions mises en cache du harnais réutilisent.
+- **« Voir le brouillon » de l'éditeur de portail** a ouvert un onglet « le jeton n'est pas valide » (`portail-configuration`). Le portail brouillon est sur son propre sous-domaine, atteint par un échange de jeton de simple-directory. Le même refus (« a token_callback url was opened twice ») est apparu quand le harnais connectait le visiteur par le formulaire du portail ; il passe désormais par l'API, comme les tests e2e. À vérifier à la main dans un vrai navigateur.
 - **Après une navigation**, les outils du nouvel écran n'arrivent qu'au tour suivant (`page-puis-menu`).
 - **Aucun outil ne donne l'adresse publique ou de brouillon d'un portail** (`parametres-du-portail`) ; l'aperçu refuse une page non rattachée (`page-de-contenu`, `hors-de-portee`).
 - **Répétitions** : le lien de passation et les réserves reviennent encore dans plusieurs réponses (`hors-de-portee`).
@@ -166,7 +166,7 @@ Ce que la passe montre encore :
    Ensuite, dans portals : mettre à jour, relancer `build-types` et remesurer.
 2. **Haiku comme modèle principal** : fiable sur les parcours courts, pas sur les longs, où il invente des échanges. À traiter dans le service agents.
 3. **Accessibilité des listes vjsf** : le bouton qui ouvre les actions d'une ligne (Modifier, Dupliquer…) n'a pas de nom. Ni la personne, ni l'assistant, ni un lecteur d'écran ne peut le désigner. Proposé, non fait (nécessite json-layout et vjsf).
-4. **Chat du portail** : les deux cas du visiteur anonyme ne sont plus jugeables depuis agents #80. Les faire tourner avec un visiteur connecté, ou faire juger lib-agents-sim sur son propre transcript.
+4. **Chat du portail** : les cas tournent désormais avec un visiteur connecté sans organisation (`test_alone`), seul jugeable depuis agents #80. Le chemin anonyme (son jeton, ses quotas) n'est plus couvert par les simulations.
 5. **Couverture** : aucun cas ne concerne les réutilisations, les actualités ou les événements, ni un utilisateur sans droit d'écriture, ni l'anglais. `page-contenu` part d'une page qui a déjà un paragraphe d'introduction : la moitié de l'objectif n'est donc pas exercée.
 
 ## Fonctionnement
@@ -175,7 +175,7 @@ Un utilisateur simulé (la persona) poursuit un objectif avec le vrai assistant,
 
 - **Deux surfaces.**
   - Le back-office : le shell data-fair embarque le gestionnaire de portails, et l'assistant agit sur les formulaires par ses outils.
-  - Le portail public : le visiteur anonyme dispose du chat du portail.
+  - Le portail public : un visiteur connecté, sans organisation, dispose du chat du portail (la conversation d'un visiteur anonyme n'est pas relisible, donc pas exportable).
 - **Un cas = une surface, une page, une persona, un objectif**, sans résultat attendu écrit à l'avance. Les données (portail, pages, jeux de données) sont recréées à chaque run.
 - **La persona tourne sur Sonnet.** Elle regarde l'écran, clique et saisit. L'assistant tourne sur Sonnet par défaut et doit aussi être validé sur Haiku ; les sous-agents et la modération tournent sur Haiku.
 - **Un run invalide n'est pas un échec produit.** Une limite de débit, une erreur du fournisseur, un tour bloqué plus de 5 minutes ou une session expirée rendent le run invalide, et il n'est pas jugé.

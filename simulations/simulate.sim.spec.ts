@@ -4,12 +4,12 @@
  * judge's call, from the transcript.
  */
 import { test } from '@playwright/test'
-import { runSimulation, parseConversationExport } from '@data-fair/lib-agents-sim'
+import { runSimulation, parseConversationExport, REVIEW_CONSENT_COOKIE, REVIEW_CONSENT_YES } from '@data-fair/lib-agents-sim'
 import { cases } from './cases/index.ts'
 import { selectOwnCases } from './cases/select.ts'
 import { seedAll } from './runner/fixtures.ts'
 import { ROOT, OWNER_ADMIN_ID, seedSettings, eraseConversations, fetchConversationExports } from './runner/settings.ts'
-import { createSurface } from './runner/surfaces.ts'
+import { createSurface, PORTAL_VISITOR } from './runner/surfaces.ts'
 
 for (const simCase of selectOwnCases(cases)) {
   test(`simulation: ${simCase.name}`, async ({ page }) => {
@@ -20,10 +20,15 @@ for (const simCase of selectOwnCases(cases)) {
       setup: async ({ assistantModel, toolsModel }) => {
         const ids = await seedAll()
         await seedSettings(assistantModel, toolsModel)
-        await eraseConversations(OWNER_ADMIN_ID)
+        await eraseConversations(simCase.host === 'portal' ? PORTAL_VISITOR.id : OWNER_ADMIN_ID)
         // Same cookie as the e2e fixtures, on the parent domain so it reaches both the
         // back-office host and the portal subdomain: the portal's own language choice.
-        await page.context().addCookies([{ name: 'i18n_lang', value: 'fr', domain: `.${process.env.DEV_HOST}`, path: '/' }])
+        // The review consent too: the portal's chat loads /agents from the portal's subdomain, where
+        // runSimulation's consent cookie (set on agentsUrl's origin) is not sent
+        await page.context().addCookies([
+          { name: 'i18n_lang', value: 'fr', domain: `.${process.env.DEV_HOST}`, path: '/' },
+          { name: REVIEW_CONSENT_COOKIE, value: REVIEW_CONSENT_YES, domain: `.${process.env.DEV_HOST}`, path: '/' }
+        ])
         await surface.goto(ids)
       },
       perceptionRoots: surface.perceptionRoots,
