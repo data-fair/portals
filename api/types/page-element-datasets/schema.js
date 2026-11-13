@@ -8,6 +8,95 @@ const ownersGetItems = {
   itemKey: 'item.id'
 }
 
+export const datasetsStaticFilters = {
+  type: 'object',
+  description: 'Restrict the datasets displayed by the catalog. These filters are neither visible nor editable by visitors.',
+  'x-i18n-description': { fr: 'Restreignent les jeux de données affichés par le catalogue. Ces filtres ne sont ni visibles ni modifiables par les visiteurs.' },
+  properties: {
+    includedOwners: {
+      $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/staticFilterValues',
+      title: 'Owners to include',
+      'x-i18n-title': { fr: 'Propriétaires à inclure' },
+      layout: {
+        comp: 'autocomplete',
+        cols: { md: 6 },
+        getItems: ownersGetItems,
+        props: { chips: true, closableChips: true }
+      }
+    },
+    excludedOwners: {
+      $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/staticFilterValues',
+      title: 'Owners to exclude',
+      'x-i18n-title': { fr: 'Propriétaires à exclure' },
+      layout: {
+        comp: 'autocomplete',
+        cols: { md: 6 },
+        getItems: ownersGetItems,
+        props: { chips: true, closableChips: true }
+      }
+    },
+    includedTopics: {
+      $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/staticFilterValues',
+      title: 'Topics to include',
+      'x-i18n-title': { fr: 'Thématiques à inclure' },
+      layout: {
+        comp: 'autocomplete',
+        getItems: {
+          url: '/data-fair/api/v1/datasets?mine=true&size=0&facets=topics',
+          itemsResults: 'data.facets.topics.map(f => ({ id: f.value.id, title: f.value.title }))',
+          itemTitle: 'item.title',
+          itemKey: 'item.id'
+        },
+        props: { chips: true, closableChips: true }
+      }
+    },
+    includedConcepts: {
+      $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/staticFilterValues',
+      title: 'Concepts to include',
+      'x-i18n-title': { fr: 'Concepts à inclure' },
+      layout: {
+        comp: 'autocomplete',
+        getItems: {
+          url: '/data-fair/api/v1/vocabulary',
+          itemsResults: 'data.map(c => ({ id: c.identifiers[0], title: c.title }))',
+          itemTitle: 'item.title',
+          itemKey: 'item.id'
+        },
+        props: { chips: true, closableChips: true }
+      }
+    },
+    includedKeywords: {
+      $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/staticFilterValues',
+      title: 'Keywords to include',
+      'x-i18n-title': { fr: 'Mots-clés à inclure' },
+      layout: {
+        comp: 'autocomplete',
+        getItems: {
+          url: '/data-fair/api/v1/datasets?mine=true&size=0&facets=keywords',
+          itemsResults: 'data.facets.keywords.map(f => ({ id: f.value, title: f.value }))',
+          itemTitle: 'item.title',
+          itemKey: 'item.id'
+        },
+        props: { chips: true, closableChips: true }
+      }
+    },
+    types: {
+      type: 'array',
+      title: 'Dataset types to include',
+      'x-i18n-title': { fr: 'Types de jeux de données à inclure' },
+      items: {
+        type: 'string',
+        oneOf: [
+          { const: 'file', title: 'File', 'x-i18n-title': { fr: 'Fichier' } },
+          { const: 'rest', title: 'Editable', 'x-i18n-title': { fr: 'Éditable' } },
+          { const: 'virtual', title: 'Virtual', 'x-i18n-title': { fr: 'Virtuel' } },
+          { const: 'metaOnly', title: 'Metadata only', 'x-i18n-title': { fr: 'Métadonnées seules' } }
+        ]
+      }
+    }
+  }
+}
+
 export default {
   $id: 'https://github.com/data-fair/portals/page-element-datasets',
   'x-exports': [],
@@ -110,94 +199,7 @@ export default {
           'x-i18n-description': { fr: 'Mode de configuration avancé. Permet de configurer des blocs de pages personnalisés entre les filtres de base et les résultats.' },
           layout: 'switch'
         },
-        staticFilters: {
-          type: 'object',
-          description: 'Restrict the datasets displayed by the catalog. These filters are neither visible nor editable by visitors.',
-          'x-i18n-description': { fr: 'Restreignent les jeux de données affichés par le catalogue. Ces filtres ne sont ni visibles ni modifiables par les visiteurs.' },
-          properties: {
-            includedOwners: {
-              $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/staticFilterValues',
-              title: 'Owners to include',
-              'x-i18n-title': { fr: 'Propriétaires à inclure' },
-              layout: {
-                comp: 'autocomplete',
-                cols: { md: 6 },
-                getItems: ownersGetItems,
-                props: { chips: true, closableChips: true }
-              }
-            },
-            excludedOwners: {
-              $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/staticFilterValues',
-              title: 'Owners to exclude',
-              'x-i18n-title': { fr: 'Propriétaires à exclure' },
-              layout: {
-                comp: 'autocomplete',
-                cols: { md: 6 },
-                getItems: ownersGetItems,
-                props: { chips: true, closableChips: true }
-              }
-            },
-            includedTopics: {
-              $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/staticFilterValues',
-              title: 'Topics to include',
-              'x-i18n-title': { fr: 'Thématiques à inclure' },
-              layout: {
-                comp: 'autocomplete',
-                getItems: {
-                  url: '/data-fair/api/v1/datasets?mine=true&size=0&facets=topics',
-                  itemsResults: 'data.facets.topics.map(f => ({ id: f.value.id, title: f.value.title }))',
-                  itemTitle: 'item.title',
-                  itemKey: 'item.id'
-                },
-                props: { chips: true, closableChips: true }
-              }
-            },
-            includedConcepts: {
-              $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/staticFilterValues',
-              title: 'Concepts to include',
-              'x-i18n-title': { fr: 'Concepts à inclure' },
-              layout: {
-                comp: 'autocomplete',
-                getItems: {
-                  url: '/data-fair/api/v1/vocabulary',
-                  itemsResults: 'data.map(c => ({ id: c.identifiers[0], title: c.title }))',
-                  itemTitle: 'item.title',
-                  itemKey: 'item.id'
-                },
-                props: { chips: true, closableChips: true }
-              }
-            },
-            includedKeywords: {
-              $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/staticFilterValues',
-              title: 'Keywords to include',
-              'x-i18n-title': { fr: 'Mots-clés à inclure' },
-              layout: {
-                comp: 'autocomplete',
-                getItems: {
-                  url: '/data-fair/api/v1/datasets?mine=true&size=0&facets=keywords',
-                  itemsResults: 'data.facets.keywords.map(f => ({ id: f.value, title: f.value }))',
-                  itemTitle: 'item.title',
-                  itemKey: 'item.id'
-                },
-                props: { chips: true, closableChips: true }
-              }
-            },
-            types: {
-              type: 'array',
-              title: 'Dataset types to include',
-              'x-i18n-title': { fr: 'Types de jeux de données à inclure' },
-              items: {
-                type: 'string',
-                oneOf: [
-                  { const: 'file', title: 'File', 'x-i18n-title': { fr: 'Fichier' } },
-                  { const: 'rest', title: 'Editable', 'x-i18n-title': { fr: 'Éditable' } },
-                  { const: 'virtual', title: 'Virtual', 'x-i18n-title': { fr: 'Virtuel' } },
-                  { const: 'metaOnly', title: 'Metadata only', 'x-i18n-title': { fr: 'Métadonnées seules' } }
-                ]
-              }
-            }
-          }
-        },
+        staticFilters: datasetsStaticFilters,
         filters: {
           type: 'object',
           properties: {
