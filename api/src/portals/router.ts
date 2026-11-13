@@ -1,4 +1,5 @@
 import type { Portal, PortalConfig } from '#types/portal/index.ts'
+import { type PushEvent } from '@data-fair/lib-node/events-queue.js'
 
 import { randomUUID } from 'node:crypto'
 import { Router } from 'express'
@@ -11,8 +12,7 @@ import * as postIngressReqBody from '#types/portal-ingress/index.ts'
 import { httpError, reqSessionAuthenticated, assertAccountRole, assertAdminMode, reqOrigin } from '@data-fair/lib-express'
 import { defaultTheme, fillTheme } from '@data-fair/lib-common-types/theme/index.js'
 import { hasKoumoulMention } from '#types/portal-config-footer/walk.ts'
-import { createPortal, validatePortalDraft, cancelPortalDraft, getPortal, getPortalAsAdmin, patchPortal, deletePortal, sendPortalEvent, duplicatePortalConfig } from './service.ts'
-import { type EventText, eventText } from '../utils/event-texts.ts'
+import { createPortal, validatePortalDraft, cancelPortalDraft, getPortal, getPortalAsAdmin, patchPortal, deletePortal, sendPortalEvent, changesBody, duplicatePortalConfig } from './service.ts'
 
 const router = Router()
 export default router
@@ -99,7 +99,7 @@ router.post('', async (req, res, next) => {
   const owner = body.owner ?? session.account
 
   // Handle portal duplication if sourcePortalId is provided
-  let duplicationEventDetails: EventText | undefined
+  let duplicationEventDetails: PushEvent['body']
   if (body.sourcePortalId) {
     const { config: duplicatedConfig, eventDetails } = await duplicatePortalConfig(session, body.sourcePortalId, portalId, owner)
     config = { ...config, ...duplicatedConfig }
@@ -159,7 +159,7 @@ router.patch('/:id', async (req, res, next) => {
   // Send patch event only if not just draft changed
   const onlyDraftChanged = Object.keys(body).length === 1 && body.draftConfig
   if (!onlyDraftChanged) {
-    sendPortalEvent(updatedPortal, 'patch', session, eventText('changes', { keys: Object.keys(body).join(', ') }))
+    sendPortalEvent(updatedPortal, 'patch', session, changesBody(Object.keys(body)))
   }
 
   res.send(updatedPortal)

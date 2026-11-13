@@ -3,7 +3,6 @@ import type { SessionStateAuthenticated } from '@data-fair/lib-express'
 import Debug from 'debug'
 import eventsQueue from '@data-fair/lib-node/events-queue.js'
 import mongo from '#mongo'
-import { type EventAction, type EventText, eventText } from '../utils/event-texts.ts'
 
 const debug = Debug('groups')
 
@@ -57,26 +56,29 @@ export const patchGroup = async (group: Group, patch: Partial<Group>, session: S
   return updatedGroup
 }
 
+const groupTitles = {
+  create: (title: string) => ({ en: `The page group ${title} was created`, fr: `Le groupe de pages ${title} a été créé` }),
+  patch: (title: string) => ({ en: `The page group ${title} was updated`, fr: `Le groupe de pages ${title} a été modifié` }),
+  delete: (title: string) => ({ en: `The page group ${title} was deleted`, fr: `Le groupe de pages ${title} a été supprimé` })
+}
+
 /**
- * Helper function to send events related to groups
- * @param topicAction The action part of the topic key, it also selects the event title (e.g. "create", "draft-validate")
- * @param body Optional additional information to include in the event
+ * Send an event about a group of pages.
+ * @param topicAction The action part of the topic key, it also selects the event title
  */
 export const sendGroupEvent = (
   group: Group,
-  topicAction: EventAction<'group'>,
-  sessionState?: SessionStateAuthenticated,
-  body?: EventText
+  topicAction: keyof typeof groupTitles,
+  sessionState?: SessionStateAuthenticated
 ) => {
   eventsQueue.pushEvent({
-    title: eventText(`group-${topicAction}`, { title: group.title }),
+    title: groupTitles[topicAction](group.title),
     topic: { key: `groups:group-${topicAction}:${group._id}` },
     sender: group.owner,
     resource: {
       type: 'group',
       id: group._id,
       title: group.title,
-    },
-    body
+    }
   }, sessionState)
 }
