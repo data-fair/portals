@@ -137,6 +137,24 @@ Une passe sur les quatre cas où la revue des actions, les outils de formulaire 
 - **Environnement de dev** : data-fair n'avait pas l'adresse du service capture. La vignette d'une application répondait 502 et `datafair_preview_application` 501, si bien que le graphique de `page-avec-donnees` ne pouvait pas être vérifié. Corrigé dans `docker-compose.yml` (`PRIVATE_CAPTURE_URL`, à recréer avec `docker compose up -d data-fair`).
 - **La vue d'une page** ne nommait pas l'onglet « Aperçu », ouvert par défaut. La personne le regardait et doutait que l'assistant ait vu le site public. Le guidage nomme maintenant tous les onglets et demande de dire quelle version a été rendue.
 
+### Passe complète du 13/11/2026
+
+Tous les cas, sur les images publiées : `agents` 3b48773 (agents #101), `mcp` 78cbf8b (`@json-layout/core` 2.14.1, openapi-mcp 0.13), `data-fair` d9937c77d (libellés vérifiés), `@data-fair/lib-agents-sim` 0.15.1. **11 runs valides sur 11 réussissent.** Les deux cas du chat du portail (`portail-lien-filtre`, `portail-question-donnees`) sont invalides : depuis agents #80, la conversation d'un visiteur anonyme n'est jamais relisible, donc pas exportable. L'assistant y a pourtant répondu.
+
+Corrigé entre les deux passes, en faisant tourner agents, mcp et json-layout depuis des copies locales, validé sur 14 runs de `verifier-affichage` et `page-affichage-mobile` :
+- **Les écritures nommant leur cible par un identifiant portent son titre vérifié** (openapi-mcp 0.13, `labels`) : la carte d'approbation et la revue voient « la page « Accueil » sur le portail « … » », plus deux identifiants. Les rôles admin des pages et des réutilisations lisent la liste des portails pour cela.
+- **La revue ne doute plus d'un bloc tout juste ajouté** : json-layout marque son argument `item` comme vérifié, et la réponse d'un ajout donne le `item` à reprendre. `verifier-affichage` : 3 fausses alertes avant, aucune sur les 9 runs suivants.
+- **L'aperçu** : un bouton garde son adresse dans l'aperçu du brouillon ; la consigne fait lire la capture et non le seul verdict, dire « d'après mon rendu », et donner une fois le lien de passation, vers l'écran du back-office (`/data-fair/pages/<id>`).
+- **agents** : la marque d'une image plus ancienne dit qu'elle a été vue ; les titres de conversation ne reprennent plus la consigne (« Titre sans citation… »).
+
+Ce que la passe montre encore :
+- **`setData` renvoyant toute la liste des blocs** (`verifier-affichage`, `publier-et-accueil`) : la revue y lit un remplacement et la carte inquiète la personne, qui refuse ou annule.
+- **Une écriture par position sans `item`** (`page-avec-donnees`) est encore jugée douteuse, une fois refusée.
+- **« Voir le brouillon » de l'éditeur de portail** a ouvert un onglet « le jeton n'est pas valide » (`portail-configuration`). Le portail brouillon est sur son propre sous-domaine, atteint par un échange de jeton de simple-directory : à vérifier à la main, ce peut être le jeton à usage unique que les sessions mises en cache du harnais réutilisent.
+- **Après une navigation**, les outils du nouvel écran n'arrivent qu'au tour suivant (`page-puis-menu`).
+- **Aucun outil ne donne l'adresse publique ou de brouillon d'un portail** (`parametres-du-portail`) ; l'aperçu refuse une page non rattachée (`page-de-contenu`, `hors-de-portee`).
+- **Répétitions** : le lien de passation et les réserves reviennent encore dans plusieurs réponses (`hors-de-portee`).
+
 ## Limites et prochaines étapes
 
 1. **Publier les dépendances**, dans cet ordre :
@@ -148,7 +166,8 @@ Une passe sur les quatre cas où la revue des actions, les outils de formulaire 
    Ensuite, dans portals : mettre à jour, relancer `build-types` et remesurer.
 2. **Haiku comme modèle principal** : fiable sur les parcours courts, pas sur les longs, où il invente des échanges. À traiter dans le service agents.
 3. **Accessibilité des listes vjsf** : le bouton qui ouvre les actions d'une ligne (Modifier, Dupliquer…) n'a pas de nom. Ni la personne, ni l'assistant, ni un lecteur d'écran ne peut le désigner. Proposé, non fait (nécessite json-layout et vjsf).
-4. **Couverture** : aucun cas ne concerne les réutilisations, les actualités ou les événements, ni un utilisateur sans droit d'écriture, ni l'anglais. `page-contenu` part d'une page qui a déjà un paragraphe d'introduction : la moitié de l'objectif n'est donc pas exercée.
+4. **Chat du portail** : les deux cas du visiteur anonyme ne sont plus jugeables depuis agents #80. Les faire tourner avec un visiteur connecté, ou faire juger lib-agents-sim sur son propre transcript.
+5. **Couverture** : aucun cas ne concerne les réutilisations, les actualités ou les événements, ni un utilisateur sans droit d'écriture, ni l'anglais. `page-contenu` part d'une page qui a déjà un paragraphe d'introduction : la moitié de l'objectif n'est donc pas exercée.
 
 ## Fonctionnement
 
