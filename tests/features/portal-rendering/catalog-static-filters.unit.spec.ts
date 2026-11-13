@@ -1,6 +1,6 @@
 import { test } from '@playwright/test'
 import assert from 'node:assert/strict'
-import { staticFilterParam, isStaticFilterAllowed } from '../../../portal/app/utils/catalog-static-filters.ts'
+import { staticFilterParam, isStaticFilterAllowed, hasStaticFilters, resolveStaticFilters, staticFiltersQuery } from '../../../portal/app/utils/catalog-static-filters.ts'
 
 const included = [{ id: 'a', title: 'A' }, { id: 'b', title: 'B' }]
 const excluded = [{ id: 'x', title: 'X' }]
@@ -48,5 +48,48 @@ test.describe('isStaticFilterAllowed', () => {
   test('rejects the excluded values', () => {
     assert.equal(isStaticFilterAllowed('x', [], excluded), false)
     assert.equal(isStaticFilterAllowed('a', [], excluded), true)
+  })
+})
+
+test.describe('hasStaticFilters', () => {
+  test('ignores missing and empty groups', () => {
+    assert.equal(hasStaticFilters(undefined), false)
+    assert.equal(hasStaticFilters({ includedTopics: [], types: [] }), false)
+    assert.equal(hasStaticFilters({ excludedOwners: excluded }), true)
+  })
+})
+
+test.describe('resolveStaticFilters', () => {
+  test('own filters replace the inherited ones', () => {
+    assert.deepEqual(resolveStaticFilters({ includedTopics: included }, { includedKeywords: excluded }), { includedTopics: included })
+  })
+
+  test('empty own filters inherit', () => {
+    assert.deepEqual(resolveStaticFilters({ includedTopics: [] }, { includedKeywords: excluded }), { includedKeywords: excluded })
+    assert.equal(resolveStaticFilters(undefined, undefined), undefined)
+  })
+})
+
+test.describe('staticFiltersQuery', () => {
+  test('is empty without filters', () => {
+    assert.deepEqual(staticFiltersQuery(undefined), {})
+  })
+
+  test('maps every filter to its data-fair param', () => {
+    assert.deepEqual(staticFiltersQuery({
+      includedOwners: included,
+      excludedOwners: excluded,
+      includedTopics: included,
+      includedConcepts: included,
+      includedKeywords: included,
+      includedBaseApplications: included,
+      types: ['file', 'rest']
+    }), {
+      owner: 'a,b,-x', topics: 'a,b', concepts: 'a,b', keywords: 'a,b', 'base-application': 'a,b', type: 'file,rest'
+    })
+  })
+
+  test('excluded owners alone only reach the owner param', () => {
+    assert.deepEqual(staticFiltersQuery({ excludedOwners: excluded }), { owner: '-x' })
   })
 })

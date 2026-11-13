@@ -306,20 +306,12 @@ if (!preview && (catalogType === 'datasets' || catalogType === 'applications')) 
   if (showFilter('keywords')) facetsToFetch.push('keywords')
 
   const endpoint = catalogType === 'datasets' ? '/data-fair/api/v1/catalog/datasets' : '/data-fair/api/v1/applications'
-  const staticQuery = {
-    concepts: staticFilterParam([], staticFilters?.includedConcepts),
-    topics: staticFilterParam([], staticFilters?.includedTopics),
-    keywords: staticFilterParam([], staticFilters?.includedKeywords),
-    owner: staticFilterParam([], staticFilters?.includedOwners, staticFilters?.excludedOwners),
-    'base-application': staticFilterParam([], staticFilters?.includedBaseApplications),
-    type: staticFilters?.types?.length ? staticFilters.types.join(',') : undefined
-  }
   catalogFetch = useLocalFetch<{ facets: Facets }>(endpoint, {
     query: {
       publicationSites: 'data-fair-portals:' + portal.value._id, // Only used by /applications
       facets: facetsToFetch.join(','),
       size: 0,
-      ...Object.fromEntries(Object.entries(staticQuery).filter(([, value]) => value !== undefined))
+      ...staticFiltersQuery(staticFilters)
     }
   })
 
