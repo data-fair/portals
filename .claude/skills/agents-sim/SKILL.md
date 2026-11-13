@@ -62,7 +62,7 @@ while someone is relying on that data.
    ```
 
    Models are pinned by `SIM_ASSISTANT_MODEL` (default `sonnet`),
-   `SIM_TOOLS_MODEL` (default `haiku`, for memory consolidation, compaction and the
+   `SIM_TOOLS_MODEL` (default `haiku`, for compaction and the
    moderation guard) and `SIM_USER_MODEL` (default `sonnet`), and recorded per
    run, so verdicts from different tiers are never compared silently.
 

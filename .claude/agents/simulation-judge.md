@@ -97,8 +97,9 @@ A tool call is one `dynamic-tool` part: `toolName`, `input`, and either `output`
 (state `output-available`) or `errorText` (state `output-error`). A
 `code_mode` script's own calls are a `data-trace` part of the message that ran it.
 
-Not every model call is the assistant answering the person. Compaction,
-moderation and memory consolidation each run on their own model role, recorded
+Not every model call is the assistant answering the person. Compaction
+(`summarizer`) and moderation (`moderator`) run on their own model role, memory
+consolidation on the assistant's (since agents #98), recorded
 as `modelRole` on each entry of a run's `calls`. `metrics.requestsByRole` totals
 them — read it before attributing spend. A judge once reported three
 `summarizer` compaction calls as delegated work in a run that delegated
