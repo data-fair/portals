@@ -88,6 +88,10 @@ jobs:
     - name: Audit
       run: npm audit --omit=dev --audit-level=critical
 
+    # the scopes coverage test loads the api modules, whose development config reads .env
+    - name: Init .env
+      run: ./node_modules/.bin/df-dev init-env
+
     # no server needed
     - name: Unit tests
       run: npm run test-unit
