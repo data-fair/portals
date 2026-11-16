@@ -2,8 +2,9 @@
 layout {
   pane split_direction="vertical" {
     pane name="shell" borderless=true
-    pane name="status" command="./node_modules/.bin/df-status" {
-      args "--start-deps"
+    pane name="status" command="bash" {
+      // simple-directory mounts dev/resources/users.json: rendered from .env before the containers start
+      args "-c" "node dev/render-users.mjs && exec ./node_modules/.bin/df-status --start-deps"
     }
     pane name="ingress-manager" command="bash" {
       args "-c" "FORCE_COLOR=1 NODE_ENV=development exec ./node_modules/.bin/nodemon -e ts --watch dev --exec \"node --disable-warning=ExperimentalWarning\" dev/ingress-manager.ts"
@@ -17,7 +18,7 @@ layout {
       args "-c" "cd ui && FORCE_COLOR=1 NODE_CONFIG_DIR=../api/config/ exec ../node_modules/.bin/df-mem-cap vite --port $DEV_UI_PORT"
     }
     pane name="api" command="bash" {
-      args "-c" "./node_modules/.bin/df-dev wait-deps && export NODE_CONFIG=$(./node_modules/.bin/df-dev absent-config) && cd api && FORCE_COLOR=1 NODE_ENV=development DEBUG='upgrade*' exec ../node_modules/.bin/nodemon -e js,mjs,ts,json index.ts"
+      args "-c" "./node_modules/.bin/df-dev wait-deps && export NODE_CONFIG=$(./node_modules/.bin/df-dev absent-config) && cd api && FORCE_COLOR=1 NODE_ENV=development DEBUG='upgrade*' exec ../node_modules/.bin/nodemon -e js,mjs,ts,json,md index.ts"
     }
     pane name="portal" command="bash" {
       // piped: in a real terminal nuxt switches to its interactive screen instead of plain logs

@@ -15,7 +15,11 @@ Three things must be true, and each fails confusingly if it is not:
 
 1. The dev stack is up — `npx --no df-dev status`: core containers (nginx, simple-directory,
    data-fair, mongo, elasticsearch) healthy, panes `api`, `ui`, `portal` running, and the
-   optional `agents` container started (`npx --no df-dev up agents` if it shows `not started`).
+   optional `agents` container started (`npx --no df-dev up agents` if it shows `not started`;
+   it starts the `mcp` container too, which the autonomous-agent cases need, and nginx needs
+   `MCP_PORT` in `.env`: add it by hand in an existing worktree), and the `events` container
+   (`npx --no df-dev up events`): without it the portal's notification calls answer 502, and
+   `portals_preview_portal_page` times out on the pages that make them, the home page first.
    Back-office cases run the manager UI from the `ui` pane inside the data-fair shell;
    portal cases run the `portal` pane.
 2. The data-fair container runs with `PRIVATE_AGENTS_URL` (see docker-compose.yml).
@@ -35,7 +39,7 @@ while someone is relying on that data.
 
 ## Steps
 
-1. **Read the case list** in `simulations/cases/index.ts`. Note each `name` and `goal`.
+1. **Read the case lists** in `simulations/cases/index.ts` (in-page assistant cases) and `simulations/cases/autonomous-agents.ts` (autonomous-agent cases). Note each `name` and `goal`.
 
 2. **Delete evidence from earlier runs.**
 
@@ -52,11 +56,13 @@ while someone is relying on that data.
    ```bash
    npm run simulate                              # every case
    SIM_CASES=page-parametres npm run simulate   # one case
+   SIM_CASES=page-de-contenu,publier-et-accueil,hors-de-portee,page-avec-donnees,parametres-du-portail,verifier-affichage npm run simulate   # only the autonomous-agent cases
+   npx playwright test -c playwright.sim.config.ts simulations/simulate.sim.spec.ts   # only the in-page cases (the other spec file: autonomous-agent.sim.spec.ts)
    SIM_HEADED=1 npm run simulate                 # open the browser window to watch a run (headless by default)
    ```
 
    Models are pinned by `SIM_ASSISTANT_MODEL` (default `sonnet`),
-   `SIM_TOOLS_MODEL` (default `haiku`, for sub-agents, compaction and the
+   `SIM_TOOLS_MODEL` (default `haiku`, for compaction and the
    moderation guard) and `SIM_USER_MODEL` (default `sonnet`), and recorded per
    run, so verdicts from different tiers are never compared silently.
 
@@ -104,7 +110,7 @@ while someone is relying on that data.
    `simulations/tmp/sim-<case>.run.json` for the recorded error instead.
 
 5. **Dispatch one `simulation-judge` subagent per valid case.** Give it paths, not
-   pasted content — transcripts carry every gateway request:
+   pasted content — a run's conversation exports can run to megabytes:
 
    - the case name and its goal
    - the transcript path, `simulations/tmp/sim-<case>.json`
@@ -131,15 +137,36 @@ while someone is relying on that data.
    Relay the summary, the friction list and the findings. Exit code is non-zero
    if any case was unsatisfactory, invalid, not judged, or never ran.
 
-8. **Root-cause what it found.** The judge reads a record, not the source: it
+8. **Comparing rounds** — when a run is one condition of a comparison (a prompt
+   before and after a change, a persona variant), archive it once it is judged
+   and reported, so the next round does not overwrite it:
+
+   ```bash
+   mkdir -p simulations/tmp/before-r1 && mv simulations/tmp/sim-* simulations/tmp/before-r1/
+   ```
+
+   Judge before moving: the verdict paths are the un-moved ones. Label rounds
+   `<condition>-r<n>`, run each condition at least twice (model runs are noisy),
+   then:
+
+   ```bash
+   npm run simulate:compare before=simulations/tmp/before-r1,simulations/tmp/before-r2 after=simulations/tmp/after-r1,simulations/tmp/after-r2
+   ```
+
+   Compare conditions only under the same judge text, `assistantModel` and
+   `personaVariant` — the table's "ran on" column shows the last two. A
+   shorter condition that lost substance is worse, not better: read
+   `substance kept` before `padding/msg`.
+
+9. **Root-cause what it found.** The judge reads a record, not the source: it
    says a tool result misled the assistant, not which line built that result.
    That half is yours, and it is where a run becomes a change. For each friction
    point and each finding worth acting on, go into the code, find what produced
    it, and say so — a defect you confirmed, a design decision the judge could
    not see, or a harness artefact. Report that, not the verdict verbatim.
 
-   Many root causes live outside this repository: the chat, the gateway and the
-   sub-agents (agents service and its libs), the back-office shell and its own
+   Many root causes live outside this repository: the chat, its server-side loop and
+   skills (agents service and its libs), the back-office shell and its own
    tools (data-fair), the shared dataset tool schemas (`@data-fair/agent-tools-data-fair`).
    Fix what is in portals; write up the rest with the evidence and a suggested fix.
 

@@ -44,7 +44,7 @@ test.describe('agent host state of the editors', () => {
     await goToWithAuth(`/portals-manager/pages/${createdPage._id}/edit-config`, 'test_admin')
     await expect(page.getByLabel('Titre')).toBeVisible({ timeout: 30_000 })
 
-    await expect.poll(async () => (await readAgentState(page)).editor ?? '').toContain('pageConfig_form')
+    await expect.poll(async () => (await readAgentState(page)).editor ?? '').toContain('pageConfig_ form tools')
     // the assistant action was labelled in English in the French editor
     await expect(page.locator('[data-action-id="configure-page"]')).toHaveAttribute('title', "Demander à l'assistant")
     // the store settles once the editor has loaded the page
@@ -107,7 +107,7 @@ test.describe('agent host state of the editors', () => {
     // told the assistant that the incomplete row was not saved
     const portal = (await user1.post('/api/portals', { config: { title: 'Form Portal', menu: { children: [{ type: 'standard', subtype: 'home' }] } } })).data
     await goToWithAuth(`/portals-manager/portals/${portal._id}`, 'test_admin')
-    await expect.poll(async () => (await readAgentState(page)).editor ?? '', { timeout: 30_000 }).toContain('portalConfig_form')
+    await expect.poll(async () => (await readAgentState(page)).editor ?? '', { timeout: 30_000 }).toContain('portalConfig_ form tools')
     await expect.poll(async () => (await readAgentState(page)).form, { timeout: 15_000 }).toBeUndefined()
     await page.getByRole('tab', { name: 'Barre de navigation' }).click()
     await page.getByRole('button', { name: 'Ajouter un lien' }).click()
@@ -163,7 +163,7 @@ test.describe('agent host state of the editors', () => {
   test('the portal editor publishes its guidance', async ({ page, goToWithAuth }) => {
     const portal = (await user1.post('/api/portals', { config: { title: 'State Portal 2', menu: { children: [] } } })).data
     await goToWithAuth(`/portals-manager/portals/${portal._id}`, 'test_admin')
-    await expect.poll(async () => (await readAgentState(page)).editor ?? '', { timeout: 30_000 }).toContain('portalConfig_form')
+    await expect.poll(async () => (await readAgentState(page)).editor ?? '', { timeout: 30_000 }).toContain('portalConfig_ form tools')
     // the options of a menu row, so that the assistant does not ask the person to read them out
     expect((await readAgentState(page))['editor-menu-options']).toContain("« Catalogue d'événements »")
     // opening the editor of a new portal fills schema defaults into the form: not a draft

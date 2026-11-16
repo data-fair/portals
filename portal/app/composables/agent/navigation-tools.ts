@@ -132,7 +132,7 @@ export function useAgentNavigationTools ({ locale, portalConfig, navigationStore
       sections.push(
         '**Detail pages** (use list_datasets, list_applications, list_events, list_news, or list_reuses to find slugs). The {slug} placeholders below are the human-readable slug returned by those tools; for datasets and applications fall back to the `id` only when no slug exists. The URLs are absolute — substitute {slug} and append `?<query>`, but keep the origin and path prefix:\n' +
         `- Dataset detail: ${appUrl('/datasets/{slug}')}\n` +
-        `- Dataset table: ${appUrl('/datasets/{slug}/table')} — accepts a filter query string. Use the filterQuery from the dataset_data subagent Context directly as the query parameter; do not build or edit the parameters yourself.\n` +
+        `- Dataset table: ${appUrl('/datasets/{slug}/table')} — accepts a filter query string. Filtered by the "Filter query:" line a data query tool printed, pasted verbatim, optionally followed by cols=col1,col2 to choose the visible columns. Never write filter params yourself, in a navigate call or in a link written in the chat: query the rows you want first (query-dataset-data skill).\n` +
         `- Dataset map: ${appUrl('/datasets/{slug}/map')} — only for a dataset describe_dataset reports as geolocalized (the others have no map), accepts the same filterQuery as the table page\n` +
         `- Dataset API doc: ${appUrl('/datasets/{slug}/api-doc')}\n` +
         `- Application detail: ${appUrl('/applications/{slug}')}\n` +
@@ -173,7 +173,7 @@ export function useAgentNavigationTools ({ locale, portalConfig, navigationStore
         },
         query: {
           type: 'string' as const,
-          description: 'Optional query string to append to the URL (without leading "?"). For dataset table/map pages, pass the filterQuery from the dataset_data subagent Context verbatim — do not build or edit the filter parameters yourself. On the table page you may additionally append `cols=<column keys>` to choose which columns are displayed, but do not otherwise alter the filter syntax.'
+          description: 'Optional query string to append to the URL (without leading "?"). For dataset table/map pages, pass the "Filter query:" line a data query tool printed, verbatim, never written by hand. On the table page you may additionally append `cols=<column keys>` to choose which columns are displayed, but do not otherwise alter the filter syntax.'
         }
       },
       required: ['path'] as const
@@ -182,8 +182,8 @@ export function useAgentNavigationTools ({ locale, portalConfig, navigationStore
       try {
         // Accept a full absolute URL, a base-prefixed path, or a bare router path.
         const { path, query: embeddedQuery } = toRoutePath(window.location.origin, router.options.history.base, params.path)
-        // Defensive unwrap: the agent is told to pass the dataset_data subagent's filterQuery
-        // value directly, but it sometimes wraps it as "filterQuery=<the whole query string>".
+        // Defensive unwrap: the agent is told to pass the "Filter query:" line of a data query tool
+        // directly, but it sometimes wraps it as "filterQuery=<the whole query string>".
         const queryString = unwrapFilterQuery(params.query as string | undefined) || embeddedQuery
         const query = queryString ? Object.fromEntries(new URLSearchParams(queryString)) : undefined
         // A dataset without geographic data has no map: the page would show an empty map and a

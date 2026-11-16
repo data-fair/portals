@@ -7,6 +7,8 @@ node_modules/
 **/config/local-*
 data/
 dev/logs/
+# rendered from users.template.json by dev/render-users.mjs
+dev/resources/users.json
 
 # test output
 test-results/

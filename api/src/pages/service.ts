@@ -7,8 +7,9 @@ import eventsQueue, { type PushEvent } from '@data-fair/lib-node/events-queue.js
 import { renderMarkdown } from '@data-fair/portals-shared-markdown'
 import { randomUUID } from 'node:crypto'
 import mongo from '#mongo'
-import { duplicateImage } from '../images/service.ts'
+import { duplicateImage, transferResourceImages } from '../images/service.ts'
 import { assertNbPagesLimit } from '../limits/service.ts'
+import { assertOwnerPortals } from '../portals/service.ts'
 import { traversePageElements, resolvePageAnchors } from './operations.ts'
 
 const debug = debugModule('pages')
@@ -124,15 +125,42 @@ export const generateUniqueSlug = async (baseTitle: string, pageType: 'event' | 
   return uniqueSlug
 }
 
+// the pages a portal has at most one of
+const standardPageTypes = ['home', 'contact', 'accessibility', 'terms-of-service', 'legal-notice', 'privacy-policy', 'cookie-policy', 'datasets', 'applications', 'reuses', 'event-catalog', 'news-catalog']
+
+// a 409 with a user-friendly message when a slug already exists, instead of the raw mongo error
+const throwSlugConflict = (err: any) => {
+  if (err.code !== 11000) return
+  const indexName: string = err.message.match(/index: ([^\s]+)/)?.[1] ?? ''
+  if (indexName.includes('event-slug')) {
+    throw httpError(409, 'An event page with this slug already exists for this owner')
+  } else if (indexName.includes('news-slug')) {
+    throw httpError(409, 'A news page with this slug already exists for this owner')
+  } else if (indexName.includes('generic-slug')) {
+    throw httpError(409, 'A generic page with this slug already exists for this owner')
+  }
+}
+
 export const createPage = async (page: Page, sourcePageId?: string) => {
   debug('createPage', page)
   validateMetadata(page)
+  await assertOwnerPortals(page.owner, page.portals)
   // text blocks display their rendered _html: a page created with content showed empty blocks
   // until its draft was first edited
   await renderMarkdownElements(page.config)
   if (page.draftConfig !== page.config) await renderMarkdownElements(page.draftConfig)
   page.config._toc = await resolvePageAnchors(page.config)
-  await mongo.pages.insertOne(page)
+  try {
+    await mongo.pages.insertOne(page)
+  } catch (err: any) {
+    throwSlugConflict(err)
+    throw err
+  }
+  // as a PATCH of its portals: a standard page created on portals replaces the page of its type
+  // there, instead of leaving two home pages that alternate
+  const standardReplacements = (page.portals.length && standardPageTypes.includes(page.type))
+    ? await switchStandardPages(page, page.portals)
+    : {}
 
   const details = [{ en: `Type: ${page.type}`, fr: `Type : ${page.type}` }]
   if (page.type === 'generic' && page.config.genericMetadata?.group) {
@@ -151,6 +179,14 @@ export const createPage = async (page: Page, sourcePageId?: string) => {
       details.push({
         en: `Duplicated from the page "${sourcePage.title}" (${sourcePageId})`,
         fr: `Dupliquée depuis la page "${sourcePage.title}" (${sourcePageId})`
+      })
+    }
+  }
+  for (const [portalId, titles] of Object.entries(standardReplacements)) {
+    for (const title of titles) {
+      details.push({
+        en: `The page "${title}" was replaced by the page "${page.title}" on the portal: ${portalId}`,
+        fr: `La page "${title}" a été remplacée par la page "${page.title}" sur le portail : ${portalId}`
       })
     }
   }
@@ -176,12 +212,15 @@ export const patchPage = async (page: Page, patch: Partial<Page>, session: Sessi
   // Track portal additions/removals
   const addedPortals = patch.portals ? patch.portals.filter(portalId => !page.portals.includes(portalId)) : []
   const removedPortals = patch.portals ? page.portals.filter(portalId => !patch.portals!.includes(portalId)) : []
+  // only the added ones: a transferred page may keep the ids of its former owner's portals
+  await assertOwnerPortals(patch.owner ?? page.owner, addedPortals)
   let replacedPages: Record<string, string[]> = {}
 
   // Handle standard page type publication: auto-switch pages of same type on the same portal
-  if (patch.portals && ['home', 'contact', 'accessibility', 'terms-of-service', 'legal-notice', 'privacy-policy', 'cookie-policy', 'datasets', 'applications', 'reuses', 'event-catalog', 'news-catalog'].includes(page.type)) {
+  if (patch.portals && standardPageTypes.includes(page.type)) {
     if (addedPortals.length > 0) {
-      replacedPages = await switchStandardPages(page, addedPortals)
+      // the pages of the owner it will have: a transfer and an attachment can come in one PATCH
+      replacedPages = await switchStandardPages({ ...page, owner: patch.owner ?? page.owner }, addedPortals)
     }
   }
 
@@ -197,20 +236,7 @@ export const patchPage = async (page: Page, patch: Partial<Page>, session: Sessi
     assertAccountRole(session, page.owner, 'admin')
     assertAccountRole(session, patch.owner, 'admin')
     if (patch.owner.type !== page.owner.type || patch.owner.id !== page.owner.id) await assertNbPagesLimit(patch.owner)
-    await mongo.images.updateMany(
-      {
-        'owner.type': page.owner.type,
-        'owner.id': page.owner.id,
-        'resource.type': 'page',
-        'resource._id': page._id
-      },
-      {
-        $set: {
-          'owner.type': patch.owner.type,
-          'owner.id': patch.owner.id
-        }
-      }
-    )
+    await transferResourceImages({ type: 'page', _id: page._id }, page.owner, patch.owner)
   }
 
   const fullPatch = {
@@ -222,18 +248,7 @@ export const patchPage = async (page: Page, patch: Partial<Page>, session: Sessi
   try {
     await mongo.pages.updateOne({ _id: page._id }, { $set: fullPatch })
   } catch (err: any) {
-    // Throw a 409 error with a user-friendly message when a slug already exists
-    if (err.code === 11000) {
-      const indexMatch = err.message.match(/index: ([^\s]+)/)
-      const indexName = indexMatch ? indexMatch[1] : ''
-      if (indexName.includes('event-slug')) {
-        throw httpError(409, 'An event page with this slug already exists for this owner')
-      } else if (indexName.includes('news-slug')) {
-        throw httpError(409, 'A news page with this slug already exists for this owner')
-      } else if (indexName.includes('generic-slug')) {
-        throw httpError(409, 'A generic page with this slug already exists for this owner')
-      }
-    }
+    throwSlugConflict(err)
     throw err
   }
 
@@ -401,9 +416,13 @@ const validateMetadata = (page: Page, patch?: Partial<Page>) => {
 const switchStandardPages = async (page: Page, addedPortals: string[]) => {
   const replacedPages: Record<string, string[]> = {}
 
-  // Find other pages of the same type already published on these portals
+  // Find other pages of the same type already published on these portals, of the same owner
+  // (type and id: a department page can replace the organization's one) — the portals ids are
+  // checked by assertOwnerPortals, this keeps the detachment within the owner whatever happens
   const conflictingPages = await mongo.pages.find({
     _id: { $ne: page._id },
+    'owner.type': page.owner.type,
+    'owner.id': page.owner.id,
     type: page.type,
     portals: { $in: addedPortals }
   }).toArray()

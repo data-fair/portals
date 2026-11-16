@@ -64,11 +64,16 @@
 
 <script lang="ts" setup>
 import NavigationRight from '@data-fair/lib-vuetify/navigation-right.vue'
+import { useAgentState } from '@data-fair/lib-vue-agents'
 import { usePagePublicationAgentState } from '~/composables/use-page-publication-agent-state'
+import { pageViewGuidance } from '~/utils/agent-editor-guidance'
 
 const { t } = useI18n()
 const { pageFetch } = usePageStore()
 usePagePublicationAgentState()
+// what this screen is and where the page is edited (the « Éditer le brouillon » action, edit-config)
+const route = useRoute<'/pages/[pageId]/'>()
+useAgentState('page-view', pageViewGuidance(route.params.pageId))
 const tab = useStringSearchParam('tab', { default: 'preview' })
 
 watch(pageFetch.data, (page) => {

@@ -34,6 +34,26 @@
         "id": "test_contrib_dep",
         "role": "contrib",
         "department": "dep1"
+      },
+      {
+        "id": "test_org1_scope_nhi",
+        "role": "admin"
+      },
+      {
+        "id": "test_org1_pages_write_nhi",
+        "role": "admin"
+      },
+      {
+        "id": "test_org1_pages_admin_nhi",
+        "role": "admin"
+      },
+      {
+        "id": "test_org1_pages_read_nhi",
+        "role": "admin"
+      },
+      {
+        "id": "test_org1_portals_write_nhi",
+        "role": "admin"
       }
     ]
   },

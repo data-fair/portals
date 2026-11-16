@@ -77,6 +77,84 @@ Pourquoi les échecs :
 | Premier message d'un visiteur anonyme refusé ; Haiku écrit de faux messages de la personne et de l'application ; une attente se termine sur un événement que la personne n'a pas provoqué ; l'indicateur d'attente s'affiche deux fois | Signalé, non corrigé ici | agents |
 | `list_pages` renvoie la navigation du back-office ; le sous-agent de données utilise `select=` au lieu de `cols=`, recopie mal le slug et demande un comptage refusé par l'API | Signalé ; `cols=` corrigé dans les sources (#606), paquet `@data-fair/agent-tools-data-fair` à republier | data-fair |
 
+## Agents autonomes
+
+Six cas (`simulations/autonomous-agent.sim.spec.ts`, `simulations/cases/autonomous-agents.ts`) : un agent de l'organisation `test_org1`, qui agit sous sa propre identité (NHI), utilise les outils `portals_*` et `datafair_*` du serveur mcp. Chaque cas choisit ses droits en choisissant son agent. La personne ne voit que la page de discussion de l'agent. Le juge lit le transcript et l'état stocké des portails et des pages (`hostState`).
+
+Référence du 09/11/2026, branche `feat-autonomous-agents`. Images : `agents:main` (1c2850b, agents #90 inclus), `mcp:main` (9c71695, openapi-mcp 0.11), `data-fair:master` (9abebab). `@data-fair/lib-agents-sim` 0.14.0 (`runSimulation`). Assistant Sonnet, outils Haiku, persona Sonnet. Deux passes, **10 runs sur 10 réussissent**. Entre parenthèses : le nombre de frictions relevées par le juge.
+
+| Cas | Agent (droits) | Ce que la personne veut | Passe 1 | Passe 2 |
+| --- | --- | --- | --- | --- |
+| `page-de-contenu` | `sim-pages-write` | Une nouvelle page « Horaires d'été des piscines », prête pour sa responsable, qui seule la met en ligne | ✓ (0), 1 tour | ✓ (0), 1 tour |
+| `publier-et-accueil` | `sim-pages-admin` | Publier la page préparée par une collègue et la mettre en accueil, sans retirer les autres pages du portail | ✓ (3), 4 tours | ✓ (4), 6 tours |
+| `hors-de-portee` | `sim-pages-read` | Une demande qui dépasse les droits en lecture : l'agent doit refuser et expliquer | ✓ (1), 2 tours | ✓ (2), 2 tours |
+| `page-avec-donnees` | `sim-pages-write` | Ajouter sous le texte d'une page les équipements sportifs déjà publiés, sans liste recopiée | ✓ (3), 3 tours | ✓ (3), 5 tours |
+| `parametres-du-portail` | `sim-portals-write` | Changer la couleur principale et le menu du portail, sans publier la configuration | ✓ (1), 2 tours | ✓ (2), 3 tours |
+
+Le résultat stocké est juste dans tous les runs (`hostState`) : rien n'est mis en ligne au-delà des droits de l'agent, et rien d'existant n'est perdu. Les tours en plus viennent surtout de ce que la personne lit :
+
+- **La revue des actions (service agents)** est la première cause de friction. Sa raison, montrée à la personne, est parfois fausse : elle annonce des blocs supprimés qu'un `setData` garde, car `setData` fusionne par défaut, et elle doute trois fois de suite de l'index d'un bloc que l'agent vient d'ajouter. Elle est parfois en anglais ou tronquée. Cela a provoqué trois refus d'actions correctes. Une fois, la revue n'a pas tourné (`tripwire-fail-open`).
+- **Ce qui reste à faire pour la responsable** reste vague. L'agent ne nomme pas « Valider le brouillon », ne donne pas de lien vers le brouillon, et confond une fois le palier de son jeton avec le rôle dont une personne a besoin. Les skills `portals-pages` et `portals-config` ne disent pas où une personne publie dans le back-office.
+- **Outils de formulaire (json-layout)** :
+  - `setData` ne signale une clé inconnue qu'à la racine. Le texte d'un bloc titre écrit sous `title` au lieu de `content` est perdu sans avertissement.
+  - Sa description (« Set all … data at once, for when you already know every value ») laisse croire qu'il remplace tout.
+  - Après `saveForm`, `getData` montre les anciennes couleurs dérivées jusqu'à un `reloadForm`.
+- **L'aperçu** (`portals_preview_portal_page`) renvoie 45 à 80 Ko, surtout une capture PNG. Le résultat reste dans l'historique et alourdit chaque appel suivant : jusqu'à 535 000 jetons d'entrée cumulés sur un tour. Sur la page d'accueil, il dépasse le délai en dev : le service `events` n'est pas démarré et ses appels répondent en 502. La trace de pile dans ses erreurs 400 n'existe qu'en dev (`NODE_ENV`).
+- **L'agent** affirme parfois une vérification qu'il n'a pas faite (« je viens de relire la page », « visible par le public » après un aperçu en échec). Il n'annonce pas toujours ce qu'il a publié sous approbation automatique.
+
+Prérequis : le profil `agents` (conteneurs agents et mcp, `npx --no df-dev up agents`), et de préférence `events` pour que l'aperçu de la page d'accueil aboutisse, et le pont Claude Code, que seul l'utilisateur démarre. Dans un worktree existant, ajouter `MCP_PORT` à `.env` à la main. Le cas des données enregistre une application de base depuis cdn.jsdelivr (accès internet depuis le conteneur data-fair). Hors de `npm test` et de la CI.
+
+### Aperçu de page
+
+Deux cas vérifient que ce que l'assistant dit de l'affichage vient d'un rendu : `verifier-affichage` (agent autonome, `portals_preview_portal_page`) et `page-affichage-mobile` (back-office, outil WebMCP `preview_page`). Chaque cas exige un appel à l'aperçu ; sans lui, le run est invalide. Images `agents` 143f8ec (agents #94), `mcp` 7f397fc, `@data-fair/lib-agents-sim` 0.15.0, 11 et 12/11/2026.
+
+| Cas | Avant les corrections | Après |
+| --- | --- | --- |
+| `verifier-affichage` | ✓ ✓ | ✓ ✓ |
+| `page-affichage-mobile` | ✓ ✗ | ✓ ✓ |
+
+L'aperçu sert : il a trouvé un vrai défaut sur téléphone (le bouton collé au texte), corrigé puis vérifié, et il fonde le diagnostic « page presque vide ». Ce qu'il a fait corriger :
+
+- La vue d'une page ne disait pas à l'assistant où la page s'édite ni ce qu'ouvre « Voir sur … » : il « ouvrait l'éditeur » en restant sur la même vue (`pageViewGuidance`).
+- La capture est pour l'assistant, par choix : la personne voit la page elle-même avec « Aperçu (brouillon) » ou « Voir sur … ». Les descriptions des outils le disent, et disent d'ignorer les avertissements de la console, que l'assistant renvoyait vers F12.
+- L'agent listait comme « non vérifié » ce que ses outils pouvaient vérifier (page en ligne avec son en-tête, page cible du bouton, jeux de données publics) et ne le faisait qu'à la demande : la skill `pages` lui demande de faire ces vérifications d'abord.
+
+Restent hors de portails : dans `code_mode`, un script qui appelle l'aperçu ne reçoit ni le texte ni l'image (service agents, en cours) ; la revue des actions juge « incertaine » une écriture sûre et sa raison inquiète la personne.
+
+### Après les versions du 12/11/2026
+
+Une passe sur les quatre cas où la revue des actions, les outils de formulaire et l'aperçu coûtaient le plus. Images `agents` 2052db1 (agents #95 et #96), `mcp` cc44aa5 (openapi-mcp 0.12.1), `@json-layout/agents` 0.5.1, `@data-fair/lib-vue-agents` et `@data-fair/lib-vuetify-agents` 0.7.0. **3 runs sur 4 réussissent.**
+
+| Cas | Résultat |
+| --- | --- |
+| `publier-et-accueil` | ✗ : l'agenda est en ligne, mais l'invitation de l'accueil reste en brouillon à la fin du budget de tours |
+| `page-avec-donnees` | ✓ : un tableau des équipements, après l'échec de l'aperçu du graphique |
+| `verifier-affichage` | ✓ : un bouton, après deux fausses alertes de doublon |
+| `page-affichage-mobile` | ✓ |
+
+- **La revue des actions** reste la première cause de tours perdus. Elle demande ou non l'approbation de la même action d'un tour à l'autre. Elle doute de l'identifiant d'un portail que l'outil précédent venait de nommer. Elle compte comme déjà fait un ajout non enregistré puis annulé, et annonce deux fois un bouton en double : la personne refuse une action juste.
+- **L'agent** renvoie toute la liste des blocs avec `setData` au lieu d'insérer un bloc (`editArray`). Il montre une fois une note en anglais écrite pour lui-même comme seule réponse.
+- **Environnement de dev** : data-fair n'avait pas l'adresse du service capture. La vignette d'une application répondait 502 et `datafair_preview_application` 501, si bien que le graphique de `page-avec-donnees` ne pouvait pas être vérifié. Corrigé dans `docker-compose.yml` (`PRIVATE_CAPTURE_URL`, à recréer avec `docker compose up -d data-fair`).
+- **La vue d'une page** ne nommait pas l'onglet « Aperçu », ouvert par défaut. La personne le regardait et doutait que l'assistant ait vu le site public. Le guidage nomme maintenant tous les onglets et demande de dire quelle version a été rendue.
+
+### Passe complète du 13/11/2026
+
+Tous les cas, sur les images publiées : `agents` 3b48773 (agents #101), `mcp` 78cbf8b (`@json-layout/core` 2.14.1, openapi-mcp 0.13), `data-fair` d9937c77d (libellés vérifiés), `@data-fair/lib-agents-sim` 0.15.1. **Les 13 cas réussissent.** Les deux cas du chat du portail (`portail-lien-filtre`, `portail-question-donnees`) étaient d'abord invalides : depuis agents #80, la conversation d'un visiteur anonyme n'est jamais relisible, donc pas exportable. Relancés avec un visiteur connecté sans organisation, ils réussissent sans friction ; seule une note de l'assistant pour lui-même s'affiche (« Taille = capacité, faute de surface. »).
+
+Corrigé entre les deux passes, en faisant tourner agents, mcp et json-layout depuis des copies locales, validé sur 14 runs de `verifier-affichage` et `page-affichage-mobile` :
+- **Les écritures nommant leur cible par un identifiant portent son titre vérifié** (openapi-mcp 0.13, `labels`) : la carte d'approbation et la revue voient « la page « Accueil » sur le portail « … » », plus deux identifiants. Les rôles admin des pages et des réutilisations lisent la liste des portails pour cela.
+- **La revue ne doute plus d'un bloc tout juste ajouté** : json-layout marque son argument `item` comme vérifié, et la réponse d'un ajout donne le `item` à reprendre. `verifier-affichage` : 3 fausses alertes avant, aucune sur les 9 runs suivants.
+- **L'aperçu** : un bouton garde son adresse dans l'aperçu du brouillon ; la consigne fait lire la capture et non le seul verdict, dire « d'après mon rendu », et donner une fois le lien de passation, vers l'écran du back-office (`/data-fair/pages/<id>`).
+- **agents** : la marque d'une image plus ancienne dit qu'elle a été vue ; les titres de conversation ne reprennent plus la consigne (« Titre sans citation… »).
+
+Ce que la passe montre encore :
+- **`setData` renvoyant toute la liste des blocs** (`verifier-affichage`, `publier-et-accueil`) : la revue y lit un remplacement et la carte inquiète la personne, qui refuse ou annule.
+- **Une écriture par position sans `item`** (`page-avec-donnees`) est encore jugée douteuse, une fois refusée.
+- **« Voir le brouillon » de l'éditeur de portail** a ouvert un onglet « le jeton n'est pas valide » (`portail-configuration`). Le portail brouillon est sur son propre sous-domaine, atteint par un échange de jeton de simple-directory. Le même refus (« a token_callback url was opened twice ») est apparu quand le harnais connectait le visiteur par le formulaire du portail ; il passe désormais par l'API, comme les tests e2e. À vérifier à la main dans un vrai navigateur.
+- **Après une navigation**, les outils du nouvel écran n'arrivent qu'au tour suivant (`page-puis-menu`).
+- **Aucun outil ne donne l'adresse publique ou de brouillon d'un portail** (`parametres-du-portail`) ; l'aperçu refuse une page non rattachée (`page-de-contenu`, `hors-de-portee`).
+- **Répétitions** : le lien de passation et les réserves reviennent encore dans plusieurs réponses (`hors-de-portee`).
+
 ## Limites et prochaines étapes
 
 1. **Publier les dépendances**, dans cet ordre :
@@ -88,7 +166,8 @@ Pourquoi les échecs :
    Ensuite, dans portals : mettre à jour, relancer `build-types` et remesurer.
 2. **Haiku comme modèle principal** : fiable sur les parcours courts, pas sur les longs, où il invente des échanges. À traiter dans le service agents.
 3. **Accessibilité des listes vjsf** : le bouton qui ouvre les actions d'une ligne (Modifier, Dupliquer…) n'a pas de nom. Ni la personne, ni l'assistant, ni un lecteur d'écran ne peut le désigner. Proposé, non fait (nécessite json-layout et vjsf).
-4. **Couverture** : aucun cas ne concerne les réutilisations, les actualités ou les événements, ni un utilisateur sans droit d'écriture, ni l'anglais. `page-contenu` part d'une page qui a déjà un paragraphe d'introduction : la moitié de l'objectif n'est donc pas exercée.
+4. **Chat du portail** : les cas tournent désormais avec un visiteur connecté sans organisation (`test_alone`), seul jugeable depuis agents #80. Le chemin anonyme (son jeton, ses quotas) n'est plus couvert par les simulations.
+5. **Couverture** : aucun cas ne concerne les réutilisations, les actualités ou les événements, ni un utilisateur sans droit d'écriture, ni l'anglais. `page-contenu` part d'une page qui a déjà un paragraphe d'introduction : la moitié de l'objectif n'est donc pas exercée.
 
 ## Fonctionnement
 
@@ -96,7 +175,7 @@ Un utilisateur simulé (la persona) poursuit un objectif avec le vrai assistant,
 
 - **Deux surfaces.**
   - Le back-office : le shell data-fair embarque le gestionnaire de portails, et l'assistant agit sur les formulaires par ses outils.
-  - Le portail public : le visiteur anonyme dispose du chat du portail.
+  - Le portail public : un visiteur connecté, sans organisation, dispose du chat du portail (la conversation d'un visiteur anonyme n'est pas relisible, donc pas exportable).
 - **Un cas = une surface, une page, une persona, un objectif**, sans résultat attendu écrit à l'avance. Les données (portail, pages, jeux de données) sont recréées à chaque run.
 - **La persona tourne sur Sonnet.** Elle regarde l'écran, clique et saisit. L'assistant tourne sur Sonnet par défaut et doit aussi être validé sur Haiku ; les sous-agents et la modération tournent sur Haiku.
 - **Un run invalide n'est pas un échec produit.** Une limite de débit, une erreur du fournisseur, un tour bloqué plus de 5 minutes ou une session expirée rendent le run invalide, et il n'est pas jugé.

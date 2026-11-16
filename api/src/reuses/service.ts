@@ -6,6 +6,8 @@ import { type SessionStateAuthenticated, assertAccountRole, httpError } from '@d
 import eventsQueue, { type PushEvent } from '@data-fair/lib-node/events-queue.js'
 import { renderMarkdown } from '@data-fair/portals-shared-markdown'
 import mongo from '#mongo'
+import { assertOwnerPortals } from '../portals/service.ts'
+import { transferResourceImages } from '../images/service.ts'
 
 const debug = debugModule('reuses')
 
@@ -32,6 +34,7 @@ export const getReuseAsAdminOrSubmitter = async (sessionState: SessionStateAuthe
 
 export const createReuse = async (reuse: Reuse) => {
   debug('createReuse', reuse)
+  await assertOwnerPortals(reuse.owner, reuse.portals)
   if (reuse.config.description) {
     reuse.config._descriptionHtml = renderMarkdown(reuse.config.description)
   }
@@ -44,6 +47,8 @@ export const patchReuse = async (
   session: SessionStateAuthenticated,
   options?: { skipOwnerRoleCheck?: boolean; forceNewSlug?: boolean }
 ) => {
+  // only the added ones: a transferred reuse may keep the ids of its former owner's portals
+  if (patch.portals) await assertOwnerPortals(patch.owner ?? reuse.owner, patch.portals.filter(portalId => !reuse.portals.includes(portalId)))
   // Render markdown description if provided in config
   if (patch.config?.description) patch.config._descriptionHtml = renderMarkdown(patch.config.description)
   if (patch.draftConfig?.description) patch.draftConfig._descriptionHtml = renderMarkdown(patch.draftConfig.description)
@@ -76,20 +81,7 @@ export const patchReuse = async (
     }
 
     // Update ownership of associated images
-    await mongo.images.updateMany(
-      {
-        'owner.type': reuse.owner.type,
-        'owner.id': reuse.owner.id,
-        'resource.type': 'reuse',
-        'resource._id': reuse._id
-      },
-      {
-        $set: {
-          'owner.type': patch.owner.type,
-          'owner.id': patch.owner.id
-        }
-      }
-    )
+    await transferResourceImages({ type: 'reuse', _id: reuse._id }, reuse.owner, patch.owner)
   }
 
   const fullPatch = {

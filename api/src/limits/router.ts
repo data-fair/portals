@@ -1,7 +1,7 @@
 import type { Request } from 'express'
 import type { Limit } from '#types/limit/index.ts'
 import { Router } from 'express'
-import { httpError, reqSessionAuthenticated, assertAdminMode, secretKeyMatches } from '@data-fair/lib-express'
+import { httpError, reqSessionAuthenticated, assertAdminMode, secretKeyMatches, allowAnyScope } from '@data-fair/lib-express'
 import * as limitSchema from '#types/limit/index.ts'
 import mongo from '#mongo'
 import config from '#config'
@@ -42,7 +42,7 @@ router.post('/:type/:id', async (req, res) => {
 })
 
 // A user can get limits information for their own accounts only
-router.get('/:type/:id', async (req, res) => {
+router.get('/:type/:id', allowAnyScope, async (req, res) => {
   const account = accountParams(req)
   if (!hasSecretKey(req)) {
     const session = reqSessionAuthenticated(req)

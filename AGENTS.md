@@ -19,7 +19,7 @@ npx --no df-dev down maildev
 - Read the logs before restarting: nodemon (api, ingress-manager), vite (ui) and nuxt (portal) already reload on file changes. Restart only a pane that exited, hangs, or needs new env.
 - If `restart` answers "not ready", report to the user with the logs instead of retrying.
 - Never use `docker compose restart`, `kill` or `zellij action` directly.
-- Optional containers: `agents` (back-office and portal chat, simulations), `events`, `maildev` (contact form mails). The user can start them with the env: `npm run dev-zellij -- --services agents,events,maildev`.
+- Optional containers: `agents` (back-office and portal chat, simulations), `events`, `capture` (renders the pages for the agents' page preview, needs the `capture` image and simple-directory's pseudo sessions), `maildev` (contact form mails). The user can start them with the env: `npm run dev-zellij -- --services agents,events,capture,maildev`.
 
 ### Port assignments
 
@@ -44,7 +44,11 @@ Branch names: letters, digits, `.`, `_`, `-`, at most 60 characters, no `/`.
 The environment allows for integration testing thanks to docker containers (see docker-compose.yml).
 Random ports are allocated and defined in `.env`.
 A nginx proxy is part of the containers and exposes all services, including the development API server (configured in dev/resources/nginx.conf.template).
-Test users are defined in dev/resources/users.json
+Test users are defined in dev/resources/users.template.json (rendered to the git-ignored users.json with the host and port of `.env` by `node dev/render-users.mjs`: df-dev setup, the status pane, CI)
+
+The scope tests use a non-human identity, `test_org1_scope_nhi` (admin of `test_org1`,
+in dev/resources/users.template.json and organizations.json): `nhiSession(scope?)` in `tests/support/nhi.ts`
+exchanges its assertion for a scoped (or, without scope, unrestricted) session.
 
 The test cleanup endpoint (`DELETE /api/test-env`) only removes data whose `owner.id` starts with `test_`. Use the dev-only superadmin `superadmin@dev.com` (id `dev_superadmin`, password `passwd`, member of org `dev_org`) to play around manually without seeing your data wiped by tests.
 
@@ -83,6 +87,17 @@ portals and pages lists, page editor draft). Tag a test only if it is fast and c
 many features depend on. When iterating, run only the related test cases; `npm run quality`
 runs the full gate locally.
 
+### API for agents
+
+The manager API is usable by AI agents through OAuth scopes and an `x-agent` annotated OpenAPI
+document that data-fair merges into its platform document:
+
+- `docs/architecture/scopes.md`: scope vocabulary and tiers, the operations table in
+  `api/src/scopes.ts`, any-scope and refused routes, the publication-site sync of agent sessions.
+- `docs/architecture/api-docs.md`: the document, its tools, editor tool groups and skills, how
+  data-fair merges it (namespace `portals`). The agent surface is pinned by
+  `tests/fixtures/agent-surface.json`.
+
 ### Simulations
 
 Judged browser simulations of the AI assistant (`@data-fair/lib-agents-sim`): a simulated
@@ -100,6 +115,26 @@ Run and judge them with the `/agents-sim` skill.
   datasets in data-fair, and rewrites `test_org1`'s agents settings and data-fair topics.
 - Status summary: `docs/qa/simulations-assistant-ia.md`. What the judge reads as the
   product's promises: `docs/architecture/agent.md`.
+
+Autonomous-agent cases (`simulations/autonomous-agent.sim.spec.ts`, cases in
+`simulations/cases/autonomous-agents.ts`, runner in `simulations/runner/autonomous-agent.ts`):
+an agent of `test_org1`, acting as its own NHI, uses the `portals_*` / `datafair_*` tools of the
+mcp server. The judge also reads the stored portals state (`hostState`) read back by the case's `check`.
+
+- They need the `agents` profile (agents + mcp containers: `npx --no df-dev up agents`) and the
+  bridge, which only the user starts. Never part of `npm test` or CI.
+- Four agent identities (NHIs of `test_org1`, defined in `dev/resources/users.template.json`;
+  `dev/resources/users.json` is rendered from it by `dev/render-users.mjs` and git-ignored):
+  `sim-pages-write`, `sim-pages-admin`, `sim-pages-read`, `sim-portals-write`
+  (user ids `test_org1_<scope>_nhi`). Each case picks its scopes by picking its agent.
+- `MCP_PORT` (nginx exposes the mcp server on `/mcp-server/`). `df-dev init-env` never adds a port
+  to an existing `.env` (`--force` redraws all of them): in an existing worktree add `MCP_PORT=<free port>`
+  by hand, otherwise nginx cannot start when it is recreated.
+- simple-directory validates NHI scopes against data-fair's `scopes.json` (`PLATFORM_SCOPES_URL`),
+  which lists portals' scopes only while data-fair's platform document holds a good fragment of portals
+  (fetched while the portals api was up).
+- Seeding the data case registers a base application from cdn.jsdelivr: the data-fair container
+  needs internet access.
 
 ### Linting & Type Checking
 

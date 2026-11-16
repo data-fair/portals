@@ -2,6 +2,7 @@ import { createServer } from 'node:http'
 import * as wsServer from '@data-fair/lib-express/ws-server.js'
 import * as wsEmitter from '@data-fair/lib-node/ws-emitter.js'
 import { session } from '@data-fair/lib-express/index.js'
+import log from '@data-fair/lib-node/log.js'
 import { startObserver, stopObserver } from '@data-fair/lib-node/observer.js'
 import eventPromise from '@data-fair/lib-utils/event-promise.js'
 import eventsQueue from '@data-fair/lib-node/events-queue.js'
@@ -23,7 +24,7 @@ server.headersTimeout = (60 * 1000) + 2000
 
 export const start = async () => {
   if (config.observer.active) await startObserver(config.observer.port)
-  session.init(config.privateDirectoryUrl)
+  session.init(config.privateDirectoryUrl, undefined, undefined, { scopeAware: true })
   await mongo.init()
   await locks.start(mongo.db)
   await upgradeScripts(mongo.db, locks, config.upgradeRoot)
@@ -38,7 +39,7 @@ export const start = async () => {
   await wsServer.start(server, mongo.db, async () => false)
   await wsEmitter.init(mongo.db)
 
-  console.log(`API server listening on port ${config.port}`)
+  log.info(`API server listening on port ${config.port}`)
 }
 
 export const stop = async () => {

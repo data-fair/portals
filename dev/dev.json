@@ -15,7 +15,9 @@
     "DF_PORT",
     "EVENTS_PORT",
     "AGENTS_PORT",
-    "BRIDGE_PORT"
+    "BRIDGE_PORT",
+    "MCP_PORT",
+    "CAPTURE_PORT"
   ],
   "panes": {
     "api": {
@@ -30,9 +32,15 @@
     "ingress-manager": {}
   },
   "url": "http://${DEV_HOST}:${NGINX_PORT}/portals-manager/dev",
+  "setup": [
+    "node dev/render-users.mjs"
+  ],
   "optional": {
     "events": {
       "privateEventsUrl": ""
+    },
+    "capture": {
+      "privateCaptureUrl": ""
     }
   }
 }
