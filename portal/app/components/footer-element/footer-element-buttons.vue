@@ -1,5 +1,6 @@
 <template>
-  <div :class="footerElementClasses(element)">
+  <!-- the template drops the whitespace between the buttons: the gap keeps them apart, also between wrapped lines -->
+  <div :class="[...footerElementClasses(element), 'd-flex flex-wrap align-center ga-2', footerJustifyClass(element.align)]">
     <template
       v-for="(link, index) in element.items"
       :key="index"

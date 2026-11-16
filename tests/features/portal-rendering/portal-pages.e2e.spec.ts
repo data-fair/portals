@@ -170,7 +170,15 @@ test.describe('portal rendering', () => {
           background: { color: 'secondary' },
           blocks: [
             { type: 'divider', align: 'left', opacity: 0.5, thickness: 2 },
-            { type: 'buttons', align: 'center', variant: 'outlined', items: [{ type: 'standard', subtype: 'contact', title: 'Contact us' }] }
+            {
+              type: 'buttons',
+              align: 'center',
+              variant: 'outlined',
+              items: [
+                { type: 'standard', subtype: 'contact', title: 'Contact us' },
+                { type: 'standard', subtype: 'accessibility', title: 'Accessibility statement' }
+              ]
+            }
           ]
         },
         {
@@ -210,6 +218,12 @@ test.describe('portal rendering', () => {
     expect(firstBox.y).toBe(secondBox.y)
     expect(firstBox.width).toBeLessThanOrEqual(rowBox.width * 0.55)
     expect(secondBox.width).toBeLessThanOrEqual(rowBox.width * 0.55)
+
+    // the outlined buttons of a block are spaced on their line instead of touching each other
+    const contactBox = (await footerLocator.getByRole('link', { name: /Contact us/ }).boundingBox())!
+    const accessibilityBox = (await footerLocator.getByRole('link', { name: /Accessibility statement/ }).boundingBox())!
+    expect(accessibilityBox.y).toBe(contactBox.y)
+    expect(accessibilityBox.x - (contactBox.x + contactBox.width)).toBeGreaterThanOrEqual(8)
   })
 
   test('should render contact page', async ({ page, goToPortal }) => {
