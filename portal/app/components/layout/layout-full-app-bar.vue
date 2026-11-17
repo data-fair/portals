@@ -23,10 +23,12 @@
     <v-spacer />
 
     <!-- Agent Chat -->
-    <div
-      id="agent-chat-appbar"
-      class="d-flex align-center"
-    />
+    <v-toolbar-items>
+      <div
+        id="agent-chat-appbar"
+        class="d-flex"
+      />
+    </v-toolbar-items>
   </v-app-bar>
 </template>
 

@@ -94,28 +94,6 @@ export default {
         width: { type: 'number', title: 'Width (px)', 'x-i18n-title': { fr: 'Largeur (px)' }, default: 400, layout: { cols: 6 } },
         height: { type: 'number', title: 'Height (px)', 'x-i18n-title': { fr: 'Hauteur (px)' }, default: 500, layout: { cols: 6 } }
       }
-    },
-    btnProps: {
-      type: 'object',
-      title: 'Button options',
-      'x-i18n-title': { fr: 'Options du bouton' },
-      unevaluatedProperties: false,
-      layout: { if: 'parent.data?.active', cols: 6 },
-      properties: {
-        size: {
-          type: 'string',
-          title: 'Size',
-          'x-i18n-title': { fr: 'Taille' },
-          default: 'default',
-          oneOf: [
-            { const: 'x-small', title: 'Extra small', 'x-i18n-title': { fr: 'Très petit' } },
-            { const: 'small', title: 'Small', 'x-i18n-title': { fr: 'Petit' } },
-            { const: 'default', title: 'Normal' },
-            { const: 'large', title: 'Large', 'x-i18n-title': { fr: 'Grand' } },
-            { const: 'x-large', title: 'Extra large', 'x-i18n-title': { fr: 'Très grand' } }
-          ]
-        }
-      }
     }
   }
 }

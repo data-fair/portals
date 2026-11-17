@@ -11,8 +11,7 @@
       location="bottom right"
       color="primary"
       class="ma-4"
-      size="large"
-      :style="hasAgentChatFab ? 'margin-bottom: 72px !important' : ''"
+      :style="aboveAgentChatFab ? 'margin-bottom: 80px !important' : ''"
       @click="scrollToTop"
     />
   </v-fab-transition>
@@ -28,9 +27,9 @@ const goTo = useGoTo()
 const { t } = useI18n()
 
 const { portalConfig } = usePortalStore()
-const hasAgentChatFab = computed(() => {
-  const ac = portalConfig.value.agentChat
-  return ac?.active && ac.togglePosition !== 'appBar'
+const aboveAgentChatFab = computed(() => {
+  const agentChat = portalConfig.value.agentChat
+  return agentChat?.active && agentChat.togglePosition !== 'appBar' && route.meta.layout !== 'full'
 })
 
 const showButton = ref(false)
