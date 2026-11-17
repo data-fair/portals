@@ -273,6 +273,38 @@ const getIngressInfos = (portal: Portal) => {
   return ingressInfos
 }
 
+const postSDSites = async (sdSites: Awaited<ReturnType<typeof getSDSites>>) => {
+  for (const site of sdSites) {
+    debugSyncPortal('sync to SD', site)
+    try {
+      await axios.post(
+        `${config.privateDirectoryUrl}/api/sites`,
+        site,
+        { params: { key: config.secretKeys.sites } }
+      )
+    } catch (err: any) {
+      formatSyncError('simple-directory', err)
+    }
+  }
+}
+
+// the font faces are baked in the theme of the simple-directory sites, a change of a font asset
+// is not seen by syncPortalUpdate (both sides of its comparison read the current assets)
+export const syncPortalsUsingFonts = async (owner: { type: string, id: string }, familyNames: string[]) => {
+  const portals = await mongo.portals.find({
+    'owner.type': owner.type,
+    'owner.id': owner.id,
+    $or: ['config', 'draftConfig'].flatMap(c => ['bodyFontFamily', 'headingFontFamily'].map(f => ({ [`${c}.${f}`]: { $in: familyNames } })))
+  }).toArray()
+  for (const portal of portals) {
+    try {
+      await postSDSites(await getSDSites(portal))
+    } catch (err) {
+      log.warn('failed to sync the theme of a portal after a font change', { code: 'sync-portal-font', err, portalId: portal._id })
+    }
+  }
+}
+
 type SyncPart = 'ingress' | 'sd' | 'df'
 
 const formatSyncError = (service: string, err: any) => {
@@ -346,18 +378,7 @@ export async function syncPortalUpdate (portal: Portal, previousPortal: Portal |
   if (!forceSync.includes('sd') && equal(sdSites, previousPortal && await getSDSites(previousPortal))) {
     debugSyncPortal('nothing new to sync to SD', sdSites)
   } else {
-    for (const site of sdSites) {
-      debugSyncPortal('sync to SD', site)
-      try {
-        await axios.post(
-          `${config.privateDirectoryUrl}/api/sites`,
-          site,
-          { params: { key: config.secretKeys.sites } }
-        )
-      } catch (err: any) {
-        formatSyncError('simple-directory', err)
-      }
-    }
+    await postSDSites(sdSites)
   }
 
   if (config.privateIngressManagerUrl) {
