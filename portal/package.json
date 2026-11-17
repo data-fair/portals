@@ -25,7 +25,7 @@
     "@data-fair/lib-vue": "^1.31.1",
     "@data-fair/lib-vue-agents": "^0.7.0",
     "@data-fair/lib-vuetify": "^2.5.1",
-    "@data-fair/lib-vuetify-agents": "^0.7.0",
+    "@data-fair/lib-vuetify-agents": "^0.7.1",
     "@data-fair/lib-vuetify-events": "^0.3.0",
     "@data-fair/portals-shared-markdown": "*",
     "@mdi/js": "^7.4.47",
