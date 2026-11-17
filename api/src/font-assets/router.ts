@@ -9,6 +9,7 @@ import { jsonFromMultiPart, upload } from '../utils/multipart.ts'
 import { randomUUID } from 'node:crypto'
 import { readFile, unlink } from 'node:fs/promises'
 import { requireOperationScope } from '../scopes.ts'
+import { syncPortalsUsingFonts } from '../portals/service.ts'
 
 const router = Router()
 export default router
@@ -52,6 +53,7 @@ router.post('', requireOperationScope('createFontAsset'), upload.single('font-as
 
   await mongo.fontAssets.insertOne(fontAsset)
   await unlink(file.path)
+  await syncPortalsUsingFonts(fontAsset.owner, [fontAsset.name])
 
   res.json({ ...fontAsset, data: undefined })
 })
@@ -65,6 +67,7 @@ router.patch('/:id', requireOperationScope('updateFontAsset'), async (req, res) 
   const body = patchReqBody.returnValid(req.body, { name: 'body' })
   body.name = body.name?.trim()
   await mongo.fontAssets.updateOne({ _id: req.params.id }, { $set: body })
+  await syncPortalsUsingFonts(fontAsset.owner, [...new Set([fontAsset.name, body.name ?? fontAsset.name])])
 
   res.json({ ...fontAsset, ...body, data: undefined })
 })
@@ -75,6 +78,7 @@ router.delete('/:id', requireOperationScope('deleteFontAsset'), async (req, res)
   if (!fontAsset) throw httpError(404, `Font asset "${req.params.id}" not found`)
   assertAccountRole(session, fontAsset.owner, 'admin')
   await mongo.fontAssets.deleteOne({ _id: req.params.id })
+  await syncPortalsUsingFonts(fontAsset.owner, [fontAsset.name])
   res.status(204).send()
 })
 
