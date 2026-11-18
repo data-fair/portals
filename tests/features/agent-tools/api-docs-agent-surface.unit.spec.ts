@@ -36,13 +36,34 @@ const scopeSets: Record<string, string[] | undefined> = {
 }
 
 const editorVerbs = ['describeState', 'getData', 'setFieldValue', 'setData', 'getFieldSuggestions', 'editArray', 'saveForm', 'reloadForm']
-const editorTools = (name: string) => editorVerbs.map(verb => `${name}_${verb}`)
+/** openapi-mcp's form tools: one group for the page_config and portal_config forms, the form chosen per call */
+const formTools = editorVerbs.map(verb => `form_${verb}`)
+const isFormTool = (name: string) => name.startsWith('form_')
 
 /** Reads the linked skill bodies as the API serves them at /api/agents/skills/<name>.md. */
 const skillBodies = async (url: string) => {
   const prefix = `${baseUrl}/agents/skills/`
   const body = url.startsWith(prefix) && url.endsWith('.md') ? readAgentSkill(url.slice(prefix.length, -3)) : undefined
   return body ? { text: body } : { error: `not served: ${url}` }
+}
+
+/**
+ * The names a text gets wrong for the platform document, where data-fair merges this one: the plain tools
+ * are prefixed with portals_ (a text naming `publish_page` sends the agent to a tool that does not exist).
+ * The form tools are not: the mcp server builds them from the merged document, so they keep their bare
+ * names (form_saveForm) and their forms take the merged names (form "portals_page_config").
+ */
+const wrongPlatformNames = (toolSet: ToolSet, text: string) => {
+  const plain = toolSet.tools.map(t => t.name).filter(name => !isFormTool(name))
+  const forms: string[] = toolSet.tools.find(t => t.name === 'form_saveForm')!.inputSchema.properties.form.enum
+  const known = new Set([...plain, ...forms].map(name => `portals_${name}`))
+  const unprefixed = new RegExp(`(?<![A-Za-z0-9_])(${plain.join('|')})(?![A-Za-z0-9_])`, 'g')
+  return [
+    ...[...text.matchAll(unprefixed)].map(m => `unprefixed ${m[1]}`),
+    ...[...text.matchAll(/(?<![A-Za-z0-9_])portals_[A-Za-z0-9_]+/g)].map(m => m[0]).filter(name => !known.has(name)).map(name => `unknown ${name}`),
+    ...[...text.matchAll(/(?<![A-Za-z0-9_])form_[A-Za-z0-9_]+/g)].map(m => m[0]).filter(name => !formTools.includes(name)).map(name => `unknown ${name}`),
+    ...[...text.matchAll(/form \\?"([A-Za-z0-9_]+)\\?"/g)].map(m => m[1]).filter(name => !known.has(name)).map(name => `form "${name}" is not a platform form name`)
+  ]
 }
 
 const loadSurface = (options: Parameters<typeof load>[1] = {}) => load(apiDocs('en'), { baseUrl, files: FILES, lint: 'error', skillBodies, ...options })
@@ -66,16 +87,16 @@ test.describe('agent surface of the api docs', () => {
     const toolSet = await loadSurface()
     const names = (scopes: string[]) => toolsForScopes(toolSet, scopes).tools.map(t => t.name)
     const pagesWrite = names(['pages:write'])
-    for (const name of ['update_page', 'create_page', 'cancel_page_draft', ...editorTools('page_config')]) assert.ok(pagesWrite.includes(name), name)
-    for (const name of ['publish_page', 'attach_page_to_portals', 'request_page_publication', 'transfer_page', 'create_page_on_portals', 'delete_page']) {
+    for (const name of ['create_page', 'cancel_page_draft', 'update_group', ...formTools]) assert.ok(pagesWrite.includes(name), name)
+    for (const name of ['publish_page', 'update_page_settings', 'delete_page']) {
       assert.ok(!pagesWrite.includes(name), name)
       assert.ok(names(['pages:admin']).includes(name), name)
     }
     const portalsWrite = names(['portals:write'])
-    assert.ok(portalsWrite.includes('portal_config_saveForm'))
+    assert.ok(portalsWrite.includes('form_saveForm'))
     for (const name of ['publish_portal_config', 'update_portal_settings', 'create_portal']) assert.ok(!portalsWrite.includes(name), name)
     assert.ok(names(['reuses:write']).includes('update_reuse'))
-    for (const name of ['publish_reuse', 'attach_reuse_to_portals', 'submit_reuse']) assert.ok(!names(['reuses:write']).includes(name), name)
+    for (const name of ['publish_reuse', 'update_reuse_settings', 'submit_reuse']) assert.ok(!names(['reuses:write']).includes(name), name)
     assert.deepEqual(names(['pages:admin']).filter(name => name.startsWith('portal')), [], 'no portal tool for a pages token')
   })
 
@@ -91,7 +112,7 @@ test.describe('agent surface of the api docs', () => {
   test('every tool has a title in French and in English', async () => {
     for (const locale of ['fr', 'en']) {
       const toolSet = await load(apiDocs(locale as 'fr' | 'en'), { baseUrl, files: FILES, locale })
-      const plain = toolSet.tools.filter(t => !editorVerbs.some(verb => t.name.endsWith(`_${verb}`)))
+      const plain = toolSet.tools.filter(t => !isFormTool(t.name))
       assert.deepEqual(plain.filter(t => !t.title).map(t => t.name), [], `untitled in ${locale}`)
       const titles = plain.map(t => t.title)
       assert.equal(new Set(titles).size, titles.length, `two tools share a title in ${locale}`)
@@ -101,16 +122,32 @@ test.describe('agent surface of the api docs', () => {
   test('member-written resources are closed world, reuses and the page preview stay open', async () => {
     const toolSet = await loadSurface()
     const openWorld = (name: string) => toolSet.tools.find(t => t.name === name)?.annotations?.openWorldHint
-    for (const name of ['list_portals', 'get_portal', 'list_pages', 'get_page', 'create_page', 'publish_page', 'upload_image', 'page_config_getData', 'page_config_saveForm', 'portal_config_getData', 'portal_config_saveForm']) {
+    for (const name of ['list_portals', 'get_portal', 'list_pages', 'get_page', 'create_page', 'publish_page', 'upload_image', 'form_getData', 'form_saveForm']) {
       assert.equal(openWorld(name), false, name)
     }
     // submitted by a portal's users from other accounts
     for (const name of ['list_reuses', 'get_reuse']) assert.notEqual(openWorld(name), false, name)
     assert.equal(openWorld('preview_portal_page'), true)
-    // the form tools' titles, an approval card's heading: the group's title and the verb (openapi-mcp 0.11)
-    const title = (name: string) => toolSet.tools.find(t => t.name === name)?.annotations?.title
-    assert.equal(title('page_config_saveForm'), 'Page draft content (not live until published) — save')
-    assert.equal(title('portal_config_setFieldValue'), 'Portal draft configuration (not live until published) — set a field')
+  })
+
+  test('the form tools serve both forms, narrowed to the one form a token is granted', async () => {
+    const toolSet = await loadSurface()
+    const formTool = (scopes: string[] | undefined, name: string) => toolsForScopes(toolSet, scopes).tools.find(t => t.name === name)
+    const forms = (scopes: string[] | undefined) => formTool(scopes, 'form_saveForm')?.inputSchema.properties.form.enum
+    for (const scopes of [undefined, ['all:write'], ['pages:write', 'portals:write']]) assert.deepEqual(forms(scopes), ['portal_config', 'page_config'], String(scopes))
+    for (const scopes of [['pages:write'], ['pages:admin']]) assert.deepEqual(forms(scopes), ['page_config'], scopes.join())
+    for (const scopes of [['portals:write'], ['portals:admin']]) assert.deepEqual(forms(scopes), ['portal_config'], scopes.join())
+    for (const scopes of [['pages:read'], ['portals:read'], ['reuses:admin']]) {
+      assert.deepEqual(toolsForScopes(toolSet, scopes).tools.filter(t => isFormTool(t.name)).map(t => t.name), [], scopes.join())
+    }
+    const unscoped = formTool(undefined, 'form_setFieldValue')!
+    assert.deepEqual(unscoped.inputSchema.required.slice(0, 2), ['form', 'id'])
+    // the form tools' titles, an approval card's heading: the form's title and the verb while one form is offered
+    const title = (scopes: string[] | undefined, name: string) => formTool(scopes, name)?.annotations?.title
+    assert.equal(title(undefined, 'form_saveForm'), 'Form — save')
+    assert.equal(title(['pages:write'], 'form_saveForm'), 'Page draft content (not live until published) — save')
+    assert.equal(title(['portals:write'], 'form_setFieldValue'), 'Portal draft configuration (not live until published) — set a field')
+    assert.equal(formTool(['pages:write'], 'form_setFieldValue')!.inputSchema.properties.id.description, 'Id of the page.')
   })
 
   test('the page preview is a read tool returning the screenshot as an image and the report as text', async () => {
@@ -124,18 +161,14 @@ test.describe('agent surface of the api docs', () => {
     assert.ok(names(['pages:read']).includes('preview_portal_page'))
     for (const scopes of [['portals:admin'], ['reuses:admin']]) assert.ok(!names(scopes).includes('preview_portal_page'), scopes.join())
     assert.match(preview.description, /not fetch_url/)
-    assert.match(preview.description, /portals_page_config_saveForm/)
+    assert.match(preview.description, /\(form_saveForm\)/)
   })
 
   test('descriptions name the tools by their platform names', async () => {
-    // data-fair prefixes every tool of this document with portals_: a text naming `publish_page`
-    // sends the agent to a tool that does not exist in the platform document
     const toolSet = await loadSurface()
-    const baseNames = toolSet.tools.map(t => t.name)
-    const unprefixed = new RegExp(`(?<![A-Za-z0-9_])(${baseNames.join('|')})(?![A-Za-z0-9_])`, 'g')
-    // the editor tools' own texts come from @json-layout/agents, named with their prefix as loaded
-    const authored = toolSet.tools.filter(t => !editorVerbs.some(verb => t.name.endsWith(`_${verb}`)))
-    const found = authored.flatMap(t => [...JSON.stringify({ description: t.description, inputSchema: t.inputSchema }).matchAll(unprefixed)].map(m => `${t.name}: ${m[1]}`))
+    // the form tools' own texts come from openapi-mcp and @json-layout/agents, named as loaded
+    const authored = toolSet.tools.filter(t => !isFormTool(t.name))
+    const found = authored.flatMap(t => wrongPlatformNames(toolSet, JSON.stringify({ description: t.description, inputSchema: t.inputSchema })).map(name => `${t.name}: ${name}`))
     assert.deepEqual(found, [])
   })
 
@@ -154,19 +187,18 @@ test.describe('agent surface of the api docs', () => {
     assert.ok(skills(['portals:read']).includes('config'))
     assert.ok(!skills(['portals:read']).includes('pages'))
     for (const scopes of [['reuses:write'], ['pages:write']]) assert.ok(!skills(scopes).includes('config'), scopes.join())
+    // openapi-mcp's form skill (served as form in the platform too) goes with the form tools, not with a business skill
+    for (const scopes of [['pages:write'], ['portals:write']]) assert.ok(skills(scopes).includes('form'), scopes.join())
+    for (const scopes of [['pages:read'], ['portals:read'], ['reuses:admin']]) assert.ok(!skills(scopes).includes('form'), scopes.join())
+    assert.ok(!skills(['portals:write']).includes('pages'), 'a portal-config token is not offered the pages skill')
+    assert.ok(!skills(['pages:write']).includes('config'), 'a page-config token is not offered the config skill')
   })
 
   test('skill bodies name existing tools by their platform names', async () => {
     const toolSet = await loadSurface()
-    const baseNames = toolSet.tools.map(t => t.name)
-    const unprefixed = new RegExp(`(?<![A-Za-z0-9_])(${baseNames.join('|')})(?![A-Za-z0-9_])`, 'g')
-    // an editor group is named by its prefix (the portals_page_config tools)
-    const known = new Set([...baseNames, 'page_config', 'portal_config'].map(name => `portals_${name}`))
     for (const skill of toolSet.skills.filter(s => ['pages', 'config'].includes(s.name))) {
       const text = skill.description + '\n' + skill.body.replace(/\n\nTools: .*$/, '')
-      assert.deepEqual([...text.matchAll(unprefixed)].map(m => m[1]), [], `${skill.name}: unprefixed tool names`)
-      const named = [...text.matchAll(/(?<![A-Za-z0-9_])portals_[A-Za-z0-9_]+/g)].map(m => m[0])
-      assert.deepEqual(named.filter(name => !known.has(name)), [], `${skill.name}: unknown tools`)
+      assert.deepEqual(wrongPlatformNames(toolSet, text), [], skill.name)
     }
   })
 
@@ -211,10 +243,10 @@ test.describe('agent surface of the api docs', () => {
     const { error, warn } = console
     console.error = console.warn = (...args: unknown[]) => { logged.push(args.map(a => typeof a === 'string' ? a : JSON.stringify(a)).join(' ')) }
     try {
-      assert.match(await call('page_config_getData', { id: 'p1', path: '/title' }), /A page/)
-      assert.match(await call('page_config_describeState', { id: 'p1' }), /elements/)
-      assert.match(await call('portal_config_getData', { id: 'x1', path: '/title' }), /A portal/)
-      assert.match(await call('portal_config_describeState', { id: 'x1' }), /theme/)
+      assert.match(await call('form_getData', { form: 'page_config', id: 'p1', path: '/title' }), /A page/)
+      assert.match(await call('form_describeState', { form: 'page_config', id: 'p1' }), /elements/)
+      assert.match(await call('form_getData', { form: 'portal_config', id: 'x1', path: '/title' }), /A portal/)
+      assert.match(await call('form_describeState', { form: 'portal_config', id: 'x1' }), /theme/)
     } finally {
       Object.assign(console, { error, warn })
     }

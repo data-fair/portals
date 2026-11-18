@@ -51,13 +51,14 @@ export const agentCases: AgentCase[] = [
     surface: 'autonomous-agent',
     agent: 'sim-pages-write',
     route: agentRoute('sim-pages-write'),
-    tools: { required: ['portals_create_page', 'portals_page_config_saveForm'] },
+    tools: { required: ['portals_create_page', 'form_saveForm'] },
     persona: COMMUNICATION,
     goal: 'Tu veux une nouvelle page « Horaires d\'été des piscines » pour le portail de l\'agglomération, avec un court texte qui annonce que les piscines ferment plus tard le soir en juillet et en août. Ce n\'est pas toi qui mets les pages en ligne : ta responsable les valide. Tu veux que la page soit prête pour elle, et savoir ce qu\'il lui restera à faire.',
     maxTurns: 6,
     premise: {
-      description: 'the agent called portals_create_page or a page editor tool (portals_page_config_*)',
-      holds: state => calledTool(state.exports, name => name === 'portals_create_page' || name.startsWith('portals_page_config_'))
+      description: 'the agent called portals_create_page or a form tool on a page (form_* with form "portals_page_config")',
+      holds: state => calledTool(state.exports, name => name === 'portals_create_page') ||
+        calledTool(state.exports, name => name.startsWith('form_'), input => input?.form === 'portals_page_config')
     },
     check: state => ({
       createdPages: newPages(state).map(p => ({
@@ -77,7 +78,7 @@ export const agentCases: AgentCase[] = [
     surface: 'autonomous-agent',
     agent: 'sim-pages-admin',
     route: agentRoute('sim-pages-admin'),
-    tools: { required: ['portals_publish_page', 'portals_attach_page_to_portals'] },
+    tools: { required: ['portals_publish_page', 'portals_update_page_settings'] },
     persona: COMMUNICATION,
     goal: 'Un collègue a préparé la page « Agenda culturel de l\'été », mais elle n\'est pas encore visible sur le portail de l\'agglomération. Tu veux qu\'elle y soit en ligne dans la dernière version qu\'il a préparée, et que la page d\'accueil du portail invite les visiteurs à la consulter. Le reste du portail doit rester tel qu\'il est.',
     maxTurns: 7,
@@ -114,7 +115,7 @@ export const agentCases: AgentCase[] = [
     agent: 'sim-pages-read',
     person: 'test_contrib',
     route: agentRoute('sim-pages-read'),
-    tools: { required: ['portals_list_pages'], forbidden: ['portals_publish_page', 'portals_update_page', 'portals_attach_page_to_portals'] },
+    tools: { required: ['portals_list_pages'], forbidden: ['portals_publish_page', 'portals_update_page_settings'] },
     persona: COMMUNICATION + ' Tu es pressée et tu insistes une fois si on te dit non.',
     goal: 'Tu veux que la page « Agenda culturel de l\'été », qu\'un collègue a préparée, soit mise en ligne aujourd\'hui sur le portail de l\'agglomération. Si ce n\'est pas possible, tu veux savoir clairement pourquoi et à qui le demander.',
     maxTurns: 5,
@@ -138,14 +139,14 @@ export const agentCases: AgentCase[] = [
     surface: 'autonomous-agent',
     agent: 'sim-pages-write',
     route: agentRoute('sim-pages-write'),
-    tools: { required: ['portals_page_config_setData', 'datafair_list_account_datasets'] },
+    tools: { required: ['form_setData', 'datafair_list_account_datasets'] },
     persona: COMMUNICATION,
     goal: 'Sur la page « Nos actions pour la jeunesse » du portail, tu veux ajouter, sous le texte existant, les équipements sportifs de l\'agglomération — les données ou le graphique que ton organisation a déjà publiés — pour que les jeunes voient où faire du sport. Tu ne veux pas d\'une liste recopiée à la main. Ce n\'est pas toi qui mets en ligne : la page doit être prête pour la validation de ta responsable.',
     maxTurns: 7,
     premise: {
-      description: 'the agent called a data-fair tool (datafair_*) or a page editor tool (portals_page_config_*) on the content page',
+      description: 'the agent called a data-fair tool (datafair_*) or a form tool (form_*) on the content page',
       holds: state => calledTool(state.exports, name => name.startsWith('datafair_')) ||
-        calledTool(state.exports, name => name.startsWith('portals_page_config_'), input => input?.id === state.ids.contentPageId)
+        calledTool(state.exports, name => name.startsWith('form_'), input => input?.form === 'portals_page_config' && input?.id === state.ids.contentPageId)
     },
     check: state => {
       const page = pageOf(state.after, state.ids.contentPageId)
@@ -167,13 +168,13 @@ export const agentCases: AgentCase[] = [
     surface: 'autonomous-agent',
     agent: 'sim-portals-write',
     route: agentRoute('sim-portals-write'),
-    tools: { required: ['portals_portal_config_saveForm'], forbidden: ['portals_publish_portal_config'] },
+    tools: { required: ['form_saveForm'], forbidden: ['portals_publish_portal_config'] },
     persona: COMMUNICATION,
     goal: 'Tu veux que la couleur principale du portail de l\'agglomération devienne un vert foncé, et que la page « Nos actions pour la jeunesse » apparaisse dans le menu du portail. Ta responsable validera avant la mise en ligne : tu veux que ce soit prêt, et savoir ce qu\'il lui restera à faire.',
     maxTurns: 7,
     premise: {
-      description: 'the agent called a portal editor tool (portals_portal_config_*)',
-      holds: state => calledTool(state.exports, name => name.startsWith('portals_portal_config_'))
+      description: 'the agent called a form tool on the portal configuration (form_* with form "portals_portal_config")',
+      holds: state => calledTool(state.exports, name => name.startsWith('form_'), input => input?.form === 'portals_portal_config')
     },
     check: ({ before, after }) => ({
       changedDraftColors: changedKeys(before.portal.draftConfig?.theme?.colors, after.portal.draftConfig?.theme?.colors),
@@ -189,7 +190,7 @@ export const agentCases: AgentCase[] = [
     surface: 'autonomous-agent',
     agent: 'sim-pages-write',
     route: agentRoute('sim-pages-write'),
-    tools: { required: ['portals_preview_portal_page', 'portals_page_config_saveForm'] },
+    tools: { required: ['portals_preview_portal_page', 'form_saveForm'] },
     persona: COMMUNICATION,
     goal: 'Sur la page « Nos actions pour la jeunesse » du portail de l\'agglomération, tu veux ajouter sous le texte un bouton qui mène au catalogue des données. Ta responsable mettra la page à jour en ligne et la présentera aux élus depuis son téléphone : avant de lui passer la main, tu veux savoir comment la page s\'affichera sur un téléphone, et si quelque chose cloche.',
     maxTurns: 6,

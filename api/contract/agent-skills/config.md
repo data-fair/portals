@@ -1,11 +1,11 @@
 # Configuration of a portal
 
-How a data portal is configured: its model (draft and live configuration, owner, settings), who may do what, what a save sets off in the other services of the platform and the delays that follow, and the behaviour of the configuration sections that the schema does not tell (theme, fonts, images, navigation, footer, cards, contact, security). How to fill the editor form (describeState, setFieldValue, editArray, saveForm…) is in the `portals-portal-config` skill; the content of the pages, standard pages included, is in `portals-pages`.
+How a data portal is configured: its model (draft and live configuration, owner, settings), who may do what, what a save sets off in the other services of the platform and the delays that follow, and the behaviour of the configuration sections that the schema does not tell (theme, fonts, images, navigation, footer, cards, contact, security). How to fill the editor form (describeState, setFieldValue, editArray, saveForm…) is in the `form` skill; the content of the pages, standard pages included, is in `portals-pages`.
 
 ## The model
 
 - A portal belongs to an **owner**: an account (organization or user), optionally one department. It has a **live** configuration (what visitors see) and a **draft** one, plus settings outside the configuration: owner, staging mode, contributor departments, its address (`ingress`).
-- The portals_portal_config tools edit the draft as a form, starting with **portals_portal_config_describeState**, and **portals_portal_config_saveForm** saves the **whole document**: there is no partial update. **portals_publish_portal_config** puts the draft live; **portals_cancel_portal_config_draft** puts the live configuration back in the draft.
+- The form_* tools with form "portals_portal_config" edit the draft as a form, starting with **form_describeState**, and **form_saveForm** saves the **whole document**: there is no partial update. **portals_publish_portal_config** puts the draft live; **portals_cancel_portal_config_draft** puts the live configuration back in the draft.
 - The draft is visible at the draft address of the portal (`<id>.draft` next to the portal's address): it requires a login on that host (its own session) and is never indexed.
 - **portals_update_portal_settings** changes the settings: staging mode (the portal shows the pages whose publication is *requested* on it, a preview of contributions), `contributorDepartments` (the administrators of these departments publish on it as if they owned it; only for a portal owned by the organization root), owner.
 - **portals_create_portal** takes a `config` with only `title` and `menu`, or a `sourcePortalId` to duplicate (a portal you administer or a reference portal): the published configuration, its images, menu and styles are copied, **not its pages**. The new portal's draft equals its live configuration: nothing to publish.
@@ -15,20 +15,20 @@ How a data portal is configured: its model (draft and live configuration, owner,
 ### Typical sequence
 
 1. Find the portal with **portals_list_portals** (or create it with **portals_create_portal**).
-2. Edit with the portals_portal_config tools and save.
+2. Edit with the form_* tools (form "portals_portal_config") and save.
 3. **portals_publish_portal_config**, then check the portal's address.
 4. For a new portal, create and attach its standard pages (below).
 
 ## Roles and token tiers
 
 - Reading a portal needs admin or contrib on its owner (or membership of one of its contributor departments). Editing its draft, publishing, settings, creation and deletion need **admin** of the portal's owner. A department is an owner of its own; an organization-level role covers every department.
-- An agent's token has a tier per family. The **write** tier *prepares*: edit and save the draft (portals_portal_config tools), discard it, upload images and font files. The **admin** tier *puts live or changes hands*: **portals_publish_portal_config**, **portals_update_portal_settings**, **portals_create_portal**, **portals_delete_portal**, **portals_delete_font_asset**.
+- An agent's token has a tier per family. The **write** tier *prepares*: edit and save the draft (form_* tools), discard it, upload images and font files. The **admin** tier *puts live or changes hands*: **portals_publish_portal_config**, **portals_update_portal_settings**, **portals_create_portal**, **portals_delete_portal**. A font file is deleted in the back-office.
 - With a write-tier token, prepare and save the draft, then tell the person what remains: publish the draft of portal *X* (id), and any settings change. Never claim a change is online when only the draft was saved.
 - Handing over to a person, name where they do it, with the link: the portal's screen in the back-office, `<site>/data-fair/portals/<id>` as a full link (`site`: the fact of the conversation's state), where « Valider le brouillon », in the actions panel on the right, publishes the draft (« Annuler le brouillon » discards it). Give the draft address too (`<id>.draft` next to the portal's address) to look at it first.
 
 ## A portal created through the API has no pages
 
-**portals_create_portal** creates no page: the manager's wizard creates them, the API does not. A new portal has no home page and `/datasets` answers "Page not found" until a `datasets` page is attached; the same for `/contact`, `/legal-notice`… Create each useful page (`home`, `datasets`, `applications`, then `contact`, `legal-notice`, `privacy-policy`, `accessibility`…) with **portals_create_page_on_portals** (or **portals_create_page**, then **portals_attach_page_to_portals**), owned by the **portal's account** (a portal shows only the pages of its own account), then add them to the menu. Without a pages scope (no pages tools offered), ask the person to create and attach these pages from the back-office. Catalog types get their default catalog block; the others start empty and their content belongs to `portals-pages`. A menu item towards a type without an attached page leads to a 404.
+**portals_create_portal** creates no page: the manager's wizard creates them, the API does not. A new portal has no home page and `/datasets` answers "Page not found" until a `datasets` page is attached; the same for `/contact`, `/legal-notice`… Create each useful page (`home`, `datasets`, `applications`, then `contact`, `legal-notice`, `privacy-policy`, `accessibility`…) with **portals_create_page**, then **portals_update_page_settings** with `portals`, owned by the **portal's account** (a portal shows only the pages of its own account), then add them to the menu. Without a pages scope (no pages tools offered), ask the person to create and attach these pages from the back-office. Catalog types get their default catalog block; the others start empty and their content belongs to `portals-pages`. A menu item towards a type without an attached page leads to a 404.
 
 ## Saving
 

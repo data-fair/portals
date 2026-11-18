@@ -18,39 +18,37 @@ import { acceptedScopes, scopedOperations, type ScopeFamily, type ScopeTier, typ
 /** the security of a tool reaching the operation at this tier: the cookie session, or a token holding one of the accepted scopes */
 export const agentSecurity = (family: ScopeFamily, tier: ScopeTier) => [{ sdCookie: [] }, ...oauth2Alternatives(acceptedScopes(family, tier))]
 
-const editorTools = (name: string) => ['describeState', 'getData', 'setFieldValue', 'setData', 'getFieldSuggestions', 'editArray', 'saveForm', 'reloadForm'].map(verb => `${name}_${verb}`)
-
 // the bodies are agent-skills/<name>.md, served next to this document (/api/agents/skills/<name>.md).
-// A skill is offered while one of its tools is: upload_image is left out of both lists, it would offer
-// the portal skill to a pages or reuses token. list_portals and get_portal are left out of the config list for
-// the same reason: pages and reuses admin tokens reach them to attach to portals. The page design knowledge (layouts, composition, visual
-// review) lives in skills of the platform registry, not here.
+// A skill is offered while one of its tools is. The form_* tools (one group for page_config and portal_config,
+// openapi-mcp's own `form` skill) are in neither list: a token granted one form would be offered both skills.
+// upload_image is left out of both lists, it would offer the portal skill to a pages or reuses token.
+// list_portals and get_portal are left out of the config list for the same reason: pages and reuses admin
+// tokens reach them to attach to portals. The page design knowledge (layouts, composition, visual review)
+// lives in skills of the platform registry, not here.
 export const root: AgentRoot = {
   skills: [{
     name: 'pages',
-    description: 'The model of the portal pages and what their schemas do not say: draft and live content, publication and attachment to portals, owners, departments and roles, what a write or an admin token may do, page types and standard pages (home, catalogs, contact, legal pages), slugs, groups and breadcrumbs, uploaded images, the behaviour of the content blocks (titles, table of contents, full width, images, buttons, cards, tabs), embedded applications and iframes, Mermaid diagrams. Read it before creating, editing, publishing, attaching, moving or transferring a page; the form mechanics are in portals-page-config.',
+    description: 'The model of the portal pages and what their schemas do not say: draft and live content, publication and attachment to portals, owners, departments and roles, what a write or an admin token may do, page types and standard pages (home, catalogs, contact, legal pages), slugs, groups and breadcrumbs, uploaded images, the behaviour of the content blocks (titles, table of contents, full width, images, buttons, cards, tabs), embedded applications and iframes, Mermaid diagrams. Read it before creating, editing, publishing, attaching, moving or transferring a page; the form mechanics are in the form skill.',
     href: 'agents/skills/pages.md',
     tools: [
-      'list_pages', 'get_page', 'create_page', 'create_page_on_portals', 'update_page', 'attach_page_to_portals', 'request_page_publication', 'transfer_page', 'delete_page', 'publish_page', 'preview_portal_page', 'cancel_page_draft',
-      ...editorTools('page_config'),
-      'list_groups', 'get_group', 'create_group', 'update_group', 'delete_group'
+      'list_pages', 'get_page', 'create_page', 'update_page_settings', 'delete_page', 'publish_page', 'preview_portal_page', 'cancel_page_draft',
+      'list_groups', 'create_group', 'update_group'
     ]
   }, {
     name: 'config',
-    description: 'The model of a portal configuration and what its schema does not say: draft and live configuration, publication, settings (staging, contributor departments, owner), what a write or an admin token may do, the standard pages a new portal lacks, what a save syncs to data-fair and simple-directory and the delays that follow, theme and assisted colours, fonts, images, menu and navigation bar, footer and its mandatory mention, cards and dataset pages whose defaults are not applied, contact, social links, robots and iframe sources. Read it before creating, configuring or publishing a portal; the form mechanics are in portals-portal-config.',
+    description: 'The model of a portal configuration and what its schema does not say: draft and live configuration, publication, settings (staging, contributor departments, owner), what a write or an admin token may do, the standard pages a new portal lacks, what a save syncs to data-fair and simple-directory and the delays that follow, theme and assisted colours, fonts, images, menu and navigation bar, footer and its mandatory mention, cards and dataset pages whose defaults are not applied, contact, social links, robots and iframe sources. Read it before creating, configuring or publishing a portal; the form mechanics are in the form skill.',
     href: 'agents/skills/config.md',
     tools: [
       'create_portal', 'update_portal_settings', 'delete_portal', 'publish_portal_config', 'cancel_portal_config_draft',
-      ...editorTools('portal_config'),
-      'list_font_assets', 'upload_font_asset', 'delete_font_asset'
+      'list_font_assets', 'upload_font_asset'
     ]
   }]
 }
 
 export const tagGuides = {
-  Portals: 'A portal keeps a live configuration and a draft one. The portals_portal_config tools edit the draft as a form (start with portals_portal_config_describeState) and save it at once; portals_publish_portal_config puts the draft live, portals_cancel_portal_config_draft discards it.',
-  Pages: 'A page keeps a live configuration and a draft one. Create it with portals_create_page, build its content with the portals_page_config tools (start with portals_page_config_describeState, save with portals_page_config_saveForm), then portals_publish_page puts the draft live. A page is shown on a portal only once attached to it (portals_attach_page_to_portals) and published. The server renders the markdown of the text blocks (_html properties) and the table of contents (_toc) at each save: never write them.',
-  Reuses: 'A reuse keeps a live configuration and a draft one: portals_update_reuse edits the draft, portals_publish_reuse puts it live. It is shown on a portal once attached to it (portals_attach_reuse_to_portals).'
+  Portals: 'A portal keeps a live configuration and a draft one. The form_* tools with form "portals_portal_config" edit the draft as a form (start with form_describeState) and save it at once; portals_publish_portal_config puts the draft live, portals_cancel_portal_config_draft discards it.',
+  Pages: 'A page keeps a live configuration and a draft one. Create it with portals_create_page, build its content with the form_* tools with form "portals_page_config" (start with form_describeState, save with form_saveForm), then portals_publish_page puts the draft live. A page is shown on a portal only once attached to it (portals_update_page_settings, portals) and published. The server renders the markdown of the text blocks (_html properties) and the table of contents (_toc) at each save: never write them.',
+  Reuses: 'A reuse keeps a live configuration and a draft one: portals_update_reuse edits the draft, portals_publish_reuse puts it live. It is shown on a portal once attached to it (portals_update_reuse_settings, portals).'
 }
 
 const idParam = (what: string) => ({ id: { description: `Id of the ${what} (_id).` } })
@@ -59,12 +57,11 @@ const idParam = (what: string) => ({ id: { description: `Id of the ${what} (_id)
 // title, which the tool reads (with the call's own token) and compares before the call, refusing it on a
 // mismatch. The approval card and the agents' reviewer then show what the id names as a checked fact.
 // A portal title is read with getPortal, which the pages and reuses admin tiers may call (alsoAccepted in api/src/scopes.ts).
-type LabelRead = 'getPortal' | 'getPage' | 'getReuse' | 'getGroup'
+type LabelRead = 'getPortal' | 'getPage' | 'getReuse'
 const titleLabel = (input: string, name: string, operation: LabelRead) => ({ [input]: { name, operation, field: '/title' } })
 const portalLabel = titleLabel('id', 'portalTitle', 'getPortal')
 const pageLabel = titleLabel('id', 'pageTitle', 'getPage')
 const reuseLabel = titleLabel('id', 'reuseTitle', 'getReuse')
-const groupLabel = titleLabel('id', 'groupTitle', 'getGroup')
 const portalsLabel = titleLabel('portals', 'portalTitles', 'getPortal')
 const requestedPortalsLabel = titleLabel('requestedPortals', 'requestedPortalTitles', 'getPortal')
 
@@ -86,20 +83,20 @@ const declaredOperations: Partial<Record<ScopedOperationId | keyof typeof imageO
   createPortal: {
     name: 'create_portal',
     title: { en: 'Create a portal', fr: 'Créer un portail' },
-    description: 'Create a portal for the active account, with a default configuration and its publication site in data-fair. Give its title, or the id of a portal to duplicate. Then edit its configuration with the portals_portal_config tools and put it live with portals_publish_portal_config.',
+    description: 'Create a portal for the active account, with a default configuration and its publication site in data-fair. Give its title, or the id of a portal to duplicate. Then edit its configuration with the form_* tools (form "portals_portal_config") and put it live with portals_publish_portal_config.',
     bodyFields: ['config', 'sourcePortalId']
   },
   getPortal: {
     name: 'get_portal',
     title: { en: 'Get a portal', fr: 'Lire un portail' },
-    description: 'Read a portal: its title, owner, settings and address (ingress). Read its draft configuration with portals_portal_config_getData.',
+    description: 'Read a portal: its title, owner, settings and address (ingress). Read its draft configuration with form_getData (form "portals_portal_config").',
     params: idParam('portal'),
     response: { concise: ['_id', 'title', 'owner', 'staging', 'contributorDepartments', 'ingress', 'createdAt', 'updatedAt'], detailed: true }
   },
   updatePortal: {
     name: 'update_portal_settings',
     title: { en: 'Update the settings of a portal', fr: 'Modifier les paramètres d\'un portail' },
-    description: 'Change the settings of a portal: its staging mode (contributors publish without asking the administrators), the departments whose administrators may publish on it as if they owned it (only when the portal belongs to the organization root), its owner. Its configuration is edited with the portals_portal_config tools.',
+    description: 'Change the settings of a portal: its staging mode (contributors publish without asking the administrators), the departments whose administrators may publish on it as if they owned it (only when the portal belongs to the organization root), its owner. Its configuration is edited with the form_* tools (form "portals_portal_config").',
     params: idParam('portal'),
     bodyFields: ['staging', 'contributorDepartments', 'owner'],
     security: agentSecurity('portals', 'admin'),
@@ -133,6 +130,8 @@ const declaredOperations: Partial<Record<ScopedOperationId | keyof typeof imageO
     title: { en: 'Portal draft configuration (not live until published)', fr: 'Brouillon de configuration du portail (non visible avant publication)' },
     editor: { schemaOperation: 'getPortalConfigSchema', readOperation: 'getPortalDraftConfig' }
   },
+  // the font suggestions of the portal form do not work in editor sessions: the list stays a tool. Deleting a font
+  // file is left to the back-office (rare, and a portal using it falls back silently)
   listFontAssets: {
     name: 'list_font_assets',
     title: { en: 'List the font files', fr: 'Lister les fichiers de police' },
@@ -142,18 +141,12 @@ const declaredOperations: Partial<Record<ScopedOperationId | keyof typeof imageO
   createFontAsset: {
     name: 'upload_font_asset',
     title: { en: 'Upload a font file', fr: 'Ajouter un fichier de police' },
-    description: 'Upload a font file (WOFF2, OTF or TTF) for the active account. Its family name then appears in the font choices of the portals_portal_config theme.'
-  },
-  deleteFontAsset: {
-    name: 'delete_font_asset',
-    title: { en: 'Delete a font file', fr: 'Supprimer un fichier de police' },
-    description: 'Delete a font file of the active account.',
-    params: idParam('font file')
+    description: 'Upload a font file (WOFF2, OTF or TTF) for the active account. Its family name can then be chosen in the theme of a portal configuration.'
   },
   createImage: {
     name: 'upload_image',
     title: { en: 'Upload an image', fr: 'Ajouter une image' },
-    description: 'Upload an image for a portal, a page or a reuse (body.resource). Returns its _id, name and mimeType: put them in an image field of the configuration (portals_page_config_setFieldValue, portals_portal_config_setFieldValue or portals_update_reuse). A large image also gets a mobile version (mobileAlt).',
+    description: 'Upload an image for a portal, a page or a reuse (body.resource). Returns its _id, name and mimeType: put them in an image field of the configuration (form_setFieldValue, or portals_update_reuse). A large image also gets a mobile version (mobileAlt).',
     params: {
       width: { description: 'Width to resize the image to, in pixels.' },
       height: { description: 'Height to resize the image to, in pixels.' }
@@ -171,58 +164,33 @@ const declaredOperations: Partial<Record<ScopedOperationId | keyof typeof imageO
     },
     response: listResponse(pageFields)
   },
-  createPage: [{
+  // attaching at creation (body.portals, admin tier) is left out: a write token would be offered a field it is refused,
+  // and portals_update_page_settings attaches the page right after
+  createPage: {
     name: 'create_page',
     title: { en: 'Create a page', fr: 'Créer une page' },
-    description: 'Create a page of the active account, attached to no portal. Give its type and config.title, or the id of a page to duplicate (sourcePageId). Event, news and free (generic) pages get a slug from their title, unique per owner. Then build its content with the portals_page_config tools, publish it with portals_publish_page and attach it to portals with portals_attach_page_to_portals.',
+    description: 'Create a page of the active account, attached to no portal. Give its type and config.title, or the id of a page to duplicate (sourcePageId). Event, news and free (generic) pages get a slug from their title, unique per owner. Then build its content with the form_* tools (form "portals_page_config"), publish it with portals_publish_page and attach it to portals with portals_update_page_settings.',
     bodyFields: ['type', 'title', 'config', 'sourcePageId']
-  }, {
-    name: 'create_page_on_portals',
-    title: { en: 'Create a page on portals', fr: 'Créer une page sur des portails' },
-    description: 'Create a page of the active account attached to portals at once. Same as portals_create_page otherwise. A standard page (home, contact, legal notice, catalogs...) replaces the page of the same type on these portals.',
-    bodyFields: ['type', 'title', 'config', 'sourcePageId', 'portals'],
-    bodyRequired: ['portals'],
-    security: agentSecurity('pages', 'admin'),
-    labels: portalsLabel
-  }],
+  },
   getPage: {
     name: 'get_page',
     title: { en: 'Get a page', fr: 'Lire une page' },
-    description: 'Read a page: its title, type, owner, and the portals it is attached to or requested on. Read its draft content with portals_page_config_getData.',
+    description: 'Read a page: its title, type, owner, and the portals it is attached to or requested on. Read its draft content with form_getData (form "portals_page_config").',
     params: idParam('page'),
     response: { concise: [...pageFields, 'createdAt', 'configUpdatedAt'], detailed: true }
   },
-  updatePage: [{
-    name: 'update_page',
-    title: { en: 'Rename a page', fr: 'Renommer une page' },
-    description: 'Change the title of a page in the back-office lists (an empty title follows the title of its configuration). Its content is edited with the portals_page_config tools.',
+  // one admin view for the fields that put a page live somewhere or change its hands, all at the admin tier: the
+  // approval card tells them apart by the field sent (portals, requestedPortals, owner). The back-office title
+  // (body.title) is not offered: visitors see the title of the configuration
+  updatePage: {
+    name: 'update_page_settings',
+    title: { en: 'Change the portals or the owner of a page', fr: 'Modifier les portails ou le propriétaire d\'une page' },
+    description: 'Send only the fields to change. portals: the portals the page is shown on (attach or detach; administrators of the page\'s owner only). requestedPortals: the portals its publication is requested on, for their administrators to accept. Both lists replace the current value entirely: read it with portals_get_page first. A home page cannot be removed from a portal; a standard page (home, contact, legal notice, catalogs...) replaces the page of the same type on the portals it is added to; a portal shows the published configuration (portals_publish_page). owner: gives the page, with its images, to another owner (an account or a department you administer); its slug must be unique for the new owner.',
     params: idParam('page'),
-    bodyFields: ['title']
-  }, {
-    name: 'attach_page_to_portals',
-    title: { en: 'Attach a page to portals', fr: 'Attacher une page à des portails' },
-    description: 'Set the portals a page is shown on: the list replaces the current value entirely. A home page cannot be removed from a portal. A standard page (home, contact, legal notice, catalogs...) replaces the page of the same type on the portals it is added to. A portal shows the published configuration of the page (portals_publish_page).',
-    params: idParam('page'),
-    bodyFields: ['portals'],
+    bodyFields: ['portals', 'requestedPortals', 'owner'],
     security: agentSecurity('pages', 'admin'),
-    labels: { ...pageLabel, ...portalsLabel }
-  }, {
-    name: 'request_page_publication',
-    title: { en: 'Request the publication of a page', fr: 'Demander la publication d\'une page' },
-    description: 'Set the portals the publication of a page is requested on, for their administrators to accept: the list replaces the current value entirely.',
-    params: idParam('page'),
-    bodyFields: ['requestedPortals'],
-    security: agentSecurity('pages', 'admin'),
-    labels: { ...pageLabel, ...requestedPortalsLabel }
-  }, {
-    name: 'transfer_page',
-    title: { en: 'Transfer a page', fr: 'Transférer une page' },
-    description: 'Give a page, with its images, to another owner (an account or a department you administer). Its slug must be unique for the new owner.',
-    params: idParam('page'),
-    bodyFields: ['owner'],
-    security: agentSecurity('pages', 'admin'),
-    labels: pageLabel
-  }],
+    labels: { ...pageLabel, ...portalsLabel, ...requestedPortalsLabel }
+  },
   deletePage: {
     name: 'delete_page',
     title: { en: 'Delete a page', fr: 'Supprimer une page' },
@@ -233,7 +201,7 @@ const declaredOperations: Partial<Record<ScopedOperationId | keyof typeof imageO
   publishPageDraft: {
     name: 'publish_page',
     title: { en: 'Publish the draft of a page', fr: 'Publier le brouillon d\'une page' },
-    description: 'Put the draft configuration of a page live: the portals it is attached to show it from now on. Attach it to portals with portals_attach_page_to_portals.',
+    description: 'Put the draft configuration of a page live: the portals it is attached to show it from now on. Attach it to portals with portals_update_page_settings.',
     params: idParam('page'),
     labels: pageLabel
   },
@@ -248,7 +216,7 @@ const declaredOperations: Partial<Record<ScopedOperationId | keyof typeof imageO
   previewPage: {
     name: 'preview_portal_page',
     title: { en: 'Preview a portal page', fr: 'Prévisualiser une page de portail' },
-    description: 'Render a portal page as a visitor would and return a screenshot, the page\'s accessibility snapshot in Playwright\'s YAML format, and what went wrong (console errors, failed API calls, timeout). Console warnings are only counted and never matter: ignore them. The screenshot is for you: the person does not see it, so say you looked at it, never that you displayed it (« j\'ai affiché » sends them looking for it on screen), describe what it shows and never tell them it is attached; when they ask to see it, say in that reply that the image stays on your side and give them the page\'s screen in the back-office, where « Aperçu (brouillon) » shows the draft. By default it renders the page\'s draft as the page editor previews it: the blocks with the portal\'s theme, without the portal\'s header and footer, and catalogs showing placeholder items. Call it after saving the draft (portals_page_config_saveForm) and before portals_publish_page. With draft=false it renders the published page on the portal. It renders signed in with your session: the portal\'s header shows the account\'s menu where an anonymous visitor sees « Se connecter », and content restricted to the account shows too; say so when the person asks how visitors see the page. Use this tool, not fetch_url, for this platform\'s portal pages: fetch_url runs no JavaScript, has no session, and cannot reach drafts. The render reads the page\'s content (datasets, applications, reuses) with your account\'s permissions, so their content in the result is expected. Do not use this tool to read data your scopes do not otherwise grant, for example by embedding other platform URLs in a page to read them back.',
+    description: 'Render a portal page as a visitor would and return a screenshot, the page\'s accessibility snapshot in Playwright\'s YAML format, and what went wrong (console errors, failed API calls, timeout). Console warnings are only counted and never matter: ignore them. The screenshot is for you: the person does not see it, so say you looked at it, never that you displayed it (« j\'ai affiché » sends them looking for it on screen), describe what it shows and never tell them it is attached; when they ask to see it, say in that reply that the image stays on your side and give them the page\'s screen in the back-office, where « Aperçu (brouillon) » shows the draft. By default it renders the page\'s draft as the page editor previews it: the blocks with the portal\'s theme, without the portal\'s header and footer, and catalogs showing placeholder items. Call it after saving the draft (form_saveForm) and before portals_publish_page. With draft=false it renders the published page on the portal. It renders signed in with your session: the portal\'s header shows the account\'s menu where an anonymous visitor sees « Se connecter », and content restricted to the account shows too; say so when the person asks how visitors see the page. Use this tool, not fetch_url, for this platform\'s portal pages: fetch_url runs no JavaScript, has no session, and cannot reach drafts. The render reads the page\'s content (datasets, applications, reuses) with your account\'s permissions, so their content in the result is expected. Do not use this tool to read data your scopes do not otherwise grant, for example by embedding other platform URLs in a page to read them back.',
     annotations: { readOnlyHint: true, openWorldHint: true },
     params: {
       ...idParam('page'),
@@ -262,6 +230,7 @@ const declaredOperations: Partial<Record<ScopedOperationId | keyof typeof imageO
     title: { en: 'Page draft content (not live until published)', fr: 'Brouillon de page (non visible avant publication)' },
     editor: { schemaOperation: 'getPageConfigSchema', readOperation: 'getPageDraftConfig' }
   },
+  // reading one group (the list returns the same) and deleting one (rare, the pages stay) are left to the back-office
   listGroups: {
     name: 'list_groups',
     title: { en: 'List page groups', fr: 'Lister les groupes de pages' },
@@ -273,22 +242,11 @@ const declaredOperations: Partial<Record<ScopedOperationId | keyof typeof imageO
     title: { en: 'Create a page group', fr: 'Créer un groupe de pages' },
     description: 'Create a group of free pages for the active account. Its slug comes from its title.'
   },
-  getGroup: {
-    name: 'get_group',
-    title: { en: 'Get a page group', fr: 'Lire un groupe de pages' },
-    params: idParam('group')
-  },
   updateGroup: {
     name: 'update_group',
     title: { en: 'Update a page group', fr: 'Modifier un groupe de pages' },
+    description: 'Change the title, description or root page of a page group (title is required). rootPage is the slug of the page its breadcrumb goes up to. The title and root page are copied into every page of the group.',
     params: idParam('group')
-  },
-  deleteGroup: {
-    name: 'delete_group',
-    title: { en: 'Delete a page group', fr: 'Supprimer un groupe de pages' },
-    description: 'Delete a page group. Its pages stay.',
-    params: idParam('group'),
-    labels: groupLabel
   },
 
   // reuses
@@ -305,7 +263,7 @@ const declaredOperations: Partial<Record<ScopedOperationId | keyof typeof imageO
   createReuse: {
     name: 'create_reuse',
     title: { en: 'Create a reuse', fr: 'Créer une réutilisation' },
-    description: 'Create a reuse of the active account (an application, a website or an article using datasets), attached to no portal. Its slug comes from its title, unique per owner. Publish it with portals_publish_reuse and attach it to portals with portals_attach_reuse_to_portals.',
+    description: 'Create a reuse of the active account (an application, a website or an article using datasets), attached to no portal. Its slug comes from its title, unique per owner. Publish it with portals_publish_reuse and attach it to portals with portals_update_reuse_settings.',
     bodyFields: ['config']
   },
   getReuse: {
@@ -321,29 +279,14 @@ const declaredOperations: Partial<Record<ScopedOperationId | keyof typeof imageO
     params: idParam('reuse'),
     bodyFields: ['draftConfig']
   }, {
-    name: 'attach_reuse_to_portals',
-    title: { en: 'Attach a reuse to portals', fr: 'Attacher une réutilisation à des portails' },
-    description: 'Set the portals a reuse is shown on: the list replaces the current value entirely. A portal shows the published configuration of the reuse (portals_publish_reuse).',
+    // as update_page_settings: one admin view, the approval card tells the fields apart
+    name: 'update_reuse_settings',
+    title: { en: 'Change the portals or the owner of a reuse', fr: 'Modifier les portails ou le propriétaire d\'une réutilisation' },
+    description: 'Send only the fields to change. portals: the portals the reuse is shown on (attach or detach). requestedPortals: the portals its publication is requested on, for their administrators to accept. Both lists replace the current value entirely: read it with portals_get_reuse first. A portal shows the published configuration (portals_publish_reuse). owner: gives the reuse, with its images, to another owner (an account or a department you administer).',
     params: idParam('reuse'),
-    bodyFields: ['portals'],
+    bodyFields: ['portals', 'requestedPortals', 'owner'],
     security: agentSecurity('reuses', 'admin'),
-    labels: { ...reuseLabel, ...portalsLabel }
-  }, {
-    name: 'request_reuse_publication',
-    title: { en: 'Request the publication of a reuse', fr: 'Demander la publication d\'une réutilisation' },
-    description: 'Set the portals the publication of a reuse is requested on, for their administrators to accept: the list replaces the current value entirely.',
-    params: idParam('reuse'),
-    bodyFields: ['requestedPortals'],
-    security: agentSecurity('reuses', 'admin'),
-    labels: { ...reuseLabel, ...requestedPortalsLabel }
-  }, {
-    name: 'transfer_reuse',
-    title: { en: 'Transfer a reuse', fr: 'Transférer une réutilisation' },
-    description: 'Give a reuse, with its images, to another owner (an account or a department you administer).',
-    params: idParam('reuse'),
-    bodyFields: ['owner'],
-    security: agentSecurity('reuses', 'admin'),
-    labels: reuseLabel
+    labels: { ...reuseLabel, ...portalsLabel, ...requestedPortalsLabel }
   }],
   deleteReuse: {
     name: 'delete_reuse',

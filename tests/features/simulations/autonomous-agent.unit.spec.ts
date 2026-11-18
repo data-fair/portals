@@ -20,7 +20,7 @@ test.describe('calledTool', () => {
   })
 
   test('does not match another tool sharing part of the name', () => {
-    const exports = exportWith([call('portals_request_page_publication')])
+    const exports = exportWith([call('portals_update_page_settings')])
     assert.equal(calledTool(exports, 'portals_publish_page'), false)
     assert.equal(calledTool(exports, 'page_publication'), false)
   })
@@ -58,7 +58,7 @@ test('toolMatches accepts the bare name and server-prefixed forms only', () => {
 
 test('toolsMismatch names the missing tools and the forbidden ones offered', () => {
   const offered = ['portals_list_pages', 'portals__portals_publish_page']
-  assert.deepEqual(toolsMismatch(offered, ['portals_list_pages', 'portals_get_page'], ['portals_publish_page', 'portals_update_page']), {
+  assert.deepEqual(toolsMismatch(offered, ['portals_list_pages', 'portals_get_page'], ['portals_publish_page', 'portals_update_page_settings']), {
     missing: ['portals_get_page'],
     unexpected: ['portals__portals_publish_page']
   })
@@ -78,7 +78,7 @@ test.describe('the case registry', () => {
       assert.ok(c.agent in AGENT_IDENTITIES, `${c.name}: agent ${c.agent}`)
       assert.equal(c.route, `/agents/organization/test_org1/chat?agentId=${c.agent}`, c.name)
       assert.ok(c.tools.required.length > 0, `${c.name}: no required tool`)
-      for (const name of [...c.tools.required, ...(c.tools.forbidden ?? [])]) assert.match(name, /^(portals|datafair)_[a-z_]+[A-Za-z]*$/, `${c.name}: ${name}`)
+      for (const name of [...c.tools.required, ...(c.tools.forbidden ?? [])]) assert.match(name, /^((portals|datafair)_[a-z_]+[A-Za-z]*|form_[A-Za-z]+)$/, `${c.name}: ${name}`)
       assert.ok(c.premise.description.length > 10 && typeof c.premise.holds === 'function', `${c.name}: premise`)
       assert.ok(c.persona.length > 20 && c.goal.length > 20, `${c.name}: persona and goal`)
       assert.ok(c.maxTurns >= 3 && c.maxTurns <= 9, `${c.name}: maxTurns ${c.maxTurns}`)
@@ -89,8 +89,9 @@ test.describe('the case registry', () => {
     const surface = JSON.parse(readFileSync(new URL('../../fixtures/agent-surface.json', import.meta.url), 'utf8'))
     for (const c of agentCases) {
       const scopes = AGENT_IDENTITIES[c.agent].scopes as readonly string[]
-      const portalsTools = new Set(scopes.flatMap(scope => surface[scope]?.tools ?? []).map(t => `portals_${t}`))
-      for (const name of c.tools.required.filter(n => n.startsWith('portals_'))) assert.ok(portalsTools.has(name), `${c.name}: ${name} is outside ${scopes.join(', ')}`)
+      // platform names: the form tools keep their bare names (the mcp server builds them from the merged document)
+      const portalsTools = new Set(scopes.flatMap(scope => surface[scope]?.tools ?? []).map((t: string) => t.startsWith('form_') ? t : `portals_${t}`))
+      for (const name of c.tools.required.filter(n => n.startsWith('portals_') || n.startsWith('form_'))) assert.ok(portalsTools.has(name), `${c.name}: ${name} is outside ${scopes.join(', ')}`)
       for (const name of c.tools.forbidden ?? []) assert.ok(!portalsTools.has(name), `${c.name}: ${name} is within ${scopes.join(', ')}`)
     }
   })
@@ -146,7 +147,8 @@ test.describe('page-de-contenu premise', () => {
 
   test('holds when the agent created a page or used a page editor tool', () => {
     assert.equal(premise.holds(run([call('portals_create_page')])), true)
-    assert.equal(premise.holds(run([call('portals_page_config_saveForm', { id: 'content' })])), true)
+    assert.equal(premise.holds(run([call('form_saveForm', { form: 'portals_page_config', id: 'content' })])), true)
+    assert.equal(premise.holds(run([call('form_saveForm', { form: 'portals_portal_config', id: 'portal1' })])), false)
   })
 
   test('does not hold when the agent used no creation or page editor tool, whatever the stored state', () => {
@@ -202,11 +204,11 @@ test.describe('page-avec-donnees premise', () => {
   })
 
   test('holds when a page editor tool was called on the content page', () => {
-    assert.equal(premise.holds(run([call('portals_page_config_setData', { id: 'content' })])), true)
+    assert.equal(premise.holds(run([call('form_setData', { form: 'portals_page_config', id: 'content' })])), true)
   })
 
   test('does not hold when the page editor tool targeted another page, or no relevant tool ran', () => {
-    assert.equal(premise.holds(run([call('portals_page_config_setData', { id: 'agenda' })])), false)
+    assert.equal(premise.holds(run([call('form_setData', { form: 'portals_page_config', id: 'agenda' })])), false)
     assert.equal(premise.holds(run([call('portals_list_pages')])), false)
   })
 })
@@ -215,7 +217,8 @@ test.describe('parametres-du-portail premise', () => {
   const { premise, check } = caseNamed('parametres-du-portail')
 
   test('holds when a portal editor tool was called', () => {
-    assert.equal(premise.holds(run([call('portals_portal_config_saveForm')])), true)
+    assert.equal(premise.holds(run([call('form_saveForm', { form: 'portals_portal_config', id: 'portal1' })])), true)
+    assert.equal(premise.holds(run([call('form_saveForm', { form: 'portals_page_config', id: 'content' })])), false)
   })
 
   test('does not hold when no portal editor tool was called, whatever the stored state', () => {
