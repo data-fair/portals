@@ -61,8 +61,7 @@ refuses the call, nothing sent, on a title mismatch; the API receives the call w
 Their inputs carry `x-checked`, which the agents' approval card and reviewer show as a checked fact:
 "page « Accueil » on portal « Portail de test »" rather than two uuids. Labelled: the publish,
 cancel-draft and delete tools of portals, pages and reuses, the three `update_*_settings` and
-`submit_reuse`. A portal title is
-read with `getPortal`, which the pages and reuses admin tiers may call ([scopes.md](scopes.md)).
+`submit_reuse`. A portal title is read with `getPortal`, which the pages and reuses admin tiers may call ([scopes.md](scopes.md)).
 
 List tools fix `select` and declare a concise view (`response.concise`); tags `Portals`, `Pages`
 and `Reuses` carry a guide (`tagGuides`) on the draft / live model.

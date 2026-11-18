@@ -21,14 +21,14 @@ export const agentSecurity = (family: ScopeFamily, tier: ScopeTier) => [{ sdCook
 // the bodies are agent-skills/<name>.md, served next to this document (/api/agents/skills/<name>.md).
 // A skill is offered while one of its tools is. The form_* tools (one group for page_config and portal_config,
 // openapi-mcp's own `form` skill) are in neither list: a token granted one form would be offered both skills.
-// upload_image is left out of both lists, it would offer
-// the portal skill to a pages or reuses token. list_portals and get_portal are left out of the config list for
-// the same reason: pages and reuses admin tokens reach them to attach to portals. The page design knowledge (layouts, composition, visual
-// review) lives in skills of the platform registry, not here.
+// upload_image is left out of both lists, it would offer the portal skill to a pages or reuses token.
+// list_portals and get_portal are left out of the config list for the same reason: pages and reuses admin
+// tokens reach them to attach to portals. The page design knowledge (layouts, composition, visual review)
+// lives in skills of the platform registry, not here.
 export const root: AgentRoot = {
   skills: [{
     name: 'pages',
-    description: 'The model of the portal pages and what their schemas do not say: draft and live content, publication and attachment to portals, owners, departments and roles, what a write or an admin token may do, page types and standard pages (home, catalogs, contact, legal pages), slugs, groups and breadcrumbs, uploaded images, the behaviour of the content blocks (titles, table of contents, full width, images, buttons, cards, tabs), embedded applications and iframes, Mermaid diagrams. Read it before creating, editing, publishing, attaching, moving or transferring a page; the form mechanics are in form.',
+    description: 'The model of the portal pages and what their schemas do not say: draft and live content, publication and attachment to portals, owners, departments and roles, what a write or an admin token may do, page types and standard pages (home, catalogs, contact, legal pages), slugs, groups and breadcrumbs, uploaded images, the behaviour of the content blocks (titles, table of contents, full width, images, buttons, cards, tabs), embedded applications and iframes, Mermaid diagrams. Read it before creating, editing, publishing, attaching, moving or transferring a page; the form mechanics are in the form skill.',
     href: 'agents/skills/pages.md',
     tools: [
       'list_pages', 'get_page', 'create_page', 'update_page_settings', 'delete_page', 'publish_page', 'preview_portal_page', 'cancel_page_draft',
@@ -36,7 +36,7 @@ export const root: AgentRoot = {
     ]
   }, {
     name: 'config',
-    description: 'The model of a portal configuration and what its schema does not say: draft and live configuration, publication, settings (staging, contributor departments, owner), what a write or an admin token may do, the standard pages a new portal lacks, what a save syncs to data-fair and simple-directory and the delays that follow, theme and assisted colours, fonts, images, menu and navigation bar, footer and its mandatory mention, cards and dataset pages whose defaults are not applied, contact, social links, robots and iframe sources. Read it before creating, configuring or publishing a portal; the form mechanics are in form.',
+    description: 'The model of a portal configuration and what its schema does not say: draft and live configuration, publication, settings (staging, contributor departments, owner), what a write or an admin token may do, the standard pages a new portal lacks, what a save syncs to data-fair and simple-directory and the delays that follow, theme and assisted colours, fonts, images, menu and navigation bar, footer and its mandatory mention, cards and dataset pages whose defaults are not applied, contact, social links, robots and iframe sources. Read it before creating, configuring or publishing a portal; the form mechanics are in the form skill.',
     href: 'agents/skills/config.md',
     tools: [
       'create_portal', 'update_portal_settings', 'delete_portal', 'publish_portal_config', 'cancel_portal_config_draft',
