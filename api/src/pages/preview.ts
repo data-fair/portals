@@ -29,17 +29,18 @@ export const previewTarget = (managerUrl: string, portal: Pick<Portal, '_id' | '
 /**
  * The status the preview answers with when an internal service fails: 504 on a timeout, 503 when the service
  * does not answer at all, else 502. The messages carry the status code only, never what the service
- * answered (it could echo secrets or cookies).
+ * answered (it could echo secrets or cookies), so they are exposed: in production the error handler sends
+ * no body for a status >= 500 unless the error is marked safe, and the agent would only read the status.
  */
 export const upstreamError = (service: string, err: any) => {
-  if (err.code === 'ECONNABORTED' || err.code === 'ETIMEDOUT') return httpError(504, `${service} timed out`)
-  if (!err.status) return httpError(503, `${service} is unreachable`)
-  return httpError(502, `${service} failed (${err.status})`)
+  if (err.code === 'ECONNABORTED' || err.code === 'ETIMEDOUT') return httpError(504, `${service} timed out`, { expose: true })
+  if (!err.status) return httpError(503, `${service} is unreachable`, { expose: true })
+  return httpError(502, `${service} failed (${err.status})`, { expose: true })
 }
 
 export const assertPreviewConfigured = () => {
   if (!config.privateCaptureUrl || !config.secretKeys.capture || !config.secretKeys.pseudoSession) {
-    throw httpError(501, 'the page preview is not configured on this platform (capture service and pseudo sessions)')
+    throw httpError(501, 'the page preview is not configured on this platform (capture service and pseudo sessions)', { expose: true })
   }
 }
 
