@@ -44,19 +44,24 @@ fields (`bodyFields`); the views offering an admin field are narrowed to the adm
 | Operation | Write-tier view | Admin-tier views |
 | --- | --- | --- |
 | `PATCH /portals/{id}` | — | `update_portal_settings` (staging, contributorDepartments, owner) |
-| `POST /pages` | `create_page` | `create_page_on_portals` |
-| `PATCH /pages/{id}` | `update_page` (title) | `attach_page_to_portals`, `request_page_publication`, `transfer_page` |
-| `PATCH /reuses/{id}` | `update_reuse` (draftConfig) | `attach_reuse_to_portals`, `request_reuse_publication`, `transfer_reuse` |
+| `POST /pages` | `create_page` | — (`portals` not offered: attach with `update_page_settings`) |
+| `PATCH /pages/{id}` | — (the back-office `title` is not offered) | `update_page_settings` (portals, requestedPortals, owner) |
+| `PATCH /reuses/{id}` | `update_reuse` (draftConfig) | `update_reuse_settings` (portals, requestedPortals, owner) |
+
+Attaching, requesting a publication and transferring are one admin view per resource rather than one
+tool each: they share the operation and the tier, and the approval card tells them apart by the field
+sent. Left to the back-office (no tool): `getGroup` (the list returns the same), `deleteGroup`,
+`deleteFontAsset`, the back-office title of a page.
 
 The writes that name their target by an opaque id carry checked labels (openapi-mcp `labels`, 0.13):
-beside `id` the tool takes the target's title (`pageTitle`, `portalTitle`, `reuseTitle`, `groupTitle`),
+beside `id` the tool takes the target's title (`pageTitle`, `portalTitle`, `reuseTitle`),
 beside `portals` / `requestedPortals` the portals' titles in the same order. Before the call the tool
-reads each target (`getPage`, `getPortal`, `getReuse`, `getGroup`, with the call's own token) and
+reads each target (`getPage`, `getPortal`, `getReuse`, with the call's own token) and
 refuses the call, nothing sent, on a title mismatch; the API receives the call without the labels.
 Their inputs carry `x-checked`, which the agents' approval card and reviewer show as a checked fact:
 "page « Accueil » on portal « Portail de test »" rather than two uuids. Labelled: the publish,
-cancel-draft, delete, transfer, attach and publication-request tools of portals, pages and reuses,
-`update_portal_settings`, `create_page_on_portals`, `submit_reuse` and `delete_group`. A portal title is
+cancel-draft and delete tools of portals, pages and reuses, the three `update_*_settings` and
+`submit_reuse`. A portal title is
 read with `getPortal`, which the pages and reuses admin tiers may call ([scopes.md](scopes.md)).
 
 List tools fix `select` and declare a concise view (`response.concise`); tags `Portals`, `Pages`
@@ -65,10 +70,18 @@ and `Reuses` carry a guide (`tagGuides`) on the draft / live model.
 ## Editor tool groups
 
 `PUT /portals/{id}/draft-config` (`portal_config`) and `PUT /pages/{id}/draft-config`
-(`page_config`) carry `x-agent.editor`: openapi-mcp turns each into eight json-layout form tools
-(`<name>_describeState`, `_getData`, `_setFieldValue`, `_setData`, `_getFieldSuggestions`,
-`_editArray`, `_saveForm`, `_reloadForm`) and a fill-form skill named after the group
-(`page-config`, `portal-config`). See openapi-mcp's `docs/editor-tool-groups.md`.
+(`page_config`) carry `x-agent.editor`: openapi-mcp makes them the two forms of one group of eight
+json-layout form tools (`form_describeState`, `form_getData`, `form_setFieldValue`, `form_setData`,
+`form_getFieldSuggestions`, `form_editArray`, `form_saveForm`, `form_reloadForm`), each taking
+`form` (`portal_config` | `page_config`) and `id`, and one fill-form skill, `form`. A token granted
+only one of the forms sees `form` narrowed to it.
+
+In the platform the form tools are not this document's: the mcp server loads data-fair's merged
+document, whose editor operations (portals', and later other services') make one group. The tools keep
+their bare names, `form_<verb>`, without the `portals_` prefix, and the forms take the merged tool names,
+`portals_portal_config` and `portals_page_config`. Texts name them that way: `form_saveForm` with form
+"portals_page_config". The skill is served as `form`. The form tools are in neither root skill's
+`tools`: a token granted one form would be offered both skills. See openapi-mcp's `docs/editor-tool-groups.md`.
 
 The routes behind them (`api/src/draft-configs/`), scoped like the rest:
 
@@ -96,7 +109,7 @@ URL). A skill is offered while one of its `tools` is:
   data-fair and simple-directory, theme, fonts, images, menu, footer...).
 
 `upload_image` is in neither list: it would offer the portals skill to a pages or reuses token.
-The form mechanics are in the editor groups' skills; page design knowledge lives in the platform
+The form mechanics are in the `form` skill; page design knowledge lives in the platform
 registry's skills, not here.
 
 ## How data-fair merges it
@@ -114,8 +127,7 @@ skills `portals-pages` and `portals-config` (`href`s resolved against the public
 The label reads (`labels.*.operation`) name operationIds, so they must follow the same prefix
 (`portals_getPage`), like the editor's `schemaOperation` / `readOperation`; data-fair keeps the
 `labels` key only from a version that knows it (an older merge drops it with a warning, and the tools
-work unlabelled). openapi-mcp names the editor groups' skills after their merged tool names, `portals-page-config`
-and `portals-portal-config`.
+work unlabelled).
 
 ## Testing
 
