@@ -14,6 +14,7 @@ import { defaultTheme, fillTheme } from '@data-fair/lib-common-types/theme/index
 import { hasKoumoulMention } from '#types/portal-config-footer/walk.ts'
 import { createPortal, validatePortalDraft, cancelPortalDraft, getPortal, getPortalAsAdmin, patchPortal, deletePortal, sendPortalEvent, changesBody, duplicatePortalConfig } from './service.ts'
 import { requireOperationScope } from '../scopes.ts'
+import { assertNbPortalsLimit } from '../limits/service.ts'
 import { syncHeaders } from './operations.ts'
 
 const router = Router()
@@ -100,6 +101,9 @@ router.post('', requireOperationScope('createPortal'), async (req, res, next) =>
   let config = { ...initialConfig }
   const portalId = randomUUID()
   const owner = body.owner ?? session.account
+  // before the duplication, a refused creation must not leave copied images behind
+  assertAccountRole(session, owner, 'admin')
+  await assertNbPortalsLimit(owner)
 
   // Handle portal duplication if sourcePortalId is provided
   let duplicationEventDetails: PushEvent['body']
@@ -123,7 +127,6 @@ router.post('', requireOperationScope('createPortal'), async (req, res, next) =>
     config,
     draftConfig: config
   }
-  assertAccountRole(session, portal.owner, 'admin')
 
   await createPortal(portal, reqOrigin(req), { session, headers: syncHeaders(req) })
   sendPortalEvent(portal, 'create', session, duplicationEventDetails)

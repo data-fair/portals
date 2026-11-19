@@ -10,7 +10,7 @@ export const getLimits = async (account: AccountKeys & { name?: string }): Promi
   const [stored, nbPages, nbDomains] = await Promise.all([
     mongo.limits.findOne({ type: account.type, id: account.id }, { projection: { _id: 0 } }),
     mongo.pages.countDocuments(ownerFilter),
-    mongo.portals.countDocuments({ ...ownerFilter, 'ingress.url': { $exists: true } })
+    mongo.portals.countDocuments(ownerFilter)
   ])
   return {
     type: account.type,
@@ -20,6 +20,7 @@ export const getLimits = async (account: AccountKeys & { name?: string }): Promi
     ...(!stored && { defaults: true }),
     ...stored,
     portals_nb_pages: { limit: stored?.portals_nb_pages?.limit ?? config.defaultLimits.nbPages, consumption: nbPages },
+    // named after the custom domains for the customers service, but every portal counts
     portals_nb_domains: { limit: stored?.portals_nb_domains?.limit ?? config.defaultLimits.nbDomains, consumption: nbDomains }
   }
 }
@@ -28,5 +29,12 @@ export const assertNbPagesLimit = async (owner: AccountKeys) => {
   const { limit, consumption } = (await getLimits(owner)).portals_nb_pages!
   if (limit !== -1 && consumption! >= limit!) {
     throw httpError(429, `The maximum number of pages (${limit}) is reached for this account.`)
+  }
+}
+
+export const assertNbPortalsLimit = async (owner: AccountKeys) => {
+  const { limit, consumption } = (await getLimits(owner)).portals_nb_domains!
+  if (limit !== -1 && consumption! >= limit!) {
+    throw httpError(429, `The maximum number of portals (${limit}) is reached for this account.`)
   }
 }
