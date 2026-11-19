@@ -18,6 +18,7 @@ import config from '#config'
 import log from '@data-fair/lib-node/log.js'
 import { duplicateImage, transferResourceImages } from '../images/service.ts'
 import { getFontFamilyAssets } from '../fonts/service.ts'
+import { assertNbPortalsLimit } from '../limits/service.ts'
 import { type SyncCredentials, assertCanSyncPortal, subscriptionRequests, syncPath, foreignPortalId, syncErrorStatus } from './operations.ts'
 
 const debug = debugModule('portals')
@@ -89,6 +90,7 @@ export const patchPortal = async (portal: Portal, patch: Partial<Portal>, sessio
   // Change of ownership - Check permissions and propagate to images
   if (patch.owner) {
     assertAccountRole(session, patch.owner, 'admin')
+    if (patch.owner.type !== portal.owner.type || patch.owner.id !== portal.owner.id) await assertNbPortalsLimit(patch.owner)
     await transferResourceImages({ type: 'portal', _id: portal._id }, portal.owner, patch.owner)
   }
 
