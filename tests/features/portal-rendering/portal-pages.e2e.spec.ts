@@ -240,6 +240,8 @@ test.describe('portal rendering', () => {
     // below lg the footer leaves room for the fixed scroll-to-top button, so it never covers the last links
     await page.setViewportSize({ width: 390, height: 844 })
     await expect(footerLocator).toHaveCSS('padding-bottom', '64px')
+    // and the stacked columns of a row follow each other closely
+    await expect(footerLocator.locator('.footer-row').first()).toHaveCSS('row-gap', '4px')
   })
 
   test('should render contact page', async ({ page, goToPortal }) => {

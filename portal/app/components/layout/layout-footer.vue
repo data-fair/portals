@@ -23,7 +23,7 @@
           <v-row
             :density="row.gutter === 'dense' ? 'comfortable' : undefined"
             :no-gutters="row.gutter === 'none'"
-            :class="row.align && `align-${row.align}`"
+            :class="['footer-row', row.align && `align-${row.align}`]"
           >
             <v-col
               v-for="(blocks, columnIndex) in footerRowColumns(row)"
@@ -102,6 +102,13 @@ const backgroundStyle = (background: Footer['background'] | NonNullable<Footer['
 <style scoped>
 /* below lg, the content reaches the right edge, where the fixed scroll-to-top button (48px + 16px margin) stays
    at the end of the page: leave room for it so that it does not cover the last footer links (WCAG 2.4.11) */
+/* below md the columns of a row stack: the 24px grid gap that separates them side by side would split
+   two link columns into two distant lists, so they follow each other closely instead */
+@media (max-width: 959.98px) {
+  .footer-row {
+    --v-col-gap-y: 4px;
+  }
+}
 @media (max-width: 1279.98px) {
   .footer-fab-clearance {
     padding-bottom: 64px !important;
