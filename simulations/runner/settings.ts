@@ -59,7 +59,7 @@ export async function fetchConversationExports (since: Date): Promise<Conversati
 /**
  * Erase `userId`'s conversations on the owner, before a case. Opening the chat resumes the person's
  * latest thread: without this a back-office case continued the previous case's conversation and
- * created none for fetchConversationExports to find. `DELETE /api/test-env` resets portals, not the
+ * created none for fetchConversationExports to find. `DELETE /api/test-env?prefix=test_portals_` resets portals, not the
  * agents service.
  */
 export async function eraseConversations (userId: string): Promise<void> {

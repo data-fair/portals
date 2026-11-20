@@ -3,7 +3,7 @@
  * portal itself with a menu, a home page, a catalog and a content page. Seeded fresh
  * on every run after the cleanups, so a case never inherits another run's state.
  *
- * DELETE /api/test-env only wipes the portals-manager collections, so the data-fair
+ * DELETE /api/test-env?prefix=test_portals_ only wipes the portals-manager collections of that prefix, so the data-fair
  * datasets and application are deleted here by their fixed ids.
  */
 import FormData from 'form-data'

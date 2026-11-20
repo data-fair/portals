@@ -102,7 +102,7 @@ Le résultat stocké est juste dans tous les runs (`hostState`) : rien n'est mis
 - **L'aperçu** (`portals_preview_portal_page`) renvoie 45 à 80 Ko, surtout une capture PNG. Le résultat reste dans l'historique et alourdit chaque appel suivant : jusqu'à 535 000 jetons d'entrée cumulés sur un tour. Sur la page d'accueil, il dépasse le délai en dev : le service `events` n'est pas démarré et ses appels répondent en 502. La trace de pile dans ses erreurs 400 n'existe qu'en dev (`NODE_ENV`).
 - **L'agent** affirme parfois une vérification qu'il n'a pas faite (« je viens de relire la page », « visible par le public » après un aperçu en échec). Il n'annonce pas toujours ce qu'il a publié sous approbation automatique.
 
-Prérequis : le profil `agents` (conteneurs agents et mcp, `npx --no df-dev up agents`), et de préférence `events` pour que l'aperçu de la page d'accueil aboutisse, et le pont Claude Code, que seul l'utilisateur démarre. Dans un worktree existant, ajouter `MCP_PORT` à `.env` à la main. Le cas des données enregistre une application de base depuis cdn.jsdelivr (accès internet depuis le conteneur data-fair). Hors de `npm test` et de la CI.
+Prérequis : le profil `agents` (conteneurs agents et mcp, `npm run dev -- --profile agents`), et de préférence `events` pour que l'aperçu de la page d'accueil aboutisse, et le pont Claude Code, que seul l'utilisateur démarre. Le cas des données enregistre une application de base depuis cdn.jsdelivr (accès internet depuis le conteneur data-fair). Hors de `npm test` et de la CI.
 
 ### Aperçu de page
 

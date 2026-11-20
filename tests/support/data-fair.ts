@@ -1,6 +1,6 @@
 // Seeds real data-fair resources for the specs that need the server-rendered path.
 //
-// DELETE /api/test-env only wipes the portals-manager collections, it never touches
+// DELETE /api/test-env?prefix=test_portals_ only wipes the portals-manager collections, it never touches
 // data-fair, so anything seeded here has to be deleted here too.
 import FormData from 'form-data'
 import { axiosAuth } from './axios.ts'

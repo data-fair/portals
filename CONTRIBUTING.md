@@ -27,21 +27,9 @@ Each dev process has its own npm script and reads its settings from environment 
 
 Stop the containers with `npm run stop-dev-deps`.
 
-## Alternative: zellij environment
-
-```sh
-npx --no df-dev setup   # .env with free ports (kept if it exists, --force to redraw), types, UI build (once)
-npm run dev-zellij                                        # core containers + api, ui, portal, ingress manager
-npm run dev-zellij -- --services agents,events,maildev    # with the optional containers
-```
-
-This opens a zellij (>= 0.44) session named after the checkout directory, or attaches to it if it is already running. The `status` pane shows containers, panes and memory; the `bridge` pane (Claude Code bridge for the simulations) waits for Enter.
-
-From another terminal (or an agent): `npx --no df-dev status`, `npx --no df-dev logs <pane>`, `npx --no df-dev restart <pane>`, `npx --no df-dev up <service>`. Quit zellij, then `npm run stop-dev-deps`.
-
 ## Working with Git Worktrees
 
-From the main checkout, `npx --no df-worktree <branch-name>` creates `../portals_<branch-name>` with its own `.env`, docker compose project and ports; `npx --no df-worktree-delete <branch-name>` removes it with its containers and volumes. Branch names: letters, digits, `.`, `_`, `-`, at most 60 characters, no `/`.
+The dev environment uses the fixed ports of `dev/default.env`, so one environment runs per machine. If you work in several checkouts with plain `git worktree`, stop the environment of one (`npm run stop-dev-deps`) before starting the one of another.
 
 ## Building the Docker images
 
