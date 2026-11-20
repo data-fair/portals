@@ -1,6 +1,7 @@
 import { test } from '../../fixtures/login.ts'
 import assert from 'node:assert/strict'
 import { MongoClient } from 'mongodb'
+import { mongoUrl } from '../../support/mongo.ts'
 import { axios, axiosAuth, clean } from '../../support/axios.ts'
 import { nhiSession } from '../../support/nhi.ts'
 import { dataFairUrl, publicationSite } from '../../support/data-fair.ts'
@@ -45,7 +46,7 @@ const seed = async (ax = orgAdmin, title = 'Preview page') => {
 
 // the ingress of a portal points at a closed port: the render of its public host fails at once
 const setIngressUrl = async (portalId: string, url: string) => {
-  const client = await MongoClient.connect(`mongodb://localhost:${process.env.MONGO_PORT}/data-fair-portals-development`)
+  const client = await MongoClient.connect(mongoUrl)
   try {
     await client.db().collection('portals').updateOne({ _id: portalId as any }, { $set: { ingress: { url } } })
   } finally {

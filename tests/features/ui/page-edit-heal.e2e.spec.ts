@@ -1,6 +1,7 @@
 import { test, expect } from '../../fixtures/login.ts'
 import { axiosAuth, clean } from '../../support/axios.ts'
 import { MongoClient } from 'mongodb'
+import { mongoUrl } from '../../support/mongo.ts'
 
 const user1 = await axiosAuth('test_portals_admin@test.com')
 
@@ -8,9 +9,9 @@ const user1 = await axiosAuth('test_portals_admin@test.com')
 // the current API rejects such configs, but old versions of the editor stored them
 // (typically leftovers of an element type switch) and page duplication copied them
 // around. The page editor must keep working on them.
-// The e2e stack always runs against the dev API server, hence the development database.
+// The e2e tests always run against the dev API server, hence its database.
 const injectLegacyData = async (pageId: string, mongoPatch: Record<string, any>) => {
-  const client = await MongoClient.connect(`mongodb://localhost:${process.env.MONGO_PORT}/data-fair-portals-development`)
+  const client = await MongoClient.connect(mongoUrl)
   try {
     const result = await client.db().collection('pages').updateOne({ _id: pageId as any }, mongoPatch)
     if (result.matchedCount !== 1) throw new Error(`mongo legacy data injection matched ${result.matchedCount} pages`)

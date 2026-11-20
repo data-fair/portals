@@ -1,12 +1,12 @@
 import { test } from '@playwright/test'
 import assert from 'node:assert/strict'
 import { MongoClient } from 'mongodb'
+import { mongoUrl } from '../../support/mongo.ts'
 import 'dotenv/config'
 import { axiosBuilder } from '@data-fair/lib-node/axios.js'
 import { apiUrl } from '../../support/axios.ts'
 
 const ax = axiosBuilder({ baseURL: apiUrl })
-const mongoUrl = `mongodb://localhost:${process.env.MONGO_PORT}/data-fair-portals-development`
 
 const ownedBy = (orgId: string) => ({ type: 'organization', id: orgId, name: orgId })
 type OwnedDoc = { _id: string, owner?: ReturnType<typeof ownedBy> }
