@@ -4,8 +4,9 @@
     :color="footer.background.color"
     :style="backgroundStyle(footer.background)"
     :class="[
-      'pa-0 d-flex justify-center flex-wrap flex-grow-0',
-      footer.background.color === 'background' ? 'border-t' : undefined
+      'pa-0 d-flex justify-center flex-wrap flex-grow-0 footer-fab-clearance',
+      footer.background.color === 'background' ? 'border-t' : undefined,
+      belowAgentChatFab && 'footer-fab-clearance-double'
     ]"
     tabindex="-1"
   >
@@ -68,6 +69,13 @@ const getPortalImageSrc = usePortalImageSrc()
 
 const footer = computed(() => portalConfig.value.footer)
 
+// same rule as layout-scroll-to-top: the scroll-to-top button sits above the agent chat button
+const route = useRoute()
+const belowAgentChatFab = computed(() => {
+  const agentChat = portalConfig.value.agentChat
+  return agentChat?.active && agentChat.togglePosition !== 'appBar' && route.meta.layout !== 'full'
+})
+
 const hasBackground = (row?: FooterRow) => !!(row?.background?.color || row?.background?.image)
 
 const columnMd = (row: FooterRow, index: number) => {
@@ -90,6 +98,19 @@ const backgroundStyle = (background: Footer['background'] | NonNullable<Footer['
   }
 }
 </script>
+
+<style scoped>
+/* below lg, the content reaches the right edge, where the fixed scroll-to-top button (48px + 16px margin) stays
+   at the end of the page: leave room for it so that it does not cover the last footer links (WCAG 2.4.11) */
+@media (max-width: 1279.98px) {
+  .footer-fab-clearance {
+    padding-bottom: 64px !important;
+  }
+  .footer-fab-clearance-double {
+    padding-bottom: 144px !important;
+  }
+}
+</style>
 
 <i18n lang="yaml">
   en:

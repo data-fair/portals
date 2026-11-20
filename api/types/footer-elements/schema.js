@@ -216,30 +216,42 @@ const elementLinks = {
     mb
   }
 }
+/**
+ * @param {string} title
+ * @param {string} titleFr
+ * @param {boolean} [withDefault]
+ */
+const buttonVariant = (title, titleFr, withDefault = true) => ({
+  type: 'string',
+  title,
+  'x-i18n-title': { fr: titleFr },
+  description: 'The "Tonal" style is not recommended for accessibility: the contrast between the text and its tinted background may be insufficient.',
+  'x-i18n-description': { fr: "Le style « Avec fond teinté » est déconseillé pour l'accessibilité : le contraste entre le texte et son fond teinté peut être insuffisant." },
+  ...(withDefault ? { default: 'text' } : {}),
+  oneOf: [
+    { const: 'text', title: 'Text', 'x-i18n-title': { fr: 'Texte seul' } },
+    { const: 'outlined', title: 'Outlined', 'x-i18n-title': { fr: 'Avec bordure' } },
+    { const: 'tonal', title: 'Tonal', 'x-i18n-title': { fr: 'Avec fond teinté' } },
+    { const: 'flat', title: 'Filled', 'x-i18n-title': { fr: 'Avec fond coloré' } },
+    { const: 'elevated', title: 'Elevated', 'x-i18n-title': { fr: 'Avec élévation' } }
+  ]
+})
 const elementButtons = {
   type: 'object',
   title: 'FooterButtonsElement',
   'x-i18n-title': { en: 'Button or button list', fr: 'Bouton ou liste de boutons' },
   additionalProperties: false,
   required: ['type', 'align', 'variant', 'items'],
-  layout: ['type', { cols: { md: 6 }, key: 'variant' }, { cols: { md: 6 }, key: 'align' }, 'items', 'mb'],
+  layout: ['type', { cols: { md: 4 }, key: 'variant' }, { cols: { md: 4 }, key: 'firstVariant' }, { cols: { md: 4 }, key: 'align' }, 'items', 'mb'],
   properties: {
     type: { const: 'buttons', title: 'Button or button list', 'x-i18n-title': { fr: 'Bouton ou liste de boutons' } },
     align,
-    variant: {
-      type: 'string',
-      title: 'Button style',
-      'x-i18n-title': { fr: 'Style des boutons' },
-      description: 'The "Tonal" style is not recommended for accessibility: the contrast between the text and its tinted background may be insufficient.',
-      'x-i18n-description': { fr: "Le style « Avec fond teinté » est déconseillé pour l'accessibilité : le contraste entre le texte et son fond teinté peut être insuffisant." },
-      default: 'text',
-      oneOf: [
-        { const: 'text', title: 'Text', 'x-i18n-title': { fr: 'Texte seul' } },
-        { const: 'outlined', title: 'Outlined', 'x-i18n-title': { fr: 'Avec bordure' } },
-        { const: 'tonal', title: 'Tonal', 'x-i18n-title': { fr: 'Avec fond teinté' } },
-        { const: 'flat', title: 'Filled', 'x-i18n-title': { fr: 'Avec fond coloré' } },
-        { const: 'elevated', title: 'Elevated', 'x-i18n-title': { fr: 'Avec élévation' } }
-      ]
+    variant: buttonVariant('Button style', 'Style des boutons'),
+    firstVariant: {
+      ...buttonVariant('Style of the first button', 'Style du premier bouton', false),
+      description: 'Sets the first button apart, for a main call to action next to the other buttons of the same line. Empty: same style as the others.',
+      'x-i18n-description': { fr: 'Distingue le premier bouton, pour une action principale à côté des autres boutons de la même ligne. Vide : même style que les autres.' },
+      layout: { props: { clearable: true } }
     },
     items: linksList('Add a button', 'Ajouter un bouton'),
     mb
