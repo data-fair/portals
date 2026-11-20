@@ -1,14 +1,13 @@
 <template>
   <div :class="element.mb ? `mb-${element.mb}` : undefined">
-    <!-- Links in single line -->
-    <v-row
+    <!-- Links in single line: a list (RGAA 9.3), wrapped lines kept close to each other -->
+    <ul
       v-if="element.display === 'inline'"
-      :class="['my-2', footerJustifyClass(element.align)]"
+      :class="['footer-links footer-links-inline d-flex flex-wrap align-center my-2', footerJustifyClass(element.align)]"
     >
-      <v-col
+      <li
         v-for="(link, index) in element.items"
         :key="index"
-        cols="auto"
         class="text-center"
       >
         <NuxtLink
@@ -29,45 +28,51 @@
             {{ resolveLinkTitle(link, locale) }}
           </span>
         </NuxtLink>
-      </v-col>
-    </v-row>
+      </li>
+    </ul>
 
     <!-- Links in a vertical list -->
-    <div
+    <ul
       v-else-if="element.display === 'list'"
-      :class="['d-flex flex-column', { 'align-center': element.align === 'center', 'align-end': element.align === 'right' }]"
+      :class="['footer-links d-flex flex-column', { 'align-center': element.align === 'center', 'align-end': element.align === 'right' }]"
     >
-      <NuxtLink
+      <li
         v-for="(link, index) in element.items"
         :key="index"
-        :to="resolveLink(link)"
-        :target="link.type === 'external' && link.target ? '_blank' : undefined"
-        :rel="linkRel(resolveLink(link), link.type === 'external' && link.target)"
-        :title="link.type === 'external' && link.target ? resolveLinkTitle(link, locale) + ' - ' + t('newWindow') : undefined"
-        class="simple-link d-flex align-center my-1"
+        class="my-1"
       >
-        <span class="d-flex align-center">
-          <v-icon
-            v-if="link.icon && (link.icon.mdi?.svgPath || link.icon.custom)"
-            :icon="link.icon.mdi?.svgPath || link.icon.custom"
-            :color="link.icon.color"
-            size="small"
-            class="mr-1"
-          />
-          {{ resolveLinkTitle(link, locale) }}
-        </span>
-      </NuxtLink>
-    </div>
+        <NuxtLink
+          :to="resolveLink(link)"
+          :target="link.type === 'external' && link.target ? '_blank' : undefined"
+          :rel="linkRel(resolveLink(link), link.type === 'external' && link.target)"
+          :title="link.type === 'external' && link.target ? resolveLinkTitle(link, locale) + ' - ' + t('newWindow') : undefined"
+          class="simple-link d-flex align-center"
+        >
+          <span class="d-flex align-center">
+            <v-icon
+              v-if="link.icon && (link.icon.mdi?.svgPath || link.icon.custom)"
+              :icon="link.icon.mdi?.svgPath || link.icon.custom"
+              :color="link.icon.color"
+              size="small"
+              class="mr-1"
+            />
+            {{ resolveLinkTitle(link, locale) }}
+          </span>
+        </NuxtLink>
+      </li>
+    </ul>
 
     <!-- Links in columns (legacy grid, kept for the migrated portals) -->
     <v-row
       v-else
-      class="my-2"
+      tag="ul"
+      class="footer-links my-2"
       no-gutters
     >
       <v-col
         v-for="(link, index) in element.items"
         :key="index"
+        tag="li"
         cols="10"
         sm="4"
         offset="2"
@@ -105,6 +110,18 @@ defineProps<{ element: FooterLinksElement }>()
 const { locale, t } = useI18n()
 const { resolveLink, resolveLinkTitle, linkRel } = useNavigationStore()
 </script>
+
+<style scoped>
+.footer-links {
+  list-style: none;
+  padding: 0;
+}
+/* same 24px between the links as the former grid columns, but only 4px between wrapped lines */
+.footer-links-inline {
+  column-gap: 24px;
+  row-gap: 4px;
+}
+</style>
 
 <i18n lang="yaml">
   en:

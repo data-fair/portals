@@ -174,6 +174,7 @@ test.describe('portal rendering', () => {
               type: 'buttons',
               align: 'center',
               variant: 'outlined',
+              firstVariant: 'flat',
               items: [
                 { type: 'standard', subtype: 'contact', title: 'Contact us' },
                 { type: 'standard', subtype: 'accessibility', title: 'Accessibility statement' }
@@ -224,6 +225,23 @@ test.describe('portal rendering', () => {
     const accessibilityBox = (await footerLocator.getByRole('link', { name: /Accessibility statement/ }).boundingBox())!
     expect(accessibilityBox.y).toBe(contactBox.y)
     expect(accessibilityBox.x - (contactBox.x + contactBox.width)).toBeGreaterThanOrEqual(8)
+
+    // the first button stands apart (main call to action), every button gets the same case
+    const contact = footerLocator.getByRole('link', { name: /Contact us/ })
+    const accessibility = footerLocator.getByRole('link', { name: /Accessibility statement/ })
+    await expect(contact).toHaveClass(/v-btn--variant-flat/)
+    await expect(accessibility).toHaveClass(/v-btn--variant-outlined/)
+    await expect(contact).toHaveCSS('text-transform', 'uppercase')
+    await expect(accessibility).toHaveCSS('text-transform', 'uppercase')
+
+    // links are list items (RGAA 9.3)
+    await expect(footerLocator.getByRole('list').getByRole('listitem').filter({ hasText: 'Site map' })).toHaveCount(1)
+
+    // below lg the footer leaves room for the fixed scroll-to-top button, so it never covers the last links
+    await page.setViewportSize({ width: 390, height: 844 })
+    await expect(footerLocator).toHaveCSS('padding-bottom', '64px')
+    // and the stacked columns of a row follow each other closely
+    await expect(footerLocator.locator('.footer-row').first()).toHaveCSS('row-gap', '4px')
   })
 
   test('should render contact page', async ({ page, goToPortal }) => {
