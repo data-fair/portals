@@ -16,7 +16,7 @@ Each dev process also has its own npm script, reading its settings from environm
 
 ### Port assignments
 
-Port numbers are defined in `dev/default.env` (override in `.env`). Do not modify port assignments.
+Port numbers are defined in `dev/default.env`: do not change `dev/default.env`, override locally in `.env`.
 
 ### Test and dev environment
 
