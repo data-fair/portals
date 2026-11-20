@@ -216,15 +216,15 @@
       </v-col>
 
       <v-col
-        v-if="metadataConfig.showMetadataQuality && dataset.completeness != null"
+        v-if="metadataConfig.showMetadataQuality && dataset.completeness"
         v-bind="metadataColProps"
       >
         <div class="text-body-small text-medium-emphasis">
           {{ t('quality.label') }}
         </div>
-        <div class="d-flex align-center ga-1">
+        <div class="d-flex align-center ga-1 pr-2">
           <v-menu
-            v-if="dataset.completenessCriteria?.length"
+            v-if="dataset.completeness.criteria.length"
             location="bottom end"
           >
             <template #activator="{ props: menuProps }">
@@ -232,18 +232,19 @@
                 v-bind="menuProps"
                 :icon="mdiInformation"
                 :title="t('quality.detail')"
+                :aria-label="t('quality.detail')"
                 size="small"
                 density="comfortable"
                 variant="text"
               />
             </template>
-            <v-card
-              :title="t('quality.title')"
-              max-width="360"
-            >
+            <v-card max-width="420">
+              <v-card-title class="text-wrap">
+                {{ t('quality.title') }}
+              </v-card-title>
               <v-list density="compact">
                 <v-list-item
-                  v-for="criterion of dataset.completenessCriteria"
+                  v-for="criterion of dataset.completeness.criteria"
                   :key="(criterion.custom ? 'custom.' : '') + criterion.key"
                   :title="qualityLabel(criterion)"
                   :subtitle="qualityHint(criterion)"
@@ -259,7 +260,7 @@
             </v-card>
           </v-menu>
           <dataset-quality-bar
-            :score="dataset.completeness"
+            :score="dataset.completeness.score"
             class="flex-grow-1"
           />
         </div>
@@ -430,7 +431,7 @@ const formatCustomValue = (definition: CustomMetadataDefinition) => {
   return value
 }
 
-type QualityCriterion = NonNullable<Dataset['completenessCriteria']>[number]
+type QualityCriterion = NonNullable<Dataset['completeness']>['criteria'][number]
 const qualityLabel = (criterion: QualityCriterion) => {
   if (criterion.custom) return metadataSettings.data.value?.custom?.find(c => c.key === criterion.key)?.title || criterion.key
   return (metadataSettings.data.value as Record<string, { title?: string } | undefined>)?.[criterion.key]?.title || t('quality.criteria.' + criterion.key)
@@ -515,7 +516,6 @@ const qualityHint = (criterion: QualityCriterion) => {
         modified: Data last modified
         keywords: Keywords
         searchTerms: Search terms
-        conformsTo: Schema
   fr:
     attachments: 'Pièces jointes :'
     creator: 'Producteur :'
@@ -583,5 +583,4 @@ const qualityHint = (criterion: QualityCriterion) => {
         modified: Dernière mise à jour des données
         keywords: Mots-clés
         searchTerms: Termes de recherche
-        conformsTo: Schéma
 </i18n>

@@ -77,16 +77,19 @@ export type Dataset = {
     url?: string
   }
   customMetadata?: Record<string, string | number | string[] | { url: string, title?: string }>
-  // metadata quality, computed by data-fair when the owner activated it
-  completeness?: number
-  completenessCriteria?: {
-    key: string
-    custom: boolean
-    size?: number
-    recommendedMin?: number
-    recommendedMax?: number
-    note: 0 | 0.5 | 1
-  }[]
+  // computed by data-fair when the owner activated it in the settings
+  completeness?: {
+    score: number
+    criteria: {
+      key: string
+      custom: boolean
+      weight: number
+      size?: number
+      recommendedMin?: number
+      recommendedMax?: number
+      note: 0 | 0.5 | 1
+    }[]
+  }
 
   attachments?: {
     url: string

@@ -123,8 +123,10 @@ export default {
     },
     showMetadataQuality: {
       type: 'boolean',
-      title: 'Activer le score de complétion des métadonnées',
-      description: 'Présente quand le propriétaire a activé le score de complétion des métadonnées dans ses paramètres.',
+      title: 'Show the metadata completeness score',
+      'x-i18n-title': { fr: 'Afficher le score de complétion des métadonnées' },
+      description: 'Shown when the owner activated the metadata completeness score in their settings.',
+      'x-i18n-description': { fr: 'Affiché quand le propriétaire a activé le score de complétion des métadonnées dans ses paramètres.' },
       layout: {
         comp: 'switch',
         cols: { md: 6 }

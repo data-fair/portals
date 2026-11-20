@@ -147,12 +147,12 @@
 
           <!-- Metadata quality -->
           <div
-            v-if="cardConfig.showMetadataQuality && dataset.completeness != null"
+            v-if="cardConfig.showMetadataQuality && dataset.completeness"
             class="d-flex align-center ga-2 px-4 mt-2 text-body-medium"
           >
             {{ t('metadataQuality') }}
             <dataset-quality-bar
-              :score="dataset.completeness"
+              :score="dataset.completeness.score"
               class="flex-grow-1"
               style="max-width: 160px"
             />

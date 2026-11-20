@@ -67,7 +67,7 @@ if (!preview) {
       updatedAt: new Date().toISOString(),
       owner: session.account.value,
       topics: [{ id: 'topic-1', title: 'Lorem', color: '#45d31d' }],
-      completeness: 80,
+      completeness: { score: 80, criteria: [] },
       extras: { applications: [{ id: 'application-1', updatedAt: new Date().toISOString() }] },
       isMetaOnly: false
     }))
