@@ -76,7 +76,7 @@ test.describe('the case registry', () => {
     for (const c of agentCases) {
       assert.equal(c.surface, 'autonomous-agent', c.name)
       assert.ok(c.agent in AGENT_IDENTITIES, `${c.name}: agent ${c.agent}`)
-      assert.equal(c.route, `/agents/organization/test_org1/chat?agentId=${c.agent}`, c.name)
+      assert.equal(c.route, `/agents/organization/test_portals_org1/chat?agentId=${c.agent}`, c.name)
       assert.ok(c.tools.required.length > 0, `${c.name}: no required tool`)
       for (const name of [...c.tools.required, ...(c.tools.forbidden ?? [])]) assert.match(name, /^((portals|datafair)_[a-z_]+[A-Za-z]*|form_[A-Za-z]+)$/, `${c.name}: ${name}`)
       assert.ok(c.premise.description.length > 10 && typeof c.premise.holds === 'function', `${c.name}: premise`)

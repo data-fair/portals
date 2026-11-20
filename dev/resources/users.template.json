@@ -1,63 +1,63 @@
 [
   {
-    "id": "test_superadmin",
+    "id": "test_portals_superadmin",
     "firstName": "Test",
     "lastName": "Superadmin",
-    "email": "test_superadmin@test.com",
+    "email": "test_portals_superadmin@test.com",
     "password": {
       "clear": "passwd"
     }
   },
   {
-    "id": "test_admin",
+    "id": "test_portals_admin",
     "firstName": "Test",
     "lastName": "Admin",
-    "email": "test_admin@test.com",
+    "email": "test_portals_admin@test.com",
     "password": {
       "clear": "passwd"
     }
   },
   {
-    "id": "test_contrib",
+    "id": "test_portals_contrib",
     "firstName": "Test",
     "lastName": "Contrib",
-    "email": "test_contrib@test.com",
+    "email": "test_portals_contrib@test.com",
     "password": {
       "clear": "passwd"
     }
   },
   {
-    "id": "test_admin_dep",
+    "id": "test_portals_admin_dep",
     "firstName": "Test",
     "lastName": "Admin Dep",
-    "email": "test_admin_dep@test.com",
+    "email": "test_portals_admin_dep@test.com",
     "password": {
       "clear": "passwd"
     }
   },
   {
-    "id": "test_contrib_dep",
+    "id": "test_portals_contrib_dep",
     "firstName": "Test",
     "lastName": "Contrib Dep",
-    "email": "test_contrib_dep@test.com",
+    "email": "test_portals_contrib_dep@test.com",
     "password": {
       "clear": "passwd"
     }
   },
   {
-    "id": "test_user",
+    "id": "test_portals_user",
     "firstName": "Test",
     "lastName": "User",
-    "email": "test_user@test.com",
+    "email": "test_portals_user@test.com",
     "password": {
       "clear": "passwd"
     }
   },
   {
-    "id": "test_alone",
+    "id": "test_portals_alone",
     "firstName": "Test",
     "lastName": "Alone",
-    "email": "test_alone@test.com",
+    "email": "test_portals_alone@test.com",
     "password": {
       "clear": "passwd"
     }
@@ -90,8 +90,8 @@
     }
   },
   {
-    "id": "test_org1_scope_nhi",
-    "email": "test_org1_scope_nhi@test.com",
+    "id": "test_portals_org1_scope_nhi",
+    "email": "test_portals_org1_scope_nhi@test.com",
     "nhi": {
       "provider": {
         "issuer": "https://portals-tests.example.com",
@@ -112,8 +112,8 @@
     }
   },
   {
-    "id": "test_org1_pages_write_nhi",
-    "email": "test_org1_pages_write_nhi@test.com",
+    "id": "test_portals_org1_pages_write_nhi",
+    "email": "test_portals_org1_pages_write_nhi@test.com",
     "nhi": {
       "provider": {
         "issuer": "http://{DEV_HOST}:{NGINX_PORT}/agents/api/nhi"
@@ -128,8 +128,8 @@
     }
   },
   {
-    "id": "test_org1_pages_admin_nhi",
-    "email": "test_org1_pages_admin_nhi@test.com",
+    "id": "test_portals_org1_pages_admin_nhi",
+    "email": "test_portals_org1_pages_admin_nhi@test.com",
     "nhi": {
       "provider": {
         "issuer": "http://{DEV_HOST}:{NGINX_PORT}/agents/api/nhi"
@@ -143,8 +143,8 @@
     }
   },
   {
-    "id": "test_org1_pages_read_nhi",
-    "email": "test_org1_pages_read_nhi@test.com",
+    "id": "test_portals_org1_pages_read_nhi",
+    "email": "test_portals_org1_pages_read_nhi@test.com",
     "nhi": {
       "provider": {
         "issuer": "http://{DEV_HOST}:{NGINX_PORT}/agents/api/nhi"
@@ -157,8 +157,8 @@
     }
   },
   {
-    "id": "test_org1_portals_write_nhi",
-    "email": "test_org1_portals_write_nhi@test.com",
+    "id": "test_portals_org1_portals_write_nhi",
+    "email": "test_portals_org1_portals_write_nhi@test.com",
     "nhi": {
       "provider": {
         "issuer": "http://{DEV_HOST}:{NGINX_PORT}/agents/api/nhi"

@@ -103,12 +103,12 @@ export const DRAFT_PAGE_TITLE = 'Agenda culturel de l\'été'
 export const APPLICATION = { id: 'sim-graphique-equipements', title: 'Capacité des équipements sportifs par commune' }
 /** A public base application, fetched by data-fair at registration: the dev stack serves none of its own. */
 const BASE_APP_URL = 'https://cdn.jsdelivr.net/npm/@data-fair/app-charts@1/dist/'
-const SUPER_ADMIN_EMAIL = 'test_superadmin@test.com'
+const SUPER_ADMIN_EMAIL = 'test_portals_superadmin@test.com'
 
 /**
  * The autonomous-agent cases' world: seedAll's portal (home, catalog and the published content page,
  * all attached), plus a free page a colleague prepared and never published, attached to no portal,
- * and an application of test_org1 on the sports facilities dataset, published on the portal.
+ * and an application of test_portals_org1 on the sports facilities dataset, published on the portal.
  */
 export async function seedAgentFixtures (): Promise<AgentSeedIds> {
   const ids = await seedAll()
@@ -156,12 +156,12 @@ export async function seedAgentFixtures (): Promise<AgentSeedIds> {
   }
 }
 
-/** The portal's configurations and every page of test_org1, as stored: what premises and checks read. */
+/** The portal's configurations and every page of test_portals_org1, as stored: what premises and checks read. */
 export async function readPortalsState (portalId: string): Promise<PortalsState> {
   const ax = await axiosAuth({ email: OWNER_ADMIN_EMAIL, org: OWNER.id })
   const portal = (await ax.get(`/api/portals/${portalId}`)).data
   const { results, count } = (await ax.get('/api/pages', { params: { size: 100 } })).data
-  if (count > results.length) throw new Error(`test_org1 has ${count} pages, only ${results.length} were read`)
+  if (count > results.length) throw new Error(`test_portals_org1 has ${count} pages, only ${results.length} were read`)
   return {
     portal: { _id: portal._id, config: portal.config, draftConfig: portal.draftConfig },
     pages: results.map((p: any) => ({ _id: p._id, type: p.type, title: p.title, portals: p.portals ?? [], requestedPortals: p.requestedPortals ?? [], config: p.config, draftConfig: p.draftConfig }))

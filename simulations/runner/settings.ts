@@ -9,13 +9,13 @@ import { axiosAuth } from '../../tests/support/axios.ts'
 export const ROOT = `http://${process.env.DEV_HOST}:${process.env.NGINX_PORT}`
 
 /** An org: the account shape portals are managed in. test_ data is wiped by test cleanups. */
-export const OWNER = { type: 'organization', id: 'test_org1', name: 'Test Org 1' } as const
+export const OWNER = { type: 'organization', id: 'test_portals_org1', name: 'Test Org 1' } as const
 /** Admin of OWNER per dev/resources/organizations.json. */
-export const OWNER_ADMIN_EMAIL = 'test_admin@test.com'
+export const OWNER_ADMIN_EMAIL = 'test_portals_admin@test.com'
 /** Its user id, whose conversations a back-office case resumes. */
-export const OWNER_ADMIN_ID = 'test_admin'
+export const OWNER_ADMIN_ID = 'test_portals_admin'
 /** Global admin, needed to write another owner's agent settings. */
-const SUPER_ADMIN_EMAIL = 'test_superadmin@test.com'
+const SUPER_ADMIN_EMAIL = 'test_portals_superadmin@test.com'
 
 /** Agents settings, credit cap lifted, data-fair chat on. */
 export async function seedSettings (assistantModelId: string, toolsModelId: string) {

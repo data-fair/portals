@@ -4,10 +4,10 @@ import { axiosAuth, clean } from '../../support/axios.ts'
 import { nhiSession } from '../../support/nhi.ts'
 import { MongoClient } from 'mongodb'
 
-// the test NHI is admin of test_org1, as orgAdmin
-const orgAdmin = await axiosAuth({ email: 'test_admin@test.com', org: 'test_org1' })
-const orgContrib = await axiosAuth({ email: 'test_contrib@test.com', org: 'test_org1' })
-const outsider = await axiosAuth('test_alone@test.com')
+// the test NHI is admin of test_portals_org1, as orgAdmin
+const orgAdmin = await axiosAuth({ email: 'test_portals_admin@test.com', org: 'test_portals_org1' })
+const orgContrib = await axiosAuth({ email: 'test_portals_contrib@test.com', org: 'test_portals_org1' })
+const outsider = await axiosAuth('test_portals_alone@test.com')
 
 const statusOf = async (promise: Promise<any>) => {
   try {

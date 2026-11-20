@@ -3,9 +3,9 @@ import assert from 'node:assert/strict'
 import { axiosAuth, clean } from '../../support/axios.ts'
 import { nhiSession } from '../../support/nhi.ts'
 
-// the test NHI is admin of test_org1, as orgAdmin
-const orgAdmin = await axiosAuth({ email: 'test_admin@test.com', org: 'test_org1' })
-const orgContrib = await axiosAuth({ email: 'test_contrib@test.com', org: 'test_org1' })
+// the test NHI is admin of test_portals_org1, as orgAdmin
+const orgAdmin = await axiosAuth({ email: 'test_portals_admin@test.com', org: 'test_portals_org1' })
+const orgContrib = await axiosAuth({ email: 'test_portals_contrib@test.com', org: 'test_portals_org1' })
 
 const statusOf = async (promise: Promise<any>) => {
   try {
@@ -66,7 +66,7 @@ test.describe('portal draft config', () => {
     const serialized = JSON.stringify(res.data)
     assert.ok(!serialized.includes('"$ref":"https://'), 'refs are local')
     // the topics of the portal owner, not of the form context
-    assert.ok(serialized.includes('test_org1'), 'owner baked in')
+    assert.ok(serialized.includes('test_portals_org1'), 'owner baked in')
     assert.ok(!/context\.(owner|whiteLabel|simplifiedTheme|pages)/.test(serialized), 'no expression reads the form context')
     assert.equal(await statusOf(orgContrib.get(`/api/portals/${portal._id}/draft-config/schema`)), 403)
     const read = (await nhiSession('portals:read')).bearerAx

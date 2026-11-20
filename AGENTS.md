@@ -46,7 +46,7 @@ Random ports are allocated and defined in `.env`.
 A nginx proxy is part of the containers and exposes all services, including the development API server (configured in dev/resources/nginx.conf.template).
 Test users are defined in dev/resources/users.template.json (rendered to the git-ignored users.json with the host and port of `.env` by `node dev/render-users.mjs`: df-dev setup, the status pane, CI)
 
-The scope tests use a non-human identity, `test_org1_scope_nhi` (admin of `test_org1`,
+The scope tests use a non-human identity, `test_portals_org1_scope_nhi` (admin of `test_portals_org1`,
 in dev/resources/users.template.json and organizations.json): `nhiSession(scope?)` in `tests/support/nhi.ts`
 exchanges its assertion for a scoped (or, without scope, unrestricted) session.
 
@@ -112,21 +112,21 @@ Run and judge them with the `/agents-sim` skill.
   (`bridge` zellij pane, suspended until the user presses Enter in it, port `BRIDGE_PORT`
   in `.env`). Only the user starts the bridge.
 - A run wipes `test_`-owned portals data (`DELETE /api/test-env`), recreates the `sim-*`
-  datasets in data-fair, and rewrites `test_org1`'s agents settings and data-fair topics.
+  datasets in data-fair, and rewrites `test_portals_org1`'s agents settings and data-fair topics.
 - Status summary: `docs/qa/simulations-assistant-ia.md`. What the judge reads as the
   product's promises: `docs/architecture/agent.md`.
 
 Autonomous-agent cases (`simulations/autonomous-agent.sim.spec.ts`, cases in
 `simulations/cases/autonomous-agents.ts`, runner in `simulations/runner/autonomous-agent.ts`):
-an agent of `test_org1`, acting as its own NHI, uses the `portals_*` / `datafair_*` tools of the
+an agent of `test_portals_org1`, acting as its own NHI, uses the `portals_*` / `datafair_*` tools of the
 mcp server. The judge also reads the stored portals state (`hostState`) read back by the case's `check`.
 
 - They need the `agents` profile (agents + mcp containers: `npx --no df-dev up agents`) and the
   bridge, which only the user starts. Never part of `npm test` or CI.
-- Four agent identities (NHIs of `test_org1`, defined in `dev/resources/users.template.json`;
+- Four agent identities (NHIs of `test_portals_org1`, defined in `dev/resources/users.template.json`;
   `dev/resources/users.json` is rendered from it by `dev/render-users.mjs` and git-ignored):
   `sim-pages-write`, `sim-pages-admin`, `sim-pages-read`, `sim-portals-write`
-  (user ids `test_org1_<scope>_nhi`). Each case picks its scopes by picking its agent.
+  (user ids `test_portals_org1_<scope>_nhi`). Each case picks its scopes by picking its agent.
 - `MCP_PORT` (nginx exposes the mcp server on `/mcp-server/`). `df-dev init-env` never adds a port
   to an existing `.env` (`--force` redraws all of them): in an existing worktree add `MCP_PORT=<free port>`
   by hand, otherwise nginx cannot start when it is recreated.

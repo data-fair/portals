@@ -5,10 +5,10 @@ import { axios, axiosAuth, clean } from '../../support/axios.ts'
 import { nhiSession } from '../../support/nhi.ts'
 import { dataFairUrl, publicationSite } from '../../support/data-fair.ts'
 
-const orgAdmin = await axiosAuth({ email: 'test_admin@test.com', org: 'test_org1' })
-const orgContrib = await axiosAuth({ email: 'test_contrib@test.com', org: 'test_org1' })
-const depAdmin = await axiosAuth({ email: 'test_admin_dep@test.com', org: 'test_org1', dep: 'dep1' })
-const outsider = await axiosAuth('test_alone@test.com')
+const orgAdmin = await axiosAuth({ email: 'test_portals_admin@test.com', org: 'test_portals_org1' })
+const orgContrib = await axiosAuth({ email: 'test_portals_contrib@test.com', org: 'test_portals_org1' })
+const depAdmin = await axiosAuth({ email: 'test_portals_admin_dep@test.com', org: 'test_portals_org1', dep: 'dep1' })
+const outsider = await axiosAuth('test_portals_alone@test.com')
 
 const baseHost = `${process.env.DEV_HOST}:${process.env.NGINX_PORT}`
 

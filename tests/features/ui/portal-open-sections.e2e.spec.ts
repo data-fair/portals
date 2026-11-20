@@ -1,7 +1,7 @@
 import { test, expect } from '../../fixtures/login.ts'
 import { axiosAuth, clean } from '../../support/axios.ts'
 
-const user1 = await axiosAuth('test_admin@test.com')
+const user1 = await axiosAuth('test_portals_admin@test.com')
 
 // Judged simulations: the assistant's form tools changed the menu while the person stayed on
 // the first tab, the form sub-agent claimed « Barre de navigation » was open, and the
@@ -13,7 +13,7 @@ test.describe('open sections of the portal editor', () => {
 
   test('a form tool writing in another tab opens that tab', async ({ page, goToWithAuth }) => {
     const portal = (await user1.post('/api/portals', { config: { title: 'Sections Portal', menu: { children: [] } } })).data
-    await goToWithAuth(`/portals-manager/portals/${portal._id}`, 'test_admin')
+    await goToWithAuth(`/portals-manager/portals/${portal._id}`, 'test_portals_admin')
     await expect(page.getByRole('tab', { name: 'Identité' })).toHaveAttribute('aria-selected', 'true', { timeout: 30_000 })
     await page.waitForFunction(() => (navigator as any).modelContext?.listTools?.().some((t: any) => t.name === 'portalConfig_editArray'), null, { timeout: 15_000 })
 
@@ -28,7 +28,7 @@ test.describe('open sections of the portal editor', () => {
 
   test('a form tool opens the tab the assistant wants to show', async ({ page, goToWithAuth }) => {
     const portal = (await user1.post('/api/portals', { config: { title: 'Show Portal', menu: { children: [] } } })).data
-    await goToWithAuth(`/portals-manager/portals/${portal._id}`, 'test_admin')
+    await goToWithAuth(`/portals-manager/portals/${portal._id}`, 'test_portals_admin')
     await expect(page.getByRole('tab', { name: 'Identité' })).toHaveAttribute('aria-selected', 'true', { timeout: 30_000 })
     await page.waitForFunction(() => (navigator as any).modelContext?.listTools?.().some((t: any) => t.name === 'portalConfig_openSection'), null, { timeout: 15_000 })
     const text = await page.evaluate(async () => {

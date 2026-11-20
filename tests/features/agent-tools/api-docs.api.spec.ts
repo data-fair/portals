@@ -45,7 +45,7 @@ test.describe('api docs', () => {
   })
 
   test('a font file uploaded without its metadata takes them from the upload, as upload_font_asset sends it', async () => {
-    const ax = await axiosAuth({ email: 'test_admin@test.com', org: 'test_org1' })
+    const ax = await axiosAuth({ email: 'test_portals_admin@test.com', org: 'test_portals_org1' })
     const form = new FormData()
     form.append('body', JSON.stringify({ name: 'Test font', subset: 'latin', weightRange: '400 700', style: 'normal' }))
     form.append('font-asset', createReadStream(fontFile), { filename: 'test-font.woff2', contentType: 'font/woff2' })
@@ -54,7 +54,7 @@ test.describe('api docs', () => {
   })
 
   test('a multipart body part that is not a JSON object is refused with a 400', async () => {
-    const ax = await axiosAuth({ email: 'test_admin@test.com', org: 'test_org1' })
+    const ax = await axiosAuth({ email: 'test_portals_admin@test.com', org: 'test_portals_org1' })
     for (const body of ['null', '1', '[]', '{']) {
       const form = new FormData()
       form.append('body', body)

@@ -2,7 +2,7 @@ import { test, expect } from '../../fixtures/login.ts'
 import { axiosAuth, clean } from '../../support/axios.ts'
 import { MongoClient } from 'mongodb'
 
-const user1 = await axiosAuth('test_admin@test.com')
+const user1 = await axiosAuth('test_portals_admin@test.com')
 
 // Create a valid page through the API then inject legacy data directly in mongo:
 // the current API rejects such configs, but old versions of the editor stored them
@@ -51,7 +51,7 @@ test.describe('page editor on legacy configs rejected by the schema', () => {
     const injected = (await user1.get(`/api/pages/${createdPage._id}`)).data
     expect(injected.draftConfig.elements[0].mb).toBe(0)
 
-    await goToWithAuth(`/portals-manager/pages/${createdPage._id}/edit-config`, 'test_admin')
+    await goToWithAuth(`/portals-manager/pages/${createdPage._id}/edit-config`, 'test_portals_admin')
     await expect(page.getByLabel('Titre')).toBeVisible({ timeout: 30_000 })
 
     // the stale property is healed on load, no config error is reported
@@ -85,7 +85,7 @@ test.describe('page editor on legacy configs rejected by the schema', () => {
       $set: { 'config.elements.0.content': 42, 'draftConfig.elements.0.content': 42 }
     })
 
-    await goToWithAuth(`/portals-manager/pages/${createdPage._id}/edit-config`, 'test_admin')
+    await goToWithAuth(`/portals-manager/pages/${createdPage._id}/edit-config`, 'test_portals_admin')
     await expect(page.getByLabel('Titre')).toBeVisible({ timeout: 30_000 })
 
     const alert = page.getByRole('alert').filter({ hasText: 'La configuration de la page contient des erreurs' })

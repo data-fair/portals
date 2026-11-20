@@ -3,8 +3,8 @@ import { test } from '../../fixtures/login.ts'
 import assert from 'node:assert/strict'
 import { axiosAuth, clean } from '../../support/axios.ts'
 
-const orgAdmin = await axiosAuth({ email: 'test_admin@test.com', org: 'test_org1' })
-const otherUser = await axiosAuth('test_alone@test.com')
+const orgAdmin = await axiosAuth({ email: 'test_portals_admin@test.com', org: 'test_portals_org1' })
+const otherUser = await axiosAuth('test_portals_alone@test.com')
 
 const errorOf = async (promise: Promise<any>) => {
   try {
@@ -44,7 +44,7 @@ test.describe('page creation pitfalls', () => {
   test('a missing owner name is named in the error', async () => {
     const { status, data } = await errorOf(orgAdmin.post('/api/pages', {
       type: 'home',
-      owner: { type: 'organization', id: 'test_org1' },
+      owner: { type: 'organization', id: 'test_portals_org1' },
       config: { title: 'Home', elements: [] }
     }))
     assert.equal(status, 400)

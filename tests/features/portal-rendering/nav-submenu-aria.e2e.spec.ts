@@ -2,7 +2,7 @@ import { test, expect } from '../../fixtures/portal.ts'
 import { axiosAuth, clean } from '../../support/axios.ts'
 import type { Locator, Page } from '@playwright/test'
 
-const user1 = await axiosAuth('test_admin@test.com')
+const user1 = await axiosAuth('test_portals_admin@test.com')
 
 /**
  * Header submenu accessibility (RGAA 7.1 and 9.3).

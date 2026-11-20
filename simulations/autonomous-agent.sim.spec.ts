@@ -1,5 +1,5 @@
 /**
- * One judged scenario per autonomous-agent case: an agent of test_org1, acting as its own NHI, on the
+ * One judged scenario per autonomous-agent case: an agent of test_portals_org1, acting as its own NHI, on the
  * mcp server's portals_* and datafair_* tools (simulations/cases/autonomous-agents.ts). There are no
  * assertions about what the agent should say — the test fails only when the run itself is invalid (the
  * bridge is down, the agent cannot reach its tools or reaches some its scopes must deny, the turn never

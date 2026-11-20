@@ -1,5 +1,5 @@
 /**
- * The autonomous agents the cases drive: owned by test_org1, each acting as its own NHI, calling the
+ * The autonomous agents the cases drive: owned by test_portals_org1, each acting as its own NHI, calling the
  * mcp server's tools (portals_* and datafair_*) — the configuration production runs.
  *
  * The NHIs are declared in simple-directory's file storage (dev/resources/users.template.json) with
@@ -13,15 +13,15 @@ import { OWNER, OWNER_ADMIN_ID, ROOT } from './settings.ts'
 
 /** Agent id → its NHI user id (dev/resources/users.template.json), with the scopes the NHI holds. */
 export const AGENT_IDENTITIES = {
-  'sim-pages-write': { nhi: 'test_org1_pages_write_nhi', scopes: ['pages:write', 'portals:read', 'datasets:read', 'applications:read'] },
-  'sim-pages-admin': { nhi: 'test_org1_pages_admin_nhi', scopes: ['pages:admin', 'portals:read', 'datasets:read'] },
-  'sim-pages-read': { nhi: 'test_org1_pages_read_nhi', scopes: ['pages:read', 'portals:read'] },
-  'sim-portals-write': { nhi: 'test_org1_portals_write_nhi', scopes: ['portals:write', 'pages:read'] }
+  'sim-pages-write': { nhi: 'test_portals_org1_pages_write_nhi', scopes: ['pages:write', 'portals:read', 'datasets:read', 'applications:read'] },
+  'sim-pages-admin': { nhi: 'test_portals_org1_pages_admin_nhi', scopes: ['pages:admin', 'portals:read', 'datasets:read'] },
+  'sim-pages-read': { nhi: 'test_portals_org1_pages_read_nhi', scopes: ['pages:read', 'portals:read'] },
+  'sim-portals-write': { nhi: 'test_portals_org1_portals_write_nhi', scopes: ['portals:write', 'pages:read'] }
 } as const
 
 export type AgentId = keyof typeof AGENT_IDENTITIES
 
-const SUPER_ADMIN_EMAIL = 'test_superadmin@test.com'
+const SUPER_ADMIN_EMAIL = 'test_portals_superadmin@test.com'
 
 export interface SimulatedAgentConfig {
   title?: string
@@ -64,7 +64,7 @@ export type StoredPage = {
   draftConfig: Record<string, any>
 }
 
-/** The portals state of test_org1, read through the portals API as its admin. */
+/** The portals state of test_portals_org1, read through the portals API as its admin. */
 export type PortalsState = {
   portal: { _id: string, config: Record<string, any>, draftConfig: Record<string, any> },
   pages: StoredPage[]
@@ -76,7 +76,7 @@ export type RunState = { exports: ParsedExport[], ids: AgentSeedIds, before: Por
 export type AgentCase = SimulationCase & {
   surface: 'autonomous-agent',
   agent: AgentId,
-  /** The member of test_org1 who talks to the agent, and its instructor (default test_admin, an organization admin). */
+  /** The member of test_portals_org1 who talks to the agent, and its instructor (default test_portals_admin, an organization admin). */
   person?: string,
   /** Checked before any model call (assertAgentTools): a run without them would test nothing. */
   tools: { required: string[], forbidden?: string[] },
@@ -96,7 +96,7 @@ const superAdmin = async () => {
 }
 
 /**
- * Create the agent afresh, enrolled with its NHI, instructed by `instructor` (default test_admin). Deleted first, which
+ * Create the agent afresh, enrolled with its NHI, instructed by `instructor` (default test_portals_admin). Deleted first, which
  * takes its conversations with it: the agents page reopens the agent's latest thread, so a kept
  * history would carry an earlier run's conversation into this one.
  */

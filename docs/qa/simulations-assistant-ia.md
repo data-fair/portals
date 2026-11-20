@@ -79,7 +79,7 @@ Pourquoi les échecs :
 
 ## Agents autonomes
 
-Six cas (`simulations/autonomous-agent.sim.spec.ts`, `simulations/cases/autonomous-agents.ts`) : un agent de l'organisation `test_org1`, qui agit sous sa propre identité (NHI), utilise les outils `portals_*` et `datafair_*` du serveur mcp. Chaque cas choisit ses droits en choisissant son agent. La personne ne voit que la page de discussion de l'agent. Le juge lit le transcript et l'état stocké des portails et des pages (`hostState`).
+Six cas (`simulations/autonomous-agent.sim.spec.ts`, `simulations/cases/autonomous-agents.ts`) : un agent de l'organisation `test_portals_org1`, qui agit sous sa propre identité (NHI), utilise les outils `portals_*` et `datafair_*` du serveur mcp. Chaque cas choisit ses droits en choisissant son agent. La personne ne voit que la page de discussion de l'agent. Le juge lit le transcript et l'état stocké des portails et des pages (`hostState`).
 
 Référence du 09/11/2026, branche `feat-autonomous-agents`. Images : `agents:main` (1c2850b, agents #90 inclus), `mcp:main` (9c71695, openapi-mcp 0.11), `data-fair:master` (9abebab). `@data-fair/lib-agents-sim` 0.14.0 (`runSimulation`). Assistant Sonnet, outils Haiku, persona Sonnet. Deux passes, **10 runs sur 10 réussissent**. Entre parenthèses : le nombre de frictions relevées par le juge.
 
@@ -166,7 +166,7 @@ Ce que la passe montre encore :
    Ensuite, dans portals : mettre à jour, relancer `build-types` et remesurer.
 2. **Haiku comme modèle principal** : fiable sur les parcours courts, pas sur les longs, où il invente des échanges. À traiter dans le service agents.
 3. **Accessibilité des listes vjsf** : le bouton qui ouvre les actions d'une ligne (Modifier, Dupliquer…) n'a pas de nom. Ni la personne, ni l'assistant, ni un lecteur d'écran ne peut le désigner. Proposé, non fait (nécessite json-layout et vjsf).
-4. **Chat du portail** : les cas tournent désormais avec un visiteur connecté sans organisation (`test_alone`), seul jugeable depuis agents #80. Le chemin anonyme (son jeton, ses quotas) n'est plus couvert par les simulations.
+4. **Chat du portail** : les cas tournent désormais avec un visiteur connecté sans organisation (`test_portals_alone`), seul jugeable depuis agents #80. Le chemin anonyme (son jeton, ses quotas) n'est plus couvert par les simulations.
 5. **Couverture** : aucun cas ne concerne les réutilisations, les actualités ou les événements, ni un utilisateur sans droit d'écriture, ni l'anglais. `page-contenu` part d'une page qui a déjà un paragraphe d'introduction : la moitié de l'objectif n'est donc pas exercée.
 
 ## Fonctionnement

@@ -7,7 +7,7 @@ import { axiosAuth } from './axios.ts'
 
 export const dataFairUrl = `http://${process.env.DEV_HOST}:${process.env.NGINX_PORT}/data-fair`
 
-const admin = await axiosAuth('test_admin@test.com')
+const admin = await axiosAuth('test_portals_admin@test.com')
 
 /** The composite reference data-fair uses to scope a query to one portal */
 export const publicationSite = (portalId: string) => `data-fair-portals:${portalId}`

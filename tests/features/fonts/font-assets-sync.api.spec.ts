@@ -5,7 +5,7 @@ import axios from 'axios'
 import 'dotenv/config'
 import { axiosAuth, clean } from '../../support/axios.ts'
 
-const orgAdmin = await axiosAuth({ email: 'test_admin@test.com', org: 'test_org1' })
+const orgAdmin = await axiosAuth({ email: 'test_portals_admin@test.com', org: 'test_portals_org1' })
 
 const baseHost = `${process.env.DEV_HOST}:${process.env.NGINX_PORT}`
 const themeCss = async (portalId: string) => {

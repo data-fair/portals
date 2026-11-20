@@ -1,6 +1,6 @@
 [
   {
-    "id": "test_org1",
+    "id": "test_portals_org1",
     "name": "Test Org 1",
     "departments": [
       {
@@ -14,87 +14,87 @@
     ],
     "members": [
       {
-        "id": "test_admin",
+        "id": "test_portals_admin",
         "role": "admin"
       },
       {
-        "id": "test_contrib",
+        "id": "test_portals_contrib",
         "role": "contrib"
       },
       {
-        "id": "test_user",
+        "id": "test_portals_user",
         "role": "user"
       },
       {
-        "id": "test_admin_dep",
+        "id": "test_portals_admin_dep",
         "role": "admin",
         "department": "dep1"
       },
       {
-        "id": "test_contrib_dep",
+        "id": "test_portals_contrib_dep",
         "role": "contrib",
         "department": "dep1"
       },
       {
-        "id": "test_org1_scope_nhi",
+        "id": "test_portals_org1_scope_nhi",
         "role": "admin"
       },
       {
-        "id": "test_org1_pages_write_nhi",
+        "id": "test_portals_org1_pages_write_nhi",
         "role": "admin"
       },
       {
-        "id": "test_org1_pages_admin_nhi",
+        "id": "test_portals_org1_pages_admin_nhi",
         "role": "admin"
       },
       {
-        "id": "test_org1_pages_read_nhi",
+        "id": "test_portals_org1_pages_read_nhi",
         "role": "admin"
       },
       {
-        "id": "test_org1_portals_write_nhi",
+        "id": "test_portals_org1_portals_write_nhi",
         "role": "admin"
       }
     ]
   },
   {
-    "id": "test_org2",
+    "id": "test_portals_org2",
     "name": "Test Org 2",
     "members": [
       {
-        "id": "test_alone",
+        "id": "test_portals_alone",
         "role": "admin"
       },
       {
-        "id": "test_superadmin",
+        "id": "test_portals_superadmin",
         "role": "user"
       }
     ]
   },
   {
-    "id": "test_org3",
+    "id": "test_portals_org3",
     "name": "Test Org 3",
     "members": [
       {
-        "id": "test_superadmin",
+        "id": "test_portals_superadmin",
         "role": "admin"
       },
       {
-        "id": "test_admin",
+        "id": "test_portals_admin",
         "role": "admin"
       },
       {
-        "id": "test_user",
+        "id": "test_portals_user",
         "role": "user"
       },
       {
-        "id": "test_contrib",
+        "id": "test_portals_contrib",
         "role": "contrib"
       }
     ],
     "partners": [
       {
-        "id": "test_org1",
+        "id": "test_portals_org1",
         "name": "Test Org 1"
       }
     ]

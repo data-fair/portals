@@ -2,7 +2,7 @@ import type { Page } from '@playwright/test'
 import { test, expect } from '../../fixtures/login.ts'
 import { axiosAuth, clean } from '../../support/axios.ts'
 
-const user1 = await axiosAuth('test_admin@test.com')
+const user1 = await axiosAuth('test_portals_admin@test.com')
 
 /**
  * Read the host state the editors publish to the agent chat, the way the chat does:
@@ -41,7 +41,7 @@ test.describe('agent host state of the editors', () => {
       owner: portal.owner
     })).data
 
-    await goToWithAuth(`/portals-manager/pages/${createdPage._id}/edit-config`, 'test_admin')
+    await goToWithAuth(`/portals-manager/pages/${createdPage._id}/edit-config`, 'test_portals_admin')
     await expect(page.getByLabel('Titre')).toBeVisible({ timeout: 30_000 })
 
     await expect.poll(async () => (await readAgentState(page)).editor ?? '').toContain('pageConfig_ form tools')
@@ -67,14 +67,14 @@ test.describe('agent host state of the editors', () => {
       portals: [],
       owner: portal.owner
     })).data
-    await goToWithAuth(`/portals-manager/pages/${createdPage._id}?tab=publications`, 'test_admin')
+    await goToWithAuth(`/portals-manager/pages/${createdPage._id}?tab=publications`, 'test_portals_admin')
     await expect.poll(async () => (await readAgentState(page)).publication ?? '', { timeout: 30_000 }).toContain('published on no portal')
     await page.getByRole('checkbox', { name: 'Publié' }).first().check()
     await expect.poll(async () => (await readAgentState(page)).publication ?? '').toContain('published on: Publication Portal (its editor')
   })
 
   test('the pages list points to the creation wizard', async ({ page, goToWithAuth }) => {
-    await goToWithAuth('/portals-manager/pages', 'test_admin')
+    await goToWithAuth('/portals-manager/pages', 'test_portals_admin')
     await expect.poll(async () => (await readAgentState(page)).pages ?? '', { timeout: 30_000 }).toContain('« Créer une nouvelle page »')
   })
 
@@ -89,7 +89,7 @@ test.describe('agent host state of the editors', () => {
     await page.route(`**/api/pages/${createdPage._id}`, route => route.request().method() === 'PATCH'
       ? route.fulfill({ status: 400, contentType: 'text/plain', body: 'body/draftConfig/elements/1 requiert la propriété type' })
       : route.continue())
-    await goToWithAuth(`/portals-manager/pages/${createdPage._id}/edit-config`, 'test_admin')
+    await goToWithAuth(`/portals-manager/pages/${createdPage._id}/edit-config`, 'test_portals_admin')
     await expect(page.getByLabel('Titre')).toBeVisible({ timeout: 30_000 })
     await page.getByLabel('Titre').fill('Save Page renamed')
     await page.getByLabel('Titre').blur()
@@ -97,7 +97,7 @@ test.describe('agent host state of the editors', () => {
   })
 
   test('the page creation wizard publishes its guidance and current step', async ({ page, goToWithAuth }) => {
-    await goToWithAuth('/portals-manager/pages/new', 'test_admin')
+    await goToWithAuth('/portals-manager/pages/new', 'test_portals_admin')
     await expect.poll(async () => (await readAgentState(page)).wizard ?? '', { timeout: 30_000 }).toContain('not the portal menu')
     expect((await readAgentState(page))['wizard-step']).toContain('« Type de page »')
   })
@@ -106,7 +106,7 @@ test.describe('agent host state of the editors', () => {
     // a run lost a half-configured menu item when the person left the editor: nothing had
     // told the assistant that the incomplete row was not saved
     const portal = (await user1.post('/api/portals', { config: { title: 'Form Portal', menu: { children: [{ type: 'standard', subtype: 'home' }] } } })).data
-    await goToWithAuth(`/portals-manager/portals/${portal._id}`, 'test_admin')
+    await goToWithAuth(`/portals-manager/portals/${portal._id}`, 'test_portals_admin')
     await expect.poll(async () => (await readAgentState(page)).editor ?? '', { timeout: 30_000 }).toContain('portalConfig_ form tools')
     await expect.poll(async () => (await readAgentState(page)).form, { timeout: 15_000 }).toBeUndefined()
     await page.getByRole('tab', { name: 'Barre de navigation' }).click()
@@ -129,7 +129,7 @@ test.describe('agent host state of the editors', () => {
     // « unpublished changes » state still current: the draft state only changed once the
     // portal was reloaded, after the wait had answered
     const portal = (await user1.post('/api/portals', { config: { title: 'Validate Portal', menu: { children: [] } } })).data
-    await goToWithAuth(`/portals-manager/portals/${portal._id}`, 'test_admin')
+    await goToWithAuth(`/portals-manager/portals/${portal._id}`, 'test_portals_admin')
     const title = page.getByLabel('Titre', { exact: true })
     await expect(title).toBeVisible({ timeout: 30_000 })
     const saved = page.waitForResponse(response => response.url().includes(`/api/portals/${portal._id}`) && response.request().method() === 'PATCH' && response.ok())
@@ -162,7 +162,7 @@ test.describe('agent host state of the editors', () => {
 
   test('the portal editor publishes its guidance', async ({ page, goToWithAuth }) => {
     const portal = (await user1.post('/api/portals', { config: { title: 'State Portal 2', menu: { children: [] } } })).data
-    await goToWithAuth(`/portals-manager/portals/${portal._id}`, 'test_admin')
+    await goToWithAuth(`/portals-manager/portals/${portal._id}`, 'test_portals_admin')
     await expect.poll(async () => (await readAgentState(page)).editor ?? '', { timeout: 30_000 }).toContain('portalConfig_ form tools')
     // the options of a menu row, so that the assistant does not ask the person to read them out
     expect((await readAgentState(page))['editor-menu-options']).toContain("« Catalogue d'événements »")

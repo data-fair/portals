@@ -337,8 +337,8 @@ const previewFacets: Facets = {
     { value: 'keyword-2', count: 2 }
   ],
   owner: [
-    { value: { type: 'organization', id: 'test_org1', name: 'Test Org 1' }, count: 4 },
-    { value: { type: 'organization', id: 'test_org1', name: 'Test Org 1', department: 'dep1', departmentName: 'Lorem ipsum' }, count: 2 }
+    { value: { type: 'organization', id: 'test_portals_org1', name: 'Test Org 1' }, count: 4 },
+    { value: { type: 'organization', id: 'test_portals_org1', name: 'Test Org 1', department: 'dep1', departmentName: 'Lorem ipsum' }, count: 2 }
   ]
 }
 const facets = computed(() => preview ? previewFacets : (catalogFetch?.data.value?.facets ?? { concepts: [], 'base-application': [], topics: [], keywords: [], owner: [] }))

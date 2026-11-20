@@ -5,12 +5,12 @@ import { axiosAuth, clean } from '../../support/axios.ts'
 import { nhiSession } from '../../support/nhi.ts'
 import { dataFairUrl } from '../../support/data-fair.ts'
 
-// the test NHI is admin of test_org1, as this cookie user
-const orgAdmin = await axiosAuth({ email: 'test_admin@test.com', org: 'test_org1' })
+// the test NHI is admin of test_portals_org1, as this cookie user
+const orgAdmin = await axiosAuth({ email: 'test_portals_admin@test.com', org: 'test_portals_org1' })
 
 const portalBody = (title: string) => ({ config: { title, menu: { children: [] } } })
 
-const listedSites = async () => (await orgAdmin.get(`${dataFairUrl}/api/v1/settings/organization/test_org1/publication-sites`)).data as { type: string, id: string }[]
+const listedSites = async () => (await orgAdmin.get(`${dataFairUrl}/api/v1/settings/organization/test_portals_org1/publication-sites`)).data as { type: string, id: string }[]
 const isListed = (sites: { type: string, id: string }[], portalId: string) => sites.some(s => s.type === 'data-fair-portals' && s.id === portalId)
 
 test.describe('publication-site sync', () => {
