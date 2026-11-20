@@ -12,9 +12,6 @@ fi
 # generated code and ui build needed by the api, the ui and the tests, built once
 npm run dev-setup
 
-# simple-directory mounts dev/resources/users.json: rendered from .env before the containers start
-node dev/render-users.mjs
-
 # --scale only applies to "up", the other arguments (e.g. --profile) are global compose options
 global_args=()
 scale_args=()
@@ -27,3 +24,6 @@ while [ $# -gt 0 ]; do
 done
 
 docker compose --progress quiet ${global_args[@]+"${global_args[@]}"} up -d --wait ${scale_args[@]+"${scale_args[@]}"}
+
+# the dev world (test_demo_ accounts of dev/resources/demo-world.json), never cleaned by the tests
+npm run dev-world

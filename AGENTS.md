@@ -44,13 +44,21 @@ Branch names: letters, digits, `.`, `_`, `-`, at most 60 characters, no `/`.
 The environment allows for integration testing thanks to docker containers (see docker-compose.yml).
 Random ports are allocated and defined in `.env`.
 A nginx proxy is part of the containers and exposes all services, including the development API server (configured in dev/resources/nginx.conf.template).
-Test users are defined in dev/resources/users.template.json (rendered to the git-ignored users.json with the host and port of `.env` by `node dev/render-users.mjs`: df-dev setup, the status pane, CI)
+simple-directory stores its accounts in mongo. Test users and organizations live in `tests/support/sd-fixtures.ts`:
+the sub-space `test_portals_` (every user, organization and member id, and every email, starts with it; password
+`passwd`). The tests seed it through simple-directory's test API (`DELETE /api/test-env?prefix=test_portals_`, then
+`POST /api/test-env/seed`), in `tests/global-setup.ts` (before the spec files, which log in at import time, are
+loaded) and in `tests/state-setup.ts` (the setup project of the tests and the simulations).
 
 The scope tests use a non-human identity, `test_portals_org1_scope_nhi` (admin of `test_portals_org1`,
-in dev/resources/users.template.json and organizations.json): `nhiSession(scope?)` in `tests/support/nhi.ts`
+in `tests/support/sd-fixtures.ts`): `nhiSession(scope?)` in `tests/support/nhi.ts`
 exchanges its assertion for a scoped (or, without scope, unrestricted) session.
 
-The test cleanup endpoint (`DELETE /api/test-env`) only removes data whose `owner.id` starts with `test_`. Use the dev-only superadmin `superadmin@dev.com` (id `dev_superadmin`, password `passwd`, member of org `dev_org`) to play around manually without seeing your data wiped by tests.
+The test cleanup endpoint (`DELETE /api/test-env?prefix=test_portals_`) only removes data whose `owner.id`
+starts with the prefix (400 on a missing or malformed prefix). To play around manually, use the dev account
+`test_demo_dev@example.org` (password `passwd`, a simple-directory admin, admin of the org `test_demo_org`): the
+dev world `test_demo_` (`dev/resources/demo-world.json`, seeded by `npm run dev-world`, which `npm run dev-deps`
+runs) is never cleaned by the tests.
 
 ### Testing
 
@@ -111,7 +119,7 @@ Run and judge them with the `/agents-sim` skill.
 - They need the `agents` container (`npx --no df-dev up agents`) and the Claude Code bridge
   (`bridge` zellij pane, suspended until the user presses Enter in it, port `BRIDGE_PORT`
   in `.env`). Only the user starts the bridge.
-- A run wipes `test_`-owned portals data (`DELETE /api/test-env`), recreates the `sim-*`
+- A run wipes `test_portals_`-owned portals data (`DELETE /api/test-env?prefix=test_portals_`), recreates the `sim-*`
   datasets in data-fair, and rewrites `test_portals_org1`'s agents settings and data-fair topics.
 - Status summary: `docs/qa/simulations-assistant-ia.md`. What the judge reads as the
   product's promises: `docs/architecture/agent.md`.
@@ -123,8 +131,7 @@ mcp server. The judge also reads the stored portals state (`hostState`) read bac
 
 - They need the `agents` profile (agents + mcp containers: `npx --no df-dev up agents`) and the
   bridge, which only the user starts. Never part of `npm test` or CI.
-- Four agent identities (NHIs of `test_portals_org1`, defined in `dev/resources/users.template.json`;
-  `dev/resources/users.json` is rendered from it by `dev/render-users.mjs` and git-ignored):
+- Four agent identities (NHIs of `test_portals_org1`, defined in `tests/support/sd-fixtures.ts`):
   `sim-pages-write`, `sim-pages-admin`, `sim-pages-read`, `sim-portals-write`
   (user ids `test_portals_org1_<scope>_nhi`). Each case picks its scopes by picking its agent.
 - `MCP_PORT` (nginx exposes the mcp server on `/mcp-server/`). `df-dev init-env` never adds a port

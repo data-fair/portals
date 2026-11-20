@@ -160,7 +160,7 @@ jobs:
       run: sed -i 's/^DEV_HOST=.*/DEV_HOST=ci.localhost/' .env
 
     # the core services only, like a developer's default env: no test needs an optional one.
-    # dev/deps.sh also renders the dev users simple-directory mounts (host and port of .env)
+    # the test accounts are seeded in simple-directory by the tests themselves (tests/global-setup.ts)
     - name: Start docker compose services
       run: npm run dev-deps
 

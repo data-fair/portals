@@ -144,8 +144,8 @@ own credential (its bearer, else its cookie; `subscriptionRequests`). A failure 
 
 ## Testing
 
-- The test NHI `test_portals_org1_scope_nhi` (`dev/resources/users.template.json`, admin of `test_portals_org1` in
-  `dev/resources/organizations.json`; simple-directory runs with `MANAGE_NHIS` and
+- The test NHI `test_portals_org1_scope_nhi` (admin of `test_portals_org1`, seeded with the test accounts of
+  `tests/support/sd-fixtures.ts`; simple-directory runs with `MANAGE_NHIS` and
   `NHIS_ALLOW_INSECURE_ISSUERS`): `nhiSession(scope?)` in `tests/support/nhi.ts` signs an
   assertion with `tests/resources/nhi/test-nhi-key.pem` and returns `cookieAx`, `bearerAx` and the
   access token; no scope gives an unrestricted session.

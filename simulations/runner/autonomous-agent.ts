@@ -2,7 +2,7 @@
  * The autonomous agents the cases drive: owned by test_portals_org1, each acting as its own NHI, calling the
  * mcp server's tools (portals_* and datafair_*) — the configuration production runs.
  *
- * The NHIs are declared in simple-directory's file storage (dev/resources/users.template.json) with
+ * The NHIs are seeded in simple-directory with the test accounts (tests/support/sd-fixtures.ts) with
  * the subject autonomous-agent:<agentId>, which pins the agent id; each NHI holds one scope set, so a
  * case picks its scopes by picking its agent. The public creation route always generates the id, so
  * the agent is seeded through the agents test-env route (development mode only), as data-fair's
@@ -11,7 +11,7 @@
 import type { ParsedExport, SimulationCase } from '@data-fair/lib-agents-sim'
 import { OWNER, OWNER_ADMIN_ID, ROOT } from './settings.ts'
 
-/** Agent id → its NHI user id (dev/resources/users.template.json), with the scopes the NHI holds. */
+/** Agent id → its NHI user id (tests/support/sd-fixtures.ts), with the scopes the NHI holds. */
 export const AGENT_IDENTITIES = {
   'sim-pages-write': { nhi: 'test_portals_org1_pages_write_nhi', scopes: ['pages:write', 'portals:read', 'datasets:read', 'applications:read'] },
   'sim-pages-admin': { nhi: 'test_portals_org1_pages_admin_nhi', scopes: ['pages:admin', 'portals:read', 'datasets:read'] },
