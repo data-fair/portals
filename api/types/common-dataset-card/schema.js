@@ -22,7 +22,8 @@ export default {
           { cols: { md: 6 }, key: 'ownerDisplay' },
           { cols: { md: 4 }, key: 'showSummary' },
           { cols: { md: 4 }, key: 'showUpdatedAt' },
-          { cols: { md: 4 }, key: 'showContentTypes' }
+          { cols: { md: 4 }, key: 'showContentTypes' },
+          { cols: { md: 4 }, key: 'showMetadataQuality' }
         ]
       },
       'thumbnail',
@@ -115,6 +116,17 @@ export default {
       'x-i18n-title': { fr: 'Afficher les contenus disponibles' },
       description: 'Indicates whether the dataset offers metadata, data and applications.',
       'x-i18n-description': { fr: 'Indique si le jeu de données propose des métadonnées, des données et des visualisations.' },
+      layout: {
+        comp: 'switch',
+        cols: { md: 6 }
+      }
+    },
+    showMetadataQuality: {
+      type: 'boolean',
+      title: 'Show the metadata completeness score',
+      'x-i18n-title': { fr: 'Afficher le score de complétion des métadonnées' },
+      description: 'Shown when the owner activated the metadata completeness score in their settings.',
+      'x-i18n-description': { fr: 'Affiché quand le propriétaire a activé le score de complétion des métadonnées dans ses paramètres.' },
       layout: {
         comp: 'switch',
         cols: { md: 6 }
