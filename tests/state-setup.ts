@@ -2,6 +2,7 @@ import assert from 'node:assert/strict'
 import { axiosBuilder } from '@data-fair/lib-node/axios.js'
 import { test as setup } from '@playwright/test'
 import { apiUrl, clean } from './support/axios.ts'
+import { devLogFile } from './support/dev-logs.ts'
 import { sdTestEnvUrl, seedSdFixtures } from './support/sd-fixtures.ts'
 
 const ax = axiosBuilder()
@@ -12,7 +13,7 @@ setup('Stateful tests setup', async () => {
   await assert.doesNotReject(
     ax.get(`${apiUrl}/api/ping`, { timeout: 5000 }),
     `Dev API server seems to be unavailable at ${apiUrl}.
-If you are an agent, read its log (dev/logs/api.log) and report the problem to your user: the environment is started by "npm run dev".`
+If you are an agent, read its log (${devLogFile('api')}) and report the problem to your user: the environment is started by "npm run dev".`
   )
 
   // the accounts of the test sub-space (test_portals_) in simple-directory: cleaned, then seeded
