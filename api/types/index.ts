@@ -109,6 +109,10 @@ export type Dataset = {
   thumbnail?: string
 
   isMetaOnly: boolean
+  partOf?: {
+    type: string
+    id: string
+  }
   isRest?: boolean
   isVirtual?: boolean
   bbox?: number[]

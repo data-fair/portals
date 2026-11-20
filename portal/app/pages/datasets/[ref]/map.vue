@@ -32,6 +32,7 @@
 </template>
 
 <script setup lang="ts">
+import type { Dataset } from '#api/types/index.ts'
 import type { LinkItem } from '#api/types/portal'
 import type { VBreadcrumbs } from 'vuetify/components'
 
@@ -61,7 +62,9 @@ const datasetFetch = await useLocalFetch<{
   extras?: {
     applications?: { id: string; slug: string; updatedAt: string }[]
   }
+  partOf?: Dataset['partOf']
 }>(`/data-fair/api/v1/datasets/${route.params.ref}`)
+const parentDataset = useParentDataset(datasetFetch.data.value?.partOf)
 
 const thumbnailUrl = computed(() => {
   const cardConfig = portalConfig.value.datasets.card
@@ -79,11 +82,17 @@ const thumbnailUrl = computed(() => {
   return undefined
 })
 
-watch([datasetFetch.data, datasetsCatalogExists], () => {
+watch([datasetFetch.data, datasetsCatalogExists, parentDataset], () => {
   const items: (LinkItem | BreadcrumbItem)[] = []
   if (datasetsCatalogExists.value) { items.push({ type: 'standard', subtype: 'datasets' }) }
-  items.push({ title: datasetFetch.data.value?.title || t('dataset'), to: '/datasets/' + route.params.ref })
-  items.push({ title: t('map') })
+  if (parentDataset.value) {
+    // the page of a fragment is not linked anywhere: its sub-pages hang on its parent
+    items.push({ title: parentDataset.value.title, to: `/datasets/${parentDataset.value.slug}` })
+    items.push({ title: `${datasetFetch.data.value?.title || t('dataset')} - ${t('map')}` })
+  } else {
+    items.push({ title: datasetFetch.data.value?.title || t('dataset'), to: '/datasets/' + route.params.ref })
+    items.push({ title: t('map') })
+  }
   setBreadcrumbs(items)
 }, { immediate: true })
 

@@ -1,0 +1,276 @@
+{
+  "unscoped": {
+    "tools": [
+      "cancel_page_draft",
+      "cancel_portal_config_draft",
+      "cancel_reuse_draft",
+      "create_group",
+      "create_page",
+      "create_portal",
+      "create_reuse",
+      "delete_page",
+      "delete_portal",
+      "delete_reuse",
+      "form_describeState",
+      "form_editArray",
+      "form_getData",
+      "form_getFieldSuggestions",
+      "form_reloadForm",
+      "form_saveForm",
+      "form_setData",
+      "form_setFieldValue",
+      "get_page",
+      "get_portal",
+      "get_reuse",
+      "list_font_assets",
+      "list_groups",
+      "list_pages",
+      "list_portals",
+      "list_reuses",
+      "preview_portal_page",
+      "publish_page",
+      "publish_portal_config",
+      "publish_reuse",
+      "submit_reuse",
+      "update_group",
+      "update_page_settings",
+      "update_portal_settings",
+      "update_reuse",
+      "update_reuse_settings",
+      "upload_font_asset",
+      "upload_image"
+    ],
+    "skills": [
+      "config",
+      "form",
+      "pages"
+    ]
+  },
+  "none": {
+    "tools": [],
+    "skills": []
+  },
+  "portals:read": {
+    "tools": [
+      "get_portal",
+      "list_font_assets",
+      "list_portals"
+    ],
+    "skills": [
+      "config"
+    ]
+  },
+  "portals:write": {
+    "tools": [
+      "cancel_portal_config_draft",
+      "form_describeState",
+      "form_editArray",
+      "form_getData",
+      "form_getFieldSuggestions",
+      "form_reloadForm",
+      "form_saveForm",
+      "form_setData",
+      "form_setFieldValue",
+      "get_portal",
+      "list_font_assets",
+      "list_portals",
+      "upload_font_asset",
+      "upload_image"
+    ],
+    "skills": [
+      "config",
+      "form"
+    ]
+  },
+  "portals:admin": {
+    "tools": [
+      "cancel_portal_config_draft",
+      "create_portal",
+      "delete_portal",
+      "form_describeState",
+      "form_editArray",
+      "form_getData",
+      "form_getFieldSuggestions",
+      "form_reloadForm",
+      "form_saveForm",
+      "form_setData",
+      "form_setFieldValue",
+      "get_portal",
+      "list_font_assets",
+      "list_portals",
+      "publish_portal_config",
+      "update_portal_settings",
+      "upload_font_asset",
+      "upload_image"
+    ],
+    "skills": [
+      "config",
+      "form"
+    ]
+  },
+  "pages:read": {
+    "tools": [
+      "get_page",
+      "list_groups",
+      "list_pages",
+      "preview_portal_page"
+    ],
+    "skills": [
+      "pages"
+    ]
+  },
+  "pages:write": {
+    "tools": [
+      "cancel_page_draft",
+      "create_group",
+      "create_page",
+      "form_describeState",
+      "form_editArray",
+      "form_getData",
+      "form_getFieldSuggestions",
+      "form_reloadForm",
+      "form_saveForm",
+      "form_setData",
+      "form_setFieldValue",
+      "get_page",
+      "list_groups",
+      "list_pages",
+      "preview_portal_page",
+      "update_group",
+      "upload_image"
+    ],
+    "skills": [
+      "form",
+      "pages"
+    ]
+  },
+  "pages:admin": {
+    "tools": [
+      "cancel_page_draft",
+      "create_group",
+      "create_page",
+      "delete_page",
+      "form_describeState",
+      "form_editArray",
+      "form_getData",
+      "form_getFieldSuggestions",
+      "form_reloadForm",
+      "form_saveForm",
+      "form_setData",
+      "form_setFieldValue",
+      "get_page",
+      "get_portal",
+      "list_groups",
+      "list_pages",
+      "list_portals",
+      "preview_portal_page",
+      "publish_page",
+      "update_group",
+      "update_page_settings",
+      "upload_image"
+    ],
+    "skills": [
+      "form",
+      "pages"
+    ]
+  },
+  "reuses:read": {
+    "tools": [
+      "get_reuse",
+      "list_reuses"
+    ],
+    "skills": []
+  },
+  "reuses:write": {
+    "tools": [
+      "cancel_reuse_draft",
+      "create_reuse",
+      "get_reuse",
+      "list_reuses",
+      "update_reuse",
+      "upload_image"
+    ],
+    "skills": []
+  },
+  "reuses:admin": {
+    "tools": [
+      "cancel_reuse_draft",
+      "create_reuse",
+      "delete_reuse",
+      "get_portal",
+      "get_reuse",
+      "list_portals",
+      "list_reuses",
+      "publish_reuse",
+      "submit_reuse",
+      "update_reuse",
+      "update_reuse_settings",
+      "upload_image"
+    ],
+    "skills": []
+  },
+  "all:read": {
+    "tools": [
+      "get_page",
+      "get_portal",
+      "get_reuse",
+      "list_font_assets",
+      "list_groups",
+      "list_pages",
+      "list_portals",
+      "list_reuses",
+      "preview_portal_page"
+    ],
+    "skills": [
+      "config",
+      "pages"
+    ]
+  },
+  "all:admin": {
+    "tools": [
+      "cancel_page_draft",
+      "cancel_portal_config_draft",
+      "cancel_reuse_draft",
+      "create_group",
+      "create_page",
+      "create_portal",
+      "create_reuse",
+      "delete_page",
+      "delete_portal",
+      "delete_reuse",
+      "form_describeState",
+      "form_editArray",
+      "form_getData",
+      "form_getFieldSuggestions",
+      "form_reloadForm",
+      "form_saveForm",
+      "form_setData",
+      "form_setFieldValue",
+      "get_page",
+      "get_portal",
+      "get_reuse",
+      "list_font_assets",
+      "list_groups",
+      "list_pages",
+      "list_portals",
+      "list_reuses",
+      "preview_portal_page",
+      "publish_page",
+      "publish_portal_config",
+      "publish_reuse",
+      "submit_reuse",
+      "update_group",
+      "update_page_settings",
+      "update_portal_settings",
+      "update_reuse",
+      "update_reuse_settings",
+      "upload_font_asset",
+      "upload_image"
+    ],
+    "skills": [
+      "config",
+      "form",
+      "pages"
+    ]
+  }
+}

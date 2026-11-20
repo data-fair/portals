@@ -2,8 +2,8 @@
   <action-btn
     v-if="!preview && link.visible.value"
     :href="link.href.value"
+    :rel="linkRel(link.href.value, true)"
     target="_blank"
-    rel="noopener"
     color="primary"
     :action-style="actionStyle ?? 'full'"
     :icon="mdiPencil"
@@ -24,6 +24,7 @@ const props = defineProps<{
 
 const { t } = useI18n()
 const { preview } = usePortalStore()
+const { linkRel } = useNavigationStore()
 const link = useEditResourceLink(props.kind, toRef(props, 'resource'))
 </script>
 

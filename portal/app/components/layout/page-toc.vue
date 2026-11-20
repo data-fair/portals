@@ -72,19 +72,16 @@ const { isFluid } = defineProps<{ isFluid?: boolean }>()
 
 const { t } = useI18n({ useScope: 'local' })
 const { lgAndUp } = useDisplay()
-const { appBarBottom } = useNavigationStore()
+const { appBarBottom, anchorTop, updateAnchorMargins } = useNavigationStore()
 
 const route = useRoute()
 
 const pageConfig = inject<Ref<PageConfig | null>>('page-config')
 const sections = computed(() => pageConfig?.value?._toc ?? [])
 
-// Keep in sync with the scroll-margin-top applied to anchored titles in layout-title.vue
-const scrollOffset = 96
-
 const activeId = ref<string | null>(null)
 
-// Highlight the last section whose title has scrolled past the offset line.
+// Highlight the last section whose title has scrolled past the line where anchored titles stop, below the app bar.
 const findActiveId = () => {
   const list = sections.value
   const first = list[0]
@@ -97,7 +94,7 @@ const findActiveId = () => {
     const el = document.getElementById(section.id)
     if (!el) continue
     ready = true
-    if (el.getBoundingClientRect().top - scrollOffset - 4 <= 0) {
+    if (el.getBoundingClientRect().top - anchorTop.value - 4 <= 0) {
       current = section.id
       break
     }
@@ -124,6 +121,7 @@ onMounted(async () => {
   const hash = route.hash.slice(1)
   if (hash && sections.value.some(section => section.id === hash)) {
     await nextTick()
+    updateAnchorMargins()
     document.getElementById(hash)?.scrollIntoView()
     activeId.value = hash
   }

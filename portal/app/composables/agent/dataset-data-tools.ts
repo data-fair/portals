@@ -1,12 +1,12 @@
 import type { Ref } from 'vue'
 import type { $Fetch } from 'nitropack/types'
-import { useAgentTool, useAgentSubAgent } from '@data-fair/lib-vue-agents'
+import { useAgentTool, useAgentSkill } from '@data-fair/lib-vue-agents'
 import * as searchData from '@data-fair/agent-tools-data-fair/search-data'
 import * as aggregateData from '@data-fair/agent-tools-data-fair/aggregate-data'
 import * as calculateMetric from '@data-fair/agent-tools-data-fair/calculate-metric'
 import * as getFieldValues from '@data-fair/agent-tools-data-fair/get-field-values'
 import * as getDatasetSchema from '@data-fair/agent-tools-data-fair/get-dataset-schema'
-import * as datasetDataSubagent from '@data-fair/agent-tools-data-fair/dataset-data-subagent'
+import * as datasetDataSkill from '@data-fair/agent-tools-data-fair/dataset-data-skill'
 
 const apiBase = '/data-fair/api/v1/'
 
@@ -76,10 +76,9 @@ export function useAgentDatasetDataTools (locale: Ref<string>, localFetch: $Fetc
     }
   })
 
-  useAgentSubAgent({
-    name: 'dataset_data',
-    ...datasetDataSubagent.annotations[localeVal],
-    prompt: datasetDataSubagent.prompt,
-    tools: [...datasetDataSubagent.tools]
+  useAgentSkill({
+    name: datasetDataSkill.name,
+    description: datasetDataSkill.description,
+    body: datasetDataSkill.body
   })
 }

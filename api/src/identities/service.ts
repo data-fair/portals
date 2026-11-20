@@ -2,7 +2,7 @@
 // in sync with the users/organizations directory, and remove them when an identity is deleted.
 
 import type { IdentityUpdate, IdentityDelete } from '@data-fair/lib-express/identities/index.js'
-import { internalError } from '@data-fair/lib-node/observer.js'
+import log from '@data-fair/lib-node/log.js'
 import mongo from '#mongo'
 import { deletePortalSites } from '../portals/service.ts'
 
@@ -38,7 +38,7 @@ export const deleteIdentity = async (identity: IdentityDelete) => {
     try {
       await deletePortalSites(portal)
     } catch (err) {
-      internalError('identities-portal-sites', err)
+      log.error('failed to release the sites of a portal after its owner was deleted', { code: 'identities-portal-sites', err, portalId: portal._id })
     }
   }
   for (const collection of ownedCollections()) {

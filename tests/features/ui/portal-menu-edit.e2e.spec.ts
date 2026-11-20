@@ -35,5 +35,7 @@ test.describe('menu items of the portal editor', () => {
     await expect(page.getByText('Lien non configuré')).toBeVisible()
     await expect(preview.getByText('Menu Preview Portal').first()).toBeVisible()
     await expect(preview.getByText('dernier état valide')).toBeVisible()
+    // the incomplete row is not saved: the actions panel says so
+    await expect(page.getByRole('alert').filter({ hasText: 'Dernière modification non enregistrée' })).toBeVisible()
   })
 })

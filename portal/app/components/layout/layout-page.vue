@@ -10,6 +10,7 @@
         :fluid="isFluid"
       >
         <slot />
+        <div data-iframe-height="40" />
       </v-container>
     </div>
   </v-main>

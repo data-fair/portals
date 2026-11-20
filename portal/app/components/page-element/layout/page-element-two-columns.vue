@@ -14,7 +14,7 @@
           name="page-elements"
           :on-update="(newElements: PageElement[]) => ({...element, children: newElements})"
           :elements="element.children"
-          add-item-message="Ajouter un bloc à la colonne"
+          :add-item-message="t('addBlock')"
         />
       </v-col>
       <v-col
@@ -26,7 +26,7 @@
           name="page-elements"
           :on-update="(newElements: PageElement[]) => ({...element, children2: newElements})"
           :elements="element.children2"
-          add-item-message="Ajouter un bloc à la colonne"
+          :add-item-message="t('addBlock')"
         />
       </v-col>
     </v-row>
@@ -40,6 +40,15 @@ const { element } = defineProps({
   element: { type: Object as () => TwoColumnsElement, required: true }
 })
 
+const { t } = useI18n()
+
 const isStretch = (element.align?.left === 'stretch' || element?.align?.right === 'stretch')
 
 </script>
+
+<i18n lang="yaml">
+  en:
+    addBlock: Add a block to the column
+  fr:
+    addBlock: Ajouter un bloc à la colonne
+</i18n>

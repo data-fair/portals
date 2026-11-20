@@ -2,12 +2,13 @@ import type { Ref } from 'vue'
 import type { $Fetch } from 'nitropack/types'
 import type { PortalConfig } from '#api/types/portal-config'
 import type { NavigationStore } from '../use-navigation-store'
-import { useFrameServer } from '@data-fair/lib-vue-agents'
+import { useFrameServer, useAgentState } from '@data-fair/lib-vue-agents'
 import { useAgentDatasetTools } from './dataset-tools'
 import { useAgentDatasetDataTools } from './dataset-data-tools'
 import { useAgentNavigationTools } from './navigation-tools'
 import { useAgentGeoTools } from './geo-tools'
 import { useAgentPortalContentTools } from './portal-content-tools'
+import { portalAgentGuidance } from './portal-agent-guidance'
 
 /**
  * Registers the portal-level WebMCP host (frame server + base tools) so the
@@ -20,6 +21,9 @@ import { useAgentPortalContentTools } from './portal-content-tools'
  * navigator/BroadcastChannel. Order matters: useFrameServer first (installs the
  * BrowserMcpServer on navigator.modelContext), then the tool composables.
  *
+ * It also publishes the portal's guidance to the chat as keyed host state
+ * (portal-agent-guidance.ts): agents libs 0.7 ignore a host-supplied system prompt.
+ *
  * The navigation store must be passed explicitly because this composable runs
  * in app.vue's own setup — inject() would search the parent (NuxtRoot) where
  * the store has not been provided.
@@ -29,6 +33,7 @@ export function usePortalAgentHost (opts: {
   localFetch: $Fetch
   portalConfig: PortalConfig
   portalId: string
+  ownerName?: string
   navigationStore: NavigationStore
 }) {
   useFrameServer('portal')
@@ -42,4 +47,6 @@ export function usePortalAgentHost (opts: {
   })
   useAgentGeoTools(opts.locale)
   useAgentPortalContentTools(opts.locale, opts.localFetch, opts.portalId)
+  const guidance = portalAgentGuidance(opts.portalConfig, opts.ownerName, window.location.origin)
+  for (const [key, text] of Object.entries(guidance)) useAgentState(key, text)
 }

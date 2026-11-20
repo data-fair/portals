@@ -1,5 +1,6 @@
 <template>
-  <div :class="footerElementClasses(element)">
+  <!-- the template drops the whitespace between the buttons: the gap keeps them apart, also between wrapped lines -->
+  <div :class="[...footerElementClasses(element), 'd-flex flex-wrap align-center ga-2', footerJustifyClass(element.align)]">
     <template
       v-for="(link, index) in element.items"
       :key="index"
@@ -47,7 +48,7 @@ import type { FooterButtonsElement } from '#api/types/footer-elements/index.ts'
 defineProps<{ element: FooterButtonsElement }>()
 
 const { t, locale } = useI18n()
-const { resolveLink, resolveLinkTitle } = useNavigationStore()
+const { resolveLink, resolveLinkTitle, linkRel } = useNavigationStore()
 </script>
 
 <i18n lang="yaml">

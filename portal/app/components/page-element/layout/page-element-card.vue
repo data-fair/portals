@@ -146,7 +146,7 @@
               name="page-elements"
               :on-update="(newElements: PageElement[]) => ({...element, children: newElements})"
               :elements="element.children"
-              add-item-message="Ajouter un bloc à la boite"
+              :add-item-message="t('addBlock')"
             />
           </v-card-text>
 
@@ -238,8 +238,10 @@ const contentId = useId()
 
 <i18n lang="yaml">
   en:
+    addBlock: Add a block to the box
     newWindow: New window
   fr:
+    addBlock: Ajouter un bloc à la boîte
     newWindow: Nouvelle fenêtre
 </i18n>
 

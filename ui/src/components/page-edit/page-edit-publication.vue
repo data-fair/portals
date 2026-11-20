@@ -212,7 +212,7 @@ const getPortalUrl = (portal: PartialPortal): string => {
     pageType:
       home: home page
       contact: contact page
-      privacyPolicy: privacy policy page
+      privacy-policy: privacy policy page
       accessibility: accessibility page
       legal-notice: legal notice page
       cookie-policy: cookie policy page
@@ -237,7 +237,7 @@ const getPortalUrl = (portal: PartialPortal): string => {
     pageType:
       home: page d'accueil
       contact: page de contact
-      privacyPolicy: page de politique de confidentialité
+      privacy-policy: page de politique de confidentialité
       accessibility: page d'accessibilité
       legal-notice: page de mentions légales
       cookie-policy: page de politique de cookies

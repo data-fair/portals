@@ -5,20 +5,19 @@
         :account-type="owner.type"
         :account-id="owner.id"
         :chat-title="agentChat.chatTitle"
-        :system-prompt="systemPrompt"
         :drawer-props="agentChat.drawerProps"
       />
       <Teleport
         v-if="agentChat.togglePosition === 'appBar'"
         to="#agent-chat-appbar"
       >
-        <DfAgentChatToggle :btn-props="agentChat.btnProps" />
+        <DfAgentChatToggle :btn-props="btnProps" />
       </Teleport>
       <div
         v-else
-        style="position: fixed; bottom: 16px; right: 16px; z-index: 2500;"
+        :style="`position: fixed; bottom: ${fabBottom}px; right: ${fabRight}px; z-index: 2500;`"
       >
-        <DfAgentChatToggle :btn-props="agentChat.btnProps" />
+        <DfAgentChatToggle :btn-props="btnProps" />
       </div>
     </template>
 
@@ -31,22 +30,22 @@
           :account-type="owner.type"
           :account-id="owner.id"
           :chat-title="agentChat.chatTitle"
-          :system-prompt="systemPrompt"
-          :btn-props="agentChat.btnProps"
-          :menu-props="agentChat.menuProps"
+          :btn-props="btnProps"
+          :menu-props="menuProps"
+          :card-props="cardProps"
         />
       </Teleport>
       <div
         v-else
-        style="position: fixed; bottom: 16px; right: 16px; z-index: 2500;"
+        :style="`position: fixed; bottom: ${fabBottom}px; right: ${fabRight}px; z-index: 2500;`"
       >
         <DfAgentChatMenu
           :account-type="owner.type"
           :account-id="owner.id"
           :chat-title="agentChat.chatTitle"
-          :system-prompt="systemPrompt"
-          :btn-props="agentChat.btnProps"
-          :menu-props="agentChat.menuProps"
+          :btn-props="btnProps"
+          :menu-props="menuProps"
+          :card-props="cardProps"
         />
       </div>
     </template>
@@ -57,7 +56,6 @@
 import { defineAsyncComponent, computed } from 'vue'
 import type { PortalConfig } from '#api/types/portal-config'
 import { type Account, getAccountRole } from '@data-fair/lib-common-types/session/index.js'
-import { portalPromptContext } from '../composables/agent/portal-prompt-context'
 
 const DfAgentChatDrawer = defineAsyncComponent(() => import('@data-fair/lib-vuetify-agents/DfAgentChatDrawer.vue'))
 const DfAgentChatToggle = defineAsyncComponent(() => import('@data-fair/lib-vuetify-agents/DfAgentChatToggle.vue'))
@@ -73,6 +71,28 @@ const props = defineProps<{
 const agentChat = computed(() => props.portalConfig.agentChat)
 const owner = computed(() => props.owner)
 
+// same look and place as the scroll to top buttons (layout-scroll-to-top.vue here, scroll-to-top.vue of
+// lib-vuetify in the embedded data-fair views), or a full height block of the app bar like the personal menu
+const btnProps = computed(() => agentChat.value?.togglePosition === 'appBar'
+  ? { rounded: 0, height: '100%', width: 72 }
+  : { elevation: 1 })
+
+// the menu opened from the app bar hangs from it, without the gap kept from a floating button
+const menuProps = computed(() => agentChat.value?.togglePosition === 'appBar'
+  ? { ...agentChat.value.menuProps, offset: 0 }
+  : agentChat.value?.menuProps)
+
+// the menu card is elevated like the other menus, without the border of the cards default
+const cardProps = { border: 0 }
+
+// the pages of the full layout embed a data-fair view whose own scroll to top button sits in the
+// bottom right corner of the iframe, 24px away to clear its scrollbar: the agent goes above it in
+// the same column, elsewhere the portal's own scroll to top button goes above the agent
+const route = useRoute()
+const isFullLayout = computed(() => route.meta.layout === 'full')
+const fabRight = computed(() => isFullLayout.value ? 24 : 16)
+const fabBottom = computed(() => isFullLayout.value ? 88 : 16)
+
 const session = useSession()
 
 const viewerBucket = computed<'admin' | 'contrib' | 'user' | 'external' | 'anonymous'>(() => {
@@ -87,10 +107,8 @@ const canSee = computed(() => {
   return visibleTo.includes(viewerBucket.value)
 })
 
-const systemPrompt = computed(() => {
-  const base = agentChat.value?.systemPrompt || ''
-  const parts = [base, ...portalPromptContext(props.portalConfig, props.owner.name, !!base)]
-  return parts.filter(Boolean).join('\n')
-})
+// No system prompt: agents libs 0.7 ignore it (a persona is a configured agent, chosen by
+// agentId — agentChat.systemPrompt is not applied, docs/architecture/agent.md). The portal's
+// built-in guidance reaches the chat as host state (composables/agent/use-portal-agent-host.ts).
 
 </script>

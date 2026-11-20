@@ -8,11 +8,13 @@ import { httpError, reqSessionAuthenticated, assertAccountRole } from '@data-fai
 import { jsonFromMultiPart, upload } from '../utils/multipart.ts'
 import { randomUUID } from 'node:crypto'
 import { readFile, unlink } from 'node:fs/promises'
+import { requireOperationScope } from '../scopes.ts'
+import { syncPortalsUsingFonts } from '../portals/service.ts'
 
 const router = Router()
 export default router
 
-router.get('', async (req, res) => {
+router.get('', requireOperationScope('listFontAssets'), async (req, res) => {
   const session = reqSessionAuthenticated(req)
   assertAccountRole(session, session.account, 'admin')
 
@@ -22,19 +24,22 @@ router.get('', async (req, res) => {
   const query = findUtils.filterPermissions(params, session)
 
   const [results, count] = await Promise.all([
-    mongo.fontAssets.find(query).skip(skip).limit(size).skip(skip).sort(sort).toArray(),
+    size ? mongo.fontAssets.find(query).skip(skip).limit(size).skip(skip).sort(sort).toArray() : [],
     mongo.fontAssets.countDocuments(query)
   ])
 
   res.json({ results, count })
 })
 
-router.post('', upload.single('font-asset'), jsonFromMultiPart, async (req, res, next) => {
+router.post('', requireOperationScope('createFontAsset'), upload.single('font-asset'), jsonFromMultiPart, async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
 
-  const body = postReqBody.returnValid(req.body, { name: 'body' })
   const file = req.file
   if (!file) throw httpError(400, 'missing font-asset file')
+  // the metadata of the file are those of the upload when the body does not give them (an agent tool
+  // sends the file from a URL, it does not know its size)
+  if (!req.body.file?.name) req.body.file = { name: Buffer.from(file.originalname, 'latin1').toString('utf8'), size: file.size, type: file.mimetype }
+  const body = postReqBody.returnValid(req.body, { name: 'body' })
 
   body.name = body.name.trim()
   const createdAt = new Date().toISOString()
@@ -48,11 +53,12 @@ router.post('', upload.single('font-asset'), jsonFromMultiPart, async (req, res,
 
   await mongo.fontAssets.insertOne(fontAsset)
   await unlink(file.path)
+  await syncPortalsUsingFonts(fontAsset.owner, [fontAsset.name])
 
   res.json({ ...fontAsset, data: undefined })
 })
 
-router.patch('/:id', async (req, res) => {
+router.patch('/:id', requireOperationScope('updateFontAsset'), async (req, res) => {
   const session = reqSessionAuthenticated(req)
   const fontAsset = await mongo.fontAssets.findOne({ _id: req.params.id })
   if (!fontAsset) throw httpError(404, `Font asset "${req.params.id}" not found`)
@@ -61,20 +67,22 @@ router.patch('/:id', async (req, res) => {
   const body = patchReqBody.returnValid(req.body, { name: 'body' })
   body.name = body.name?.trim()
   await mongo.fontAssets.updateOne({ _id: req.params.id }, { $set: body })
+  await syncPortalsUsingFonts(fontAsset.owner, [...new Set([fontAsset.name, body.name ?? fontAsset.name])])
 
   res.json({ ...fontAsset, ...body, data: undefined })
 })
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', requireOperationScope('deleteFontAsset'), async (req, res) => {
   const session = reqSessionAuthenticated(req)
   const fontAsset = await mongo.fontAssets.findOne({ _id: req.params.id })
   if (!fontAsset) throw httpError(404, `Font asset "${req.params.id}" not found`)
   assertAccountRole(session, fontAsset.owner, 'admin')
   await mongo.fontAssets.deleteOne({ _id: req.params.id })
+  await syncPortalsUsingFonts(fontAsset.owner, [fontAsset.name])
   res.status(204).send()
 })
 
-router.get('/:id/data/:filename', async (req, res) => {
+router.get('/:id/data/:filename', requireOperationScope('getFontAssetData'), async (req, res) => {
   const session = reqSessionAuthenticated(req)
   const fontAsset = await mongo.fontAssets.findOne({ _id: req.params.id })
   if (!fontAsset) throw httpError(404, `Font asset "${req.params.id}" not found`)

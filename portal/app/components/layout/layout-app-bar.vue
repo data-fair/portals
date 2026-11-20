@@ -7,6 +7,7 @@
       (navBarConfig.transparent && scrolled) ? 'opacity-90' : undefined,
       navBarConfig.color === 'background' ? 'header-border-inner' : undefined
     ]"
+    :style="scrollBehavior === 'hide' && !appBarActive ? 'transform: translateY(-128px)' : undefined"
     :extension-height="64"
     :height="headerConfig.show ? 128 : 0"
     :scroll-behavior="scrollBehavior + ' elevate'"
@@ -48,6 +49,8 @@ const navBarConfig = computed(() => {
 // `hide` slides the header out while keeping the extension (nav bar) pinned,
 // `fully-hide` slides both away, `default` keeps everything. The header hides
 // unless kept; the nav bar only hides when shown and neither bar is kept.
+// Vuetify 4 slides a hidden app bar out by its whole height whatever the behavior,
+// so `hide` overrides that transform to slide out the header only.
 const scrollBehavior = computed(() => {
   if (!headerConfig.value.show || headerConfig.value.keepOnScroll) return 'default'
   return navBarConfig.value.keepOnScroll ? 'hide' : 'fully-hide'

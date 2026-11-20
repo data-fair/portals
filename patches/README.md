@@ -2,7 +2,7 @@
 
 Local patches applied via [`patch-package`](https://github.com/ds300/patch-package). Applied by the `postinstall` script on `npm install` / `npm ci`.
 
-## `vuetify+4.3.0.patch`
+## `vuetify+4.3.2.patch`
 
 ### `lib/composables/router.js` — d-frame iframe support
 
@@ -120,16 +120,20 @@ stays valid.
 > resolve. The lists are virtualised, so mounting them up front costs a window of items,
 > not the whole set. Tracked upstream as vuetifyjs/vuetify#23119.
 
-### `lib/locale/adapters/vuetify.js` — SSR memory leak of the locale adapter
+## Userland workarounds
 
-Vuetify 4.3.0 rebuilt the default locale adapter on `@vuetify/v0`: each instance builds a locale bundle
-and deep-watches `messages`. Those messages wrap the module-level catalogs (`en`, the `fr`/`en`
-imported in `03-vuetify.ts`), whose reactive deps are shared by every instance, and the server never
-stops the watcher. Every SSR request therefore stays subscribed and keeps its bundle alive (~200 KB per
-render): the portal reached its 4 GB heap limit every ~6 h on staging. Vuetify 4.2.4 had no watcher.
+Fixes applied outside `patch-package` (plugins, config), for defects that belong upstream.
 
-This patch only registers that watcher in the browser. The server never changes the catalogs after
-the instance is created; switching `current` still works on both sides.
+### `portal/server/plugins/prefetch-links.ts` — W3C HTML validity for Nuxt prefetch links
 
-**Removal criterion**: when Vuetify stops the watcher during SSR (no upstream issue as of 2026-10-23).
-Check with a loop of `createVuetify()` + `renderToString()`: the heap must stay flat.
+Nuxt (through `vue-bundle-renderer`) renders the chunks of other routes as
+`<link rel="prefetch" as="script">` (and `as="style"`). The hint is sensible and Chromium uses it to
+type the request, but the HTML spec only allows `as` with `rel="preload"` / `rel="modulepreload"`, so
+the W3C validator reports 14 to 38 errors per portal page. RGAA 8.2.
+
+The plugin drops `as` from prefetch links in the rendered `<head>`. The prefetch itself is kept, and
+`modulepreload` / `preload` links keep their `as`. Nothing to see in dev: Nuxt only renders these
+links in a production build.
+
+**Removal criterion**: when the HTML spec allows `as` on `rel="prefetch"` (whatwg/html#5229), or when Nuxt stops
+rendering it (nuxt/nuxt#19752, closed without fix as of 2026-10-23).

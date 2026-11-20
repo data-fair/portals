@@ -3,9 +3,9 @@
     v-for="[key, platform] in filteredSocialPlatforms"
     :key="key"
     :title="t('openAccount', { account: key }) + ' - ' + t('newWindow')"
-    :href="platform.url(links[key as keyof SocialLinks] ?? '')"
+    :href="accountUrl(platform, links[key as keyof SocialLinks] ?? '')"
     target="_blank"
-    rel="noopener"
+    rel="noopener external"
     density="comfortable"
     variant="text"
     icon
@@ -27,6 +27,9 @@ import { mdiFacebook, mdiInstagram, mdiLinkedin, mdiVimeo, mdiYoutube } from '@m
 
 const { links } = defineProps<{ links: SocialLinks }>()
 const { t } = useI18n()
+
+// an account entered as a full address, as people often paste it, is used as is
+const accountUrl = (platform: { url: (handle: string) => string }, value: string) => /^https?:\/\//.test(value) ? value : platform.url(value)
 
 const filteredSocialPlatforms = computed(() => {
   return Object.entries(socialPlatforms).filter(([key]) => links[key as keyof SocialLinks])

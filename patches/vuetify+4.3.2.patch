@@ -142,27 +142,3 @@ index 8300f4d..2cbb3df 100644
            }]
          };
        }
-diff --git a/node_modules/vuetify/lib/locale/adapters/vuetify.js b/node_modules/vuetify/lib/locale/adapters/vuetify.js
-index d5559cc..92d428a 100644
---- a/node_modules/vuetify/lib/locale/adapters/vuetify.js
-+++ b/node_modules/vuetify/lib/locale/adapters/vuetify.js
-@@ -1,7 +1,7 @@
- // Composables
- import { useProxiedModel } from "../../composables/proxiedModel.js"; // Utilities
- import { ref, shallowRef, toRef, watch } from 'vue';
--import { consoleError, createV0Locale, isString } from "../../util/index.js"; // Locales
-+import { consoleError, createV0Locale, IN_BROWSER, isString } from "../../util/index.js"; // Locales
- import en from "../en.js"; // Types
- const LANG_PREFIX = '$vuetify.';
- const replace = (str, params) => {
-@@ -31,7 +31,9 @@ const createTranslateFunction = (current, fallback, messages) => {
- 
-   // Fallback is fixed inside createLocale, and the catalogs are copied in at
-   // construction. Rebuild when either changes so t() keeps reading them.
--  watch([fallback, messages], () => {
-+  // SSR: messages holds the shared module-level catalogs, so this never-stopped watcher stays
-+  // subscribed to them and leaks every request's locale bundle; the server never changes them
-+  if (IN_BROWSER) watch([fallback, messages], () => {
-     bundle.value = createBundle(current.value, fallback.value, messages.value);
-   }, {
-     deep: true,

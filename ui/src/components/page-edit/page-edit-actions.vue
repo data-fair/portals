@@ -175,7 +175,7 @@ const portalsById = computed(() => {
     cancelingDraft: Canceling draft
     confirmCancelDraft: Are you sure you want to cancel the draft? All changes will be lost and cannot be recovered.
     validateDraft: Validate draft
-    draftValidated: The draft was validated, the changes are published.
+    draftValidated: The draft was validated.
     draftCanceled: The draft was canceled.
     viewOn: View on {portalTitle}
     no: No
@@ -187,7 +187,7 @@ const portalsById = computed(() => {
     cancelingDraft: Annulation du brouillon
     confirmCancelDraft: Êtes-vous sûr de vouloir annuler le brouillon ? Tous les changements seront perdus et ne pourront pas être récupérés.
     validateDraft: Valider le brouillon
-    draftValidated: Le brouillon a été validé, les changements sont publiés.
+    draftValidated: Le brouillon a été validé.
     draftCanceled: Le brouillon a été annulé.
     viewOn: Voir sur {portalTitle}
     no: Non

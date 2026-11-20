@@ -14,9 +14,9 @@ export default {
         type: { const: 'title' },
         uuid: { type: 'string', layout: 'none' },
         content: {
-          title: 'Content',
+          title: 'Title text',
           'x-i18n-title': {
-            fr: 'Contenu'
+            fr: 'Texte du titre'
           },
           type: 'string'
         },
@@ -27,12 +27,12 @@ export default {
           },
           type: 'string',
           oneOf: [
-            { const: 'h1', title: 'Titre principal' },
-            { const: 'h2', title: 'Très grand' },
-            { const: 'h3', title: 'Grand' },
-            { const: 'h4', title: 'Moyen' },
-            { const: 'h5', title: 'Petit' },
-            { const: 'h6', title: 'Très petit' }
+            { const: 'h1', title: 'Main title', 'x-i18n-title': { fr: 'Titre principal' } },
+            { const: 'h2', title: 'Very large', 'x-i18n-title': { fr: 'Très grand' } },
+            { const: 'h3', title: 'Large', 'x-i18n-title': { fr: 'Grand' } },
+            { const: 'h4', title: 'Medium', 'x-i18n-title': { fr: 'Moyen' } },
+            { const: 'h5', title: 'Small', 'x-i18n-title': { fr: 'Petit' } },
+            { const: 'h6', title: 'Very small', 'x-i18n-title': { fr: 'Très petit' } }
           ],
           default: 'h3',
           layout: { cols: { xs: 8 } },
@@ -41,6 +41,10 @@ export default {
           title: 'Heading tag',
           'x-i18n-title': {
             fr: 'Balise'
+          },
+          description: 'Pick the tag from the structure of the page, not from the size of the text, which is set by "Title size". The heading hierarchy must stay consistent (RGAA criterion 9.1): h1, then h2, then h3, ideally without skipping a level. "Div" gives the text the look of a title without making it one.',
+          'x-i18n-description': {
+            fr: "Choisissez la balise selon la structure de la page, pas selon la taille du texte, réglée par « Taille du titre ». La hiérarchie des titres doit rester cohérente (critère RGAA 9.1) : h1, puis h2, puis h3, idéalement sans sauter de niveau. « Div » donne au texte l'apparence d'un titre sans en faire un titre."
           },
           type: 'string',
           oneOf: [
@@ -72,7 +76,8 @@ export default {
           type: 'object',
           title: 'Line configuration',
           'x-i18n-title': {
-            fr: 'Configuration du trait'
+            fr: 'Trait',
+            en: 'Line'
           },
           layout: 'card',
           properties: {
@@ -101,7 +106,8 @@ export default {
         },
         link: {
           $ref: 'https://github.com/data-fair/portals/common-links#/$defs/simpleLinkItem',
-          title: 'Configuration du lien',
+          title: 'Title link',
+          'x-i18n-title': { fr: 'Lien', en: 'Link' },
           layout: { comp: 'card' }
         },
         anchor: {
@@ -152,20 +158,32 @@ export default {
     },
     'element-text': {
       type: 'object',
-      title: 'Texte',
+      title: 'Text element',
+      'x-i18n-title': { fr: 'Texte', en: 'Text' },
       required: ['type'],
       properties: {
         type: { const: 'text' },
         uuid: { type: 'string', layout: 'none' },
         content: {
-          title: 'Contenu',
+          title: 'Content',
+          'x-i18n-title': { fr: 'Contenu' },
           type: 'string',
           layout: 'markdown'
         },
-        centered: {
-          type: 'boolean',
-          title: 'Centrer le contenu',
-          default: false,
+        textAlign: {
+          type: 'string',
+          title: 'Text alignment',
+          'x-i18n-title': { fr: 'Alignement du texte' },
+          description: '**Align your paragraphs to the left**: they will be easier to read.\n\n- **Centered:** keep it for very short texts (one or two lines). Beyond that, each line starts at a different place, which makes reading harder.\n- **Justified:** not recommended for accessibility. Uneven gaps between words make reading harder, especially for people with dyslexia. Justified text does not meet WCAG success criterion 1.4.8 (level AAA).',
+          'x-i18n-description': {
+            fr: "**Alignez vos paragraphes à gauche** : ils seront plus faciles à lire.\n\n- **Centré :** à réserver aux textes très courts (une ou deux lignes). Au-delà, chaque ligne commence à un endroit différent et la lecture devient plus difficile.\n- **Justifié :** déconseillé pour l'accessibilité. Les espaces irréguliers entre les mots gênent la lecture, notamment pour les personnes dyslexiques. Un texte justifié ne respecte pas le critère WCAG 1.4.8 (niveau AAA)."
+          },
+          default: 'left',
+          oneOf: [
+            { const: 'left', title: 'Left', 'x-i18n-title': { fr: 'Gauche' } },
+            { const: 'center', title: 'Centered', 'x-i18n-title': { fr: 'Centré' } },
+            { const: 'justify', title: 'Justified', 'x-i18n-title': { fr: 'Justifié' } }
+          ]
         },
         mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' },
         _html: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rendered-html' }
@@ -195,14 +213,15 @@ export default {
         uuid: { type: 'string', layout: 'none' },
         alertType: {
           type: 'string',
-          title: 'Type prédéfini',
+          title: 'Predefined type',
+          'x-i18n-title': { fr: 'Type prédéfini' },
           default: 'info',
           oneOf: [
-            { const: 'none', title: 'Aucun' },
+            { const: 'none', title: 'None', 'x-i18n-title': { fr: 'Aucun' } },
             { const: 'info', title: 'Information' },
-            { const: 'success', title: 'Succès' },
-            { const: 'error', title: 'Erreur' },
-            { const: 'warning', title: 'Avertissement' }
+            { const: 'success', title: 'Success', 'x-i18n-title': { fr: 'Succès' } },
+            { const: 'error', title: 'Error', 'x-i18n-title': { fr: 'Erreur' } },
+            { const: 'warning', title: 'Warning', 'x-i18n-title': { fr: 'Avertissement' } }
           ]
         },
         icon: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/icon' },
@@ -221,11 +240,13 @@ export default {
           default: 'default'
         },
         title: {
-          title: 'Titre',
+          title: 'Title',
+          'x-i18n-title': { fr: 'Titre' },
           type: 'string',
         },
         content: {
-          title: 'Contenu',
+          title: 'Content',
+          'x-i18n-title': { fr: 'Contenu' },
           type: 'string',
           layout: 'markdown'
         },
@@ -339,7 +360,7 @@ export default {
             slots: {
               component: {
                 name: 'image-upload',
-                props: { width: 2400, label: 'Chargez une image' } // max width of v-container
+                props: { width: 2400, label: 'Upload an image', 'x-i18n-label': { fr: 'Chargez une image' } } // max width of v-container
               }
             }
           },
@@ -365,7 +386,7 @@ export default {
             slots: {
               component: {
                 name: 'image-upload',
-                props: { width: 2560, label: 'Chargez une image' }
+                props: { width: 2560, label: 'Upload an image', 'x-i18n-label': { fr: 'Chargez une image' } }
               }
             }
           },
@@ -451,8 +472,8 @@ export default {
           type: 'string',
           title: 'Alternative text (accessibility)',
           'x-i18n-title': { fr: 'Texte alternatif (accessibilité)' },
-          description: 'Required for accessibility when the image is not decorative; describes the image for screen readers.',
-          'x-i18n-description': { fr: "Nécessaire pour l'accessibilité si l'image n'est pas décorative ; décrit l'image pour les lecteurs d'écran." }
+          description: 'Required for accessibility when the image is not decorative; describes the image for screen readers. Give the information the image carries rather than its appearance: on a chart, the message to remember rather than "Chart" (RGAA criteria 1.1 and 1.3).',
+          'x-i18n-description': { fr: "Nécessaire pour l'accessibilité si l'image n'est pas décorative ; décrit l'image pour les lecteurs d'écran. Donnez l'information apportée par l'image plutôt que son apparence : sur un graphique, le message à retenir plutôt que « Graphique » (critères RGAA 1.1 et 1.3)." }
         },
         legend: {
           type: 'string',
@@ -478,29 +499,37 @@ export default {
     'element-iframe': {
       type: 'object',
       title: 'IFrame',
+      'x-i18n-title': { fr: 'Page web externe (iframe)' },
       required: ['type', 'url'],
       properties: {
         type: { const: 'iframe' },
         uuid: { type: 'string', layout: 'none' },
         title: {
-          title: "Titre de l'iframe",
-          description: "Recommandé pour l'accessibilité.",
+          title: 'Iframe title',
+          'x-i18n-title': { fr: "Titre de l'iframe" },
+          description: 'Recommended for accessibility.',
+          'x-i18n-description': { fr: "Recommandé pour l'accessibilité." },
           type: 'string'
         },
         url: {
-          title: "URL de l'iframe",
-          description: "URL de la page web à afficher dans l'iframe.",
+          title: 'Iframe URL',
+          'x-i18n-title': { fr: "URL de l'iframe" },
+          description: 'URL of the web page to display in the iframe.',
+          'x-i18n-description': { fr: "URL de la page web à afficher dans l'iframe." },
           type: 'string',
           layout: {
             slots: {
-              before: "**Important** : Pour que l'intégration IFrame fonctionne correctement, vous devez ajouter le nom de domaine de l'URL dans la **Configuration du portail** → **Paramètres généraux** → **Sécurité**."
+              before: '**Important**: for the iframe integration to work properly, you must add the domain name of the URL in **Portal configuration** → **Access and distribution** → **Iframe integration**.',
+              'x-i18n-before': { fr: "**Important** : Pour que l'intégration IFrame fonctionne correctement, vous devez ajouter le nom de domaine de l'URL dans la **Configuration du portail** → **Accès et diffusion** → **Intégration en iframe**." }
             }
           }
         },
         scroll: {
           type: 'boolean',
-          title: 'Activer le scroll',
-          description: "Permet de scroller dans le contenu de l'iframe"
+          title: 'Enable scrolling',
+          'x-i18n-title': { fr: 'Activer le scroll' },
+          description: 'Allows scrolling within the iframe content',
+          'x-i18n-description': { fr: "Permet de scroller dans le contenu de l'iframe" }
         },
         mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }
       }

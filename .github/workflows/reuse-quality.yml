@@ -47,7 +47,7 @@ jobs:
       run: npm -w ui run build
 
     - name: Upload build outputs
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: build
         include-hidden-files: true # the .type directories
@@ -75,7 +75,7 @@ jobs:
       run: npm ci
 
     - name: Download build outputs
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
         name: build
 
@@ -87,6 +87,10 @@ jobs:
 
     - name: Audit
       run: npm audit --omit=dev --audit-level=critical
+
+    # the scopes coverage test loads the api modules, whose development config reads .env
+    - name: Init .env
+      run: ./node_modules/.bin/df-dev init-env
 
     # no server needed
     - name: Unit tests
@@ -121,7 +125,7 @@ jobs:
       run: npm ci
 
     - name: Download build outputs
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
         name: build
 
@@ -134,7 +138,7 @@ jobs:
     - name: Cache playwright browsers
       if: matrix.project == 'e2e'
       id: playwright-cache
-      uses: actions/cache@v4
+      uses: actions/cache@v6
       with:
         path: ~/.cache/ms-playwright
         key: playwright-${{ runner.os }}-${{ steps.playwright.outputs.version }}-${{ inputs.browser || 'chromium' }}
@@ -154,6 +158,10 @@ jobs:
     # .localhost domain to the portals' {id}.portals.<DEV_HOST> subdomains (French, cache bypass)
     - name: Use ci.localhost as DEV_HOST in CI
       run: sed -i 's/^DEV_HOST=.*/DEV_HOST=ci.localhost/' .env
+
+    # simple-directory mounts it, with the host and port of .env
+    - name: Render dev users
+      run: node dev/render-users.mjs
 
     # the core services only, like a developer's default env: no test needs an optional one
     - name: Start docker compose services
@@ -195,7 +203,7 @@ jobs:
 
     - name: Upload test results
       if: failure()
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: test-results-${{ strategy.job-index }}
         path: |

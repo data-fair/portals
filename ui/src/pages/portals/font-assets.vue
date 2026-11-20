@@ -38,6 +38,7 @@
               >
                 <vjsf-font-asset
                   v-model="newFontAsset"
+                  :locale="locale"
                   :options="vjsfOptions"
                 />
               </v-form>
@@ -151,6 +152,7 @@
                 >
                   <vjsf-font-asset-patch
                     v-model="editValues"
+                    :locale="locale"
                     :options="vjsfOptions"
                   />
                 </v-form>
@@ -227,7 +229,7 @@
 import type { FontAsset } from '#api/types/font-asset'
 import { mdiDelete, mdiPencil, mdiPlus } from '@mdi/js'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
 setBreadcrumbs([
   { text: t('portals'), to: '/portals' },

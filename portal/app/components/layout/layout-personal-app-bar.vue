@@ -17,10 +17,6 @@
     <v-breadcrumbs :items="breadcrumbs" />
 
     <v-spacer />
-    <div
-      id="agent-chat-appbar"
-      class="d-flex align-center"
-    />
     <theme-switcher :theme="portalConfig.theme" />
 
     <v-toolbar-items>
@@ -39,6 +35,11 @@
       <df-notification-queue
         v-else
         events-url="/events"
+      />
+
+      <div
+        id="agent-chat-appbar"
+        class="d-flex"
       />
 
       <!-- Personal Menu -->

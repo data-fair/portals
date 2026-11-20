@@ -43,6 +43,9 @@ const { patchPage, page } = usePageStore()
 
 <i18n lang="yaml">
   en:
+    changeTitle:
+      label: Title shown in the back-office (not visible on the portal).
+      hint: By default, it is synchronized with the title of the page configuration. If you change it, the synchronization stops. To restore it, simply clear the field.
     dateFormat: D MMM YYYY at HH:mm
     pageGroup: belonging to the "{groupTitle}" group.
     pageType:

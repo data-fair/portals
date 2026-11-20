@@ -31,7 +31,9 @@ export default defineNuxtConfig({
     port: parseInt(process.env.DEV_PORTAL_PORT!)
   },
   compatibilityDate: '2025-07-15',
-  devtools: { enabled: true },
+  // the CSP blocks its websocket, so it never connects, and Firefox throws on the blocked
+  // connection: the dev error overlay then takes the page down
+  devtools: { enabled: false },
   // avoid infinite options traversal in stripDebugProxies during build if DEBUG env var is set
   debug: false,
   experimental: {
@@ -146,7 +148,7 @@ export default defineNuxtConfig({
         '@data-fair/agent-tools-data-fair/_utils',
         '@data-fair/agent-tools-data-fair/aggregate-data',
         '@data-fair/agent-tools-data-fair/calculate-metric',
-        '@data-fair/agent-tools-data-fair/dataset-data-subagent',
+        '@data-fair/agent-tools-data-fair/dataset-data-skill',
         '@data-fair/agent-tools-data-fair/describe-dataset',
         '@data-fair/agent-tools-data-fair/geocode-address',
         '@data-fair/agent-tools-data-fair/get-dataset-schema',
@@ -162,6 +164,7 @@ export default defineNuxtConfig({
         '@data-fair/lib-vue/locale-dayjs.js',
         '@data-fair/lib-vue/owner.js',
         '@data-fair/lib-vue/async-action.js',
+        '@data-fair/lib-vue/format/bytes.js',
         '@data-fair/lib-utils/micro-template.js',
         '@data-fair/lib-vue/reactive-search-params.js',
         '@data-fair/frame/lib/d-frame.js',
@@ -172,6 +175,7 @@ export default defineNuxtConfig({
         'analytics',
         'mermaid',
         'undici',
+        'vue3-social-sharing',
       ]
     }
   },

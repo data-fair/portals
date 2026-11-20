@@ -32,18 +32,13 @@
 
         <v-spacer />
 
-        <div
-          id="agent-chat-appbar"
-          class="d-flex align-center"
-        />
-
         <!-- before the authentication block: the theme is a visitor preference,
              available even on a portal without accounts -->
         <theme-switcher :theme="portalConfig.theme" />
 
-        <v-toolbar-items v-if="portalConfig.authentication !== 'none'">
+        <v-toolbar-items>
           <v-btn
-            v-if="preview"
+            v-if="portalConfig.authentication !== 'none' && preview"
             :title="t('openNotificationList')"
             stacked
           >
@@ -55,10 +50,15 @@
             </v-badge>
           </v-btn>
           <df-notification-queue
-            v-else
+            v-else-if="portalConfig.authentication !== 'none'"
             events-url="/events"
           />
+          <div
+            id="agent-chat-appbar"
+            class="d-flex"
+          />
           <layout-personal-menu
+            v-if="portalConfig.authentication !== 'none'"
             :login-color="navBarConfig.loginColor"
             :nav-bar-color="navBarConfig.color"
           />

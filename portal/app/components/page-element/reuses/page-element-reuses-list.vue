@@ -47,9 +47,9 @@ if (!preview) {
       _id: `reuse-${i + 1}`,
       slug: element.reuses?.[i]?.slug || `reuse-${i + 1}`,
       config: {
-        title: element.reuses?.[i]?.title || `Réutilisation ${i + 1}`,
-        summary: 'Exemple de réutilisation pour la prévisualisation.',
-        author: 'Auteur exemple'
+        title: element.reuses?.[i]?.title || `Lorem ipsum ${i + 1}`,
+        summary: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+        author: 'Lorem Ipsum'
       },
       updatedAt: new Date().toISOString()
     }))

@@ -1,6 +1,6 @@
 <template>
   <d-frame-wrapper
-    :iframe-title="`${t('events')} - ${page?.title}}`"
+    :iframe-title="`${t('events')} - ${page?.title || ''}`"
     :src="`/events/embed/events?resource=${encodeURIComponent('page/' + route.params.pageId)}`"
     class="fill-height"
     resize="no"

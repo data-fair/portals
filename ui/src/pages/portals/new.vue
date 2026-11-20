@@ -84,6 +84,7 @@
           <h2 class="text-title-large mt-2">
             {{ t('initFromOtherPortal.title') }}
           </h2>
+          <p>{{ t('initFromOtherPortal.description') }}</p>
           <v-row class="d-flex align-stretch mt-2">
             <v-col
               md="4"
@@ -185,11 +186,11 @@
               >
                 <template #title>
                   <span :class="selectedPages.home.value !== 'blank' ? 'text-primary' : ''">
-                    {{ t('blankPage.title') }}
+                    {{ t('blankHome.title') }}
                   </span>
                 </template>
                 <v-card-text>
-                  {{ t('blankPage.description') }}
+                  {{ t('blankHome.description') }}
                 </v-card-text>
               </v-card>
             </v-col>
@@ -301,12 +302,15 @@
                 @click="selectPage('datasets', 'blank')"
               >
                 <template #title>
-                  <span :class="selectedPages.datasets.value !== 'blank' ? 'text-primary' : ''">
-                    {{ t('blankPage.title') }}
+                  <span
+                    :class="selectedPages.datasets.value !== 'blank' ? 'text-primary' : ''"
+                    class="text-wrap"
+                  >
+                    {{ t('standardCatalog.title') }}
                   </span>
                 </template>
                 <v-card-text>
-                  {{ t('blankPage.description') }}
+                  {{ t('standardCatalog.datasets') }}
                 </v-card-text>
               </v-card>
             </v-col>
@@ -418,12 +422,15 @@
                 @click="selectPage('applications', 'blank')"
               >
                 <template #title>
-                  <span :class="selectedPages.applications.value !== 'blank' ? 'text-primary' : ''">
-                    {{ t('blankPage.title') }}
+                  <span
+                    :class="selectedPages.applications.value !== 'blank' ? 'text-primary' : ''"
+                    class="text-wrap"
+                  >
+                    {{ t('standardCatalog.title') }}
                   </span>
                 </template>
                 <v-card-text>
-                  {{ t('blankPage.description') }}
+                  {{ t('standardCatalog.applications') }}
                 </v-card-text>
               </v-card>
             </v-col>
@@ -572,9 +579,9 @@ const generalInformations = {
 }
 const selectedPortal = ref<string | undefined>(undefined)
 const selectedPages = {
-  home: ref<string | undefined>(undefined),
-  datasets: ref<string | undefined>(undefined),
-  applications: ref<string | undefined>(undefined)
+  home: ref<string | undefined>('blank'),
+  datasets: ref<string | undefined>('blank'),
+  applications: ref<string | undefined>('blank')
 }
 
 const ownersReady = ref(true)
@@ -638,7 +645,7 @@ const selectedPortalLabel = computed(() => {
 const selectedPageLabel = (type: 'home' | 'datasets' | 'applications') => {
   const value = selectedPages[type].value
   if (!value || value === 'none') return t('summary.none')
-  if (value === 'blank') return t('blankPage.title')
+  if (value === 'blank') return type === 'home' ? t('blankHome.title') : t('standardCatalog.title')
 
   const fetches = {
     home: [homeReferencesFetch, homePagesFetch],
@@ -792,8 +799,8 @@ setBreadcrumbs([
       titleRequired: Portal title is required
       owner: Choose the portal owner
     initFromOtherPortal:
-      title: Initialize configuration from an existing portal
-      description: This will copy the styles, menu and permissions, but not the pages.
+      title: Starting configuration
+      description: Start from the default configuration, or copy the one of a portal below (styles, menu and permissions, but not the pages).
     useReferencePortal:
       title: Use a reference portal
       description: Select a pre-designed portal configuration to save time.
@@ -806,10 +813,14 @@ setBreadcrumbs([
     duplicatePage:
       title: Duplicate one of your existing pages
       description: Create a copy of a page you already own.
-    blankPage:
-      title: Blank Page
-      description: Start with an empty structure. Requires advanced manual configuration.
-    blankPortal: None (Default)
+    blankHome:
+      title: Empty home page
+      description: To fill with blocks.
+    standardCatalog:
+      title: Standard catalog (recommended)
+      datasets: Automatically lists your datasets.
+      applications: Automatically lists your applications.
+    blankPortal: Default configuration
     noCatalog:
       title: Do not include a catalog
       description: You can add it later in the page management.
@@ -846,8 +857,8 @@ setBreadcrumbs([
       titleRequired: Le titre du portail est obligatoire
       owner: Choisir le propriétaire du portail
     initFromOtherPortal:
-      title: Initialiser la configuration depuis un portail existant
-      description: Cela copiera les styles, le menu et les permissions, mais pas les pages.
+      title: Configuration de départ
+      description: Partez de la configuration par défaut, ou copiez celle d'un portail ci-dessous (styles, menu et permissions, mais pas les pages).
     useReferencePortal:
       title: Utiliser un portail de référence
       description: Sélectionnez une configuration de portail pré-conçue pour gagner du temps.
@@ -860,10 +871,14 @@ setBreadcrumbs([
     duplicatePage:
       title: Dupliquer l'une de vos pages existantes
       description: Créez une copie d'une page que vous possédez déjà.
-    blankPage:
-      title: Page blanche
-      description: Commencer avec une structure vide. Nécessite une configuration manuelle avancée.
-    blankPortal: Aucun (Défaut)
+    blankHome:
+      title: Page d'accueil vide
+      description: À compléter avec des blocs.
+    standardCatalog:
+      title: Catalogue standard (recommandé)
+      datasets: Liste automatiquement vos jeux de données.
+      applications: Liste automatiquement vos visualisations.
+    blankPortal: Configuration par défaut
     noCatalog:
       title: Ne pas inclure de catalogue
       description: Vous pourrez l'ajouter plus tard dans la gestion des pages.

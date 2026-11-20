@@ -58,7 +58,7 @@ export function usePageConfigWebMCP (
 
       const wm = new WebMCP(
         sl as any,
-        { prefixName: 'pageConfig_', dataTitle: 'Page configuration', includeSubAgent: true }
+        { prefixName: 'pageConfig_', dataTitle: 'Page configuration' }
       )
       try {
         await wm.registerTools()
@@ -127,7 +127,7 @@ export function usePageConfigWebMCP (
 
   const configureContext = computed(() => {
     const lines = [
-      'Use the subagent tool pageConfig_form to help the user configure this page.',
+      'Help the user configure this page with the pageConfig_ form tools, following the page-config-form skill.',
       'Start by asking the user what they want to achieve.',
     ]
     if (editConfig.value?.title) lines.push(`The page title is "${editConfig.value.title}".`)

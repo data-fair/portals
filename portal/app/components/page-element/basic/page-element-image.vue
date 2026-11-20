@@ -110,7 +110,7 @@ const { width } = useElementSize(imgEl)
 const { preview } = usePortalStore()
 const getPageImageSrc = usePageImageSrc()
 // If breadcrumbs are displayed and the banner is at the top, don't apply the negative margin.
-const { showTopBreadcrumbs, isExternalLink, resolveLink } = useNavigationStore()
+const { showTopBreadcrumbs, isExternalLink, resolveLink, linkRel } = useNavigationStore()
 
 const display = useDisplay()
 

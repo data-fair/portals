@@ -24,8 +24,8 @@ if (!preview) {
   }, { immediate: true })
 } else {
   newsPageConfig = ref({
-    title: element.news?.title || 'Actualité 1',
-    description: "Exemple d'actualité pour la prévisualisation.",
+    title: element.news?.title || 'Lorem ipsum 1',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
     newsMetadata: { slug: element.news?.slug || 'news-1', date: new Date().toISOString() }
   })
 }

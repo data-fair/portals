@@ -1,4 +1,4 @@
 import { reportCli } from '@data-fair/lib-agents-sim'
-import { cases } from './cases/index.ts'
+import { allCases } from './cases/select.ts'
 
-reportCli(cases)
+reportCli(allCases)

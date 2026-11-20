@@ -40,7 +40,7 @@
           />
           <div
             class="text-break"
-            v-html="/*eslint-disable-line vue/no-v-html*/dataset.description"
+            v-html="/*eslint-disable-line vue/no-v-html*/annotateLinks(dataset.description)"
           />
         </v-col>
 
@@ -50,7 +50,10 @@
           :class="portalConfig.datasets.page.metadata?.location === 'top' ? 'order-md-first' : 'order-md-1'"
           cols="12"
         >
-          <dataset-metadata :dataset="dataset" />
+          <dataset-metadata
+            :dataset="dataset"
+            :fragments="fragments"
+          />
         </v-col>
       </v-row>
 
@@ -66,8 +69,8 @@
               class="simple-link"
               :to="attachment.url"
               :title="(attachment.title || attachment.name) + ' - ' + t('newWindow')"
+              :rel="linkRel(attachment.url, true)"
               target="_blank"
-              rel="noopener"
             >
               {{ attachment.title || attachment.name }}
               <v-icon
@@ -238,7 +241,7 @@
                 </NuxtLink>
                 <div
                   class="mt-2"
-                  v-html="/*eslint-disable-line vue/no-v-html*/app.description"
+                  v-html="/*eslint-disable-line vue/no-v-html*/annotateLinks(app.description)"
                 />
               </v-col>
               <v-col cols="12">
@@ -281,7 +284,7 @@
                 </NuxtLink>
                 <div
                   class="mt-2 text-break"
-                  v-html="/*eslint-disable-line vue/no-v-html*/app.description"
+                  v-html="/*eslint-disable-line vue/no-v-html*/annotateLinks(app.description)"
                 />
               </v-col>
             </template>
@@ -374,8 +377,6 @@
         />
       </v-row>
     </template>
-
-    <div data-iframe-height="40" />
   </layout-page>
 </template>
 
@@ -396,7 +397,7 @@ const { portal, portalConfig } = usePortalStore()
 const headerHasTitle = computed(() => !!(portalConfig.value.header?.show && portalConfig.value.header?.showTitle))
 const mainTitleTag = computed<HeadingTag>(() => headerHasTitle.value ? 'h2' : 'h1')
 const sectionTitleTag = computed<HeadingTag>(() => headerHasTitle.value ? 'h3' : 'h2')
-const { setBreadcrumbs } = useNavigationStore()
+const { setBreadcrumbs, linkRel, annotateLinks } = useNavigationStore()
 const getPortalImageSrc = usePortalImageSrc()
 providePageImageSrc('datasets', route.params.ref as string)
 
@@ -406,6 +407,8 @@ const datasetFetch = await useLocalFetch<Dataset>('/data-fair/api/v1/datasets/' 
   query: { html: 'vuetify' }
 })
 const dataset = computed(() => datasetFetch.data.value)
+// a fragment of a meta-only dataset has no page of its own: its actions are given by its parent
+if (dataset.value?.partOf?.type === 'dataset') await navigateTo('/datasets/' + dataset.value.partOf.id, { replace: true })
 // a meta-only dataset carries no data: its export URLs would lead nowhere
 const datasetFiles = dataset.value && !dataset.value.isMetaOnly ? await useDatasetFiles(dataset.value) : null
 
@@ -484,6 +487,19 @@ const relatedDatasetsCardConfig = computed(() => {
   }
   return { ...portalConfig.value.datasets.card, ...pageConfig.card }
 })
+
+// The fragments of a meta-only dataset, never published, so not filtered by publication site
+const fragmentsFetch = dataset.value?.isMetaOnly
+  ? useLocalFetch<{ count: number, results: Dataset[] }>('/data-fair/api/v1/datasets', {
+    query: {
+      partOf: 'dataset:' + dataset.value.id,
+      select: 'id,slug,title,bbox,schema,previews,owner,isMetaOnly,isRest,isVirtual,virtual,-userPermissions',
+      sort: 'title:1',
+      size: 100
+    }
+  })
+  : null
+const fragments = computed(() => fragmentsFetch?.data.value?.results ?? [])
 
 const urlAttachments = computed(() => {
   if (!portalConfig.value.datasets.page.showAttachments || !dataset.value?.attachments) return []

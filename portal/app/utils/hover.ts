@@ -1,7 +1,7 @@
 // Relative (not the portal's #api alias) so this file still resolves under the
 // root tsconfig that type-checks the unit test importing it — that config has no
 // #api alias, and the tests import api types relatively too.
-import type { Effects as SchemaHoverEffects, Effets as SchemaTopicsEffects, ButtonConfig } from '../../../api/types/common-defs/index.ts'
+import type { Effects as SchemaHoverEffects, TopicsEffects as SchemaTopicsEffects, ButtonConfig } from '../../../api/types/common-defs/index.ts'
 import type { PortalConfig } from '../../../api/types/portal-config/index.ts'
 import { mdiOpenInNew } from '@mdi/js'
 
@@ -32,7 +32,7 @@ export const linkColorValue = (color: string): string =>
   `rgb(var(--v-theme-text-${color}, var(--v-theme-${color})))`
 
 // Global style of text links (a.simple-link, markdown included), shared by the portal
-// (scope .v-application) and the manager page preview (scope of its theme provider).
+// (scope .v-application and the overlays) and the manager page preview (scope of its theme provider).
 // The doubled .simple-link.simple-link beats the rule from the simple-directory
 // _theme.css (.v-theme--<name> a.simple-link) whatever the loading order.
 export const portalLinksCss = (cfg: PortalConfig['linksConfig'], scope: string): string => {

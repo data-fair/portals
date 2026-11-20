@@ -17,6 +17,8 @@ export const seedDataset = async (portalId: string, opts: {
   title: string
   summary?: string
   image?: string
+  attachments?: unknown[]
+  topics?: { id: string, title: string }[]
 }) => {
   await admin.post(`${dataFairUrl}/api/v1/datasets/${opts.id}`, {
     isMetaOnly: true,
@@ -26,6 +28,8 @@ export const seedDataset = async (portalId: string, opts: {
   await admin.patch(`${dataFairUrl}/api/v1/datasets/${opts.id}`, {
     summary: opts.summary,
     image: opts.image,
+    attachments: opts.attachments,
+    topics: opts.topics,
     publicationSites: [publicationSite(portalId)]
   })
   await admin.put(`${dataFairUrl}/api/v1/datasets/${opts.id}/permissions`, [{ classes: ['read', 'list'] }])

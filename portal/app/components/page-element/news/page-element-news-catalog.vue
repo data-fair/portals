@@ -65,8 +65,8 @@ const {
     return query
   },
   mockDataFactory: () => Array.from({ length: 6 }, (_, i) => ({
-    title: `Actualité ${i + 1}`,
-    description: 'Exemple d\'actualité pour la prévisualisation.',
+    title: `Lorem ipsum ${i + 1}`,
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
     newsMetadata: { slug: `news-${i + 1}`, date: new Date().toISOString() }
   }))
 })

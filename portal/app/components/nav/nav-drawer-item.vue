@@ -141,7 +141,7 @@ const props = defineProps<{
 
 const route = useRoute()
 const { locale, t } = useI18n()
-const { isMenuItemActive, isExternalLink, resolveLink, resolveLinkTitle } = useNavigationStore()
+const { isMenuItemActive, isExternalLink, resolveLink, resolveLinkTitle, linkRel } = useNavigationStore()
 
 const isActive = computed(() => isMenuItemActive(props.item, route.path))
 

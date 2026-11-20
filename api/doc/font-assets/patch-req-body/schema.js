@@ -9,6 +9,7 @@ export default {
   $id: 'https://github.com/data-fair/portals/font-assets/patch-req-body',
   title: 'Patch font asset req body',
   'x-exports': ['validate', 'types', 'vjsf'],
-  'x-vjsf': { compName: 'font-asset-patch' },
+  'x-vjsf': { compName: 'font-asset-patch', xI18n: true },
+  'x-vjsf-locales': ['en', 'fr'],
   layout: { title: null }
 }

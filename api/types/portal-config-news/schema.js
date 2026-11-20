@@ -8,7 +8,7 @@ export default {
         comp: 'tabs',
         children: [
           {
-            title: 'News Card',
+            title: 'News card',
             'x-i18n-title': {
               fr: "Vignette d'une actualité"
             },

@@ -64,7 +64,7 @@
           name="page-elements"
           :on-update="(newElements: PageElement[]) => ({ ...element, advancedFilters: newElements})"
           :elements="element.advancedFilters"
-          add-item-message="Ajouter un filtre (Mode avancé)"
+          :add-item-message="t('addAdvancedFilter')"
         />
       </div>
 
@@ -249,6 +249,7 @@ watch(() => props.currentPage, (newPage) => {
     sortDescending: descending order
     sortAnnouncement: 'Sorted by {sort}, {order}'
     pageAnnouncement: 'Page {current} of {total}'
+    addAdvancedFilter: Add a filter (advanced mode)
   fr:
     resultsCount: 'Aucun résultat | {count} résultat | {count} résultats'
     loading: Chargement des résultats
@@ -256,4 +257,5 @@ watch(() => props.currentPage, (newPage) => {
     sortDescending: ordre décroissant
     sortAnnouncement: 'Tri par {sort}, {order}'
     pageAnnouncement: 'Page {current} sur {total}'
+    addAdvancedFilter: Ajouter un filtre (mode avancé)
 </i18n>

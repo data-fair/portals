@@ -21,30 +21,33 @@ export type EditorKind = 'page' | 'portal'
 // The options of a menu row, from the schema the form is built from: both judged runs of a
 // page then its menu entry guided the menu without having the form described, and made the
 // person read the drop-downs out to it.
-const pageTypes = (standardPage.properties.subtype.oneOf as Array<{ const?: string, title?: string }>)
-  .filter(o => o.const).map(o => `« ${o.title} »`).join(', ')
-const MENU_OPTIONS = `Options of a menu row, added by « Ajouter un lien » as « Lien non configuré »: its « Type de lien » is « ${standardPage.title} » (then its « Type de page »: ${pageTypes}), « ${genericPage.title} » (then its « Page », among the pages published on this portal), « ${eventPage.title} » or « ${newsPage.title} » (one event or news page), « Sous-menu » (a « Libellé » and its own rows) or « ${externalLink.title} » (a URL). Each has a « Libellé ».`
+type Titled = { const?: string, title?: string, 'x-i18n-title'?: { fr?: string } }
+// the guidance quotes the labels of the French form
+const frTitle = (schema: Titled) => schema['x-i18n-title']?.fr ?? schema.title
+const pageTypes = (standardPage.properties.subtype.oneOf as Titled[])
+  .filter(o => o.const).map(o => `« ${frTitle(o)} »`).join(', ')
+const MENU_OPTIONS = `Options of a menu row, added by « Ajouter un lien » as « Lien non configuré »: its « Type de lien » is « ${frTitle(standardPage)} » (then its « Page »: ${pageTypes}), « ${frTitle(genericPage)} » (then its « Page », among the pages published on this portal), « ${frTitle(eventPage)} » or « ${frTitle(newsPage)} » (one event or news page), « Sous-menu » (a « Libellé » and its own rows) or « ${frTitle(externalLink)} » (a URL). Each has a « Libellé ».`
 
-const DRAFT = 'Every change, the sub-agent\'s or the person\'s, is saved to a DRAFT that the public portal only shows once the person presses « Valider le brouillon » in the actions panel on the right (« Annuler le brouillon » discards it). You cannot press it. When the draft is ready and the person wants to see the result first, tell them where it shows and end your turn asking whether it suits them; once they agree (at once if they did not ask to see it), only then declare wait_for_user_action asking them to press it. The draft state tells you once it is published.'
+const DRAFT = 'Every change, yours or the person\'s, is saved to a DRAFT that the public portal only shows once the person presses « Valider le brouillon » in the actions panel on the right (« Annuler le brouillon » discards it). You cannot press it. When the draft is ready and the person wants to see the result first, tell them where it shows and end your turn asking whether it suits them; once they agree (at once if they did not ask to see it), only then declare wait_for_user_action asking them to press it. The draft state tells you once it is published.'
 
-const GUIDING = (subAgent: string) => `To guide the person click by click, have the ${subAgent} sub-agent describe the form with readOnly: true (the open tab, labels, items, and the options of a drop-down, even those not chosen) and name only what it reports: never guess a label or what a click will show. Its writes open the tab that holds what they change and say what is now on screen; to show the person a part of the form, ask it to open the tab. Give all the remaining steps of a section in one reply, down to « Valider le brouillon »; if the person cannot find something after one try, offer to make the change. The actions panel is outside the form: it is described here, not by the sub-agent.`
+const GUIDING = (prefix: string) => `To guide the person click by click, describe the form with ${prefix}describeState (the open tab, labels, items, and the options of a drop-down, even those not chosen: it changes nothing) and name only what it reports: never guess a label or what a click will show. The writes of the ${prefix} tools open the tab that holds what they change and say what is now on screen; to show the person a part of the form, open its tab with ${prefix}openSection. Give all the remaining steps of a section in one reply, down to « Valider le brouillon »; if the person cannot find something after one try, offer to make the change. The actions panel is outside the form: it is described here, not by the form tools.`
 
 const GUIDANCE: Record<EditorKind, Record<string, string>> = {
   page: {
-    editor: 'Portal page editor: edit the page (title, description, blocks) with the pageConfig_form sub-agent. The page title and description show only in the editor\'s fields, not in the draft preview, nor in the breadcrumb until the draft is validated. Pages have no topic (thématique). ' +
-      'Lists of datasets, events or news are drawn as placeholders (« Dataset 1 », …). « Liste de jeux de données » shows the 3 latest datasets; for all of them, « Catalogue de données ».',
+    editor: 'Portal page editor: edit the page (title, description, blocks) with the pageConfig_ form tools, following the page-config-form skill. The page title and description show only in the editor\'s fields, not in the draft preview, nor in the breadcrumb until the draft is validated. Pages have no topic (thématique). ' +
+      'Lists of datasets, events or news are drawn as placeholders (« Lorem ipsum 1 », …). « Liste de jeux de données » shows the 3 latest datasets; for all of them, « Catalogue de données ».',
     'editor-drafts': DRAFT,
-    'editor-guiding': GUIDING('pageConfig_form'),
+    'editor-guiding': GUIDING('pageConfig_'),
     'editor-previews': 'The editor itself has no « Aperçu (brouillon) » tab: the person sees the draft in the editor, and in that tab of the page view (the page title in the breadcrumb). There is no preview of the draft with real data: both draw lists as placeholders, « Portail de prévisualisation » only picks which portal\'s look they take, and « Voir sur … » opens the published page, without the draft. ' +
       'Validating does not publish the page on a portal: that is the « Publié » checkbox of its « Publications » tab.',
-    'editor-menu': 'The portal menu is edited in the portal editor (« Portails » in the group « Gestion » of the left column, collapsed: open it, or take the person there with navigate; then the portal, tab « Barre de navigation », card « Éléments du menu de navigation »), with its portalConfig_form sub-agent. Go there only if the person wants this page in the menu, once it is published on that portal: a « Page libre » item only offers pages published on that portal.'
+    'editor-menu': 'The portal menu is edited in the portal editor (« Portails » in the group « Gestion » of the left column, collapsed: open it, or take the person there with navigate; then the portal, tab « Barre de navigation », card « Éléments du menu de navigation »), with its portalConfig_ form tools. Go there only if the person wants this page in the menu, once it is published on that portal: a « Page libre » item only offers pages published on that portal.'
   },
   portal: {
-    editor: 'Portal editor: edit the configuration (colours in « Apparence », menu in « Barre de navigation » > « Éléments du menu de navigation », header, footer, …) with the portalConfig_form sub-agent. ' +
-      'In the menu, a free page is a « Page libre » item, picked among the suggestions; a catalog page (« Catalogue de données », « Catalogue d\'événements », …) or a standard one (contact, legal notice, …) is a « Page standard (Accueil, Contact,...) » item with its « Type de page »; give a catalog item a « Libellé » (the page title), or the menu shows a generic one. ' +
-      'The editor shows changes at once: colours in « Apparence » > « Couleurs », the menu and its preview « Aperçu - Entête & Barre de navigation » in « Barre de navigation », in that order down the tab: « Options », the preview, then « Éléments du menu de navigation ».',
+    editor: 'Portal editor: edit the configuration (colours in « Apparence », menu in « Barre de navigation » > « Éléments du menu de navigation », header, footer, …) with the portalConfig_ form tools, following the portal-config-form skill. ' +
+      'In the menu, a free page is a « Page libre » item, picked among the suggestions; a catalog page (« Catalogue de données », « Catalogue d\'événements », …) or a standard one (contact, legal notice, …) is a « Page standard (Accueil, Contact,...) » item with its « Page »; give a catalog item a « Libellé » (the page title), or the menu shows a generic one. ' +
+      'The editor shows changes at once: colours in « Apparence » > « Couleurs », the menu and its preview « Aperçu - Entête & Barre de navigation » in « Barre de navigation », in that order down the tab: « Éléments du menu de navigation », then « Options » and the preview.',
     'editor-drafts': DRAFT,
-    'editor-guiding': GUIDING('portalConfig_form'),
+    'editor-guiding': GUIDING('portalConfig_'),
     'editor-menu-options': MENU_OPTIONS,
     'editor-links': 'Actions panel links: « Voir le brouillon » opens the whole draft portal in a new tab, « Visiter le portail » the published portal. In « Éléments du menu de navigation », « Ajouter un lien » adds a « Lien non configuré » row whose type is chosen in its « Type de lien » drop-down. A « Page libre » item only offers pages published on this portal: publish a missing one first, in the « Publications » tab of the page.'
   }
@@ -66,19 +69,19 @@ export function draftState (hasDraftDiff: boolean): string {
  * three times and asked the person to copy the error.
  */
 export function draftSaveState (error: string | undefined, hadFailure: boolean): string | undefined {
-  if (error) return `the last change is NOT saved: the draft was refused (${error.slice(0, 300)}). Tell the person, and fix or undo the change with the form sub-agent`
+  if (error) return `the last change is NOT saved: the draft was refused (${error.slice(0, 300)}). Tell the person, and fix or undo the change with the form tools`
   if (hadFailure) return 'the draft is saved again'
   return undefined
 }
 
 /**
- * Whether the form is complete. An incomplete one (a required field empty, as in a menu row
+ * Whether the form is valid. An invalid one (a field empty or wrongly filled in, as in a menu row
  * just added) is not saved: the draft keeps the last complete state. A judged run lost a
  * half-configured menu item when the person left the editor, and nothing had said so.
  */
 export function formCompletenessState (valid: boolean | null, hadIncomplete: boolean): string | undefined {
   // null: v-form has not checked every field yet, as while the form opens
-  if (valid === false) return 'the form is incomplete (a required field is empty): its last change is NOT saved, the draft keeps the last complete state, and the change is lost if the person leaves the editor. Have the form sub-agent find and fill the missing field'
+  if (valid === false) return 'the form is invalid (a field is empty or wrongly filled in): its last change is NOT saved, the draft keeps the last complete state, and the change is lost if the person leaves the editor. Find the field with the form tools (describeState reports the errors) and fix it'
   if (hadIncomplete) return 'the form is complete again: its changes are saved to the draft'
   return undefined
 }
@@ -88,6 +91,18 @@ export function formCompletenessState (valid: boolean | null, hadIncomplete: boo
  * portal menu yet. With the way to each portal's editor: judged runs opened the portals list,
  * not the portal, though it was known.
  */
+/**
+ * What the screen of a page (its view, not its editor) is, for the assistant: judged runs navigated
+ * to the screen the person was already on to have them add blocks there, and doubted the address of
+ * the published page while a « Voir sur … » link was on screen.
+ */
+export function pageViewGuidance (pageId: string): string {
+  return 'Page screen (view, not the editor): its tabs are « Aperçu » (open by default: the validated content, without the portal\'s header and footer), « Aperçu (brouillon) » (the draft), « Publications » and « Informations », with an actions panel on the right. ' +
+    `Its content is edited in the page editor: « Éditer le brouillon » in the actions panel, or navigate to /pages/${pageId}/edit-config. ` +
+    '« Voir sur <portal> » in the actions panel opens the published page on that portal, in a new tab: that is how the person sees it themselves. ' +
+    'preview_page renders the page for you only: the person never sees its screenshot. Say « d\'après mon rendu », never « j\'ai affiché » (they would look for it on screen); describe it, say which version you rendered (published, with header and footer, or draft) and point to « Aperçu (brouillon) » or « Voir sur <portal> » (on a phone: the address « Voir sur <portal> » opens). When the draft may differ, render it too rather than asking them to check.'
+}
+
 export function pagePublicationState (portals: Array<{ id: string, title: string }>): string {
   return portals.length
     ? `published on: ${portals.map(p => `${p.title} (its editor, where its menu is edited: navigate to /portals/${p.id})`).join(', ')}`

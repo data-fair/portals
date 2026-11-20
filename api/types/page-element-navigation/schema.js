@@ -1,4 +1,4 @@
-import { linkItemTitle } from '../common-links/schema.js'
+import { linkItemTitle, linkItemTitleFr } from '../common-links/schema.js'
 
 export default {
   $id: 'https://github.com/data-fair/portals/page-element-navigation',
@@ -16,7 +16,8 @@ export default {
           'type',
           'link',
           {
-            title: 'Configuration du bouton',
+            title: 'Button appearance',
+            'x-i18n-title': { fr: 'Apparence du bouton' },
             comp: 'card',
             children: [
               'usePortalConfig',
@@ -38,18 +39,21 @@ export default {
         link: { $ref: 'https://github.com/data-fair/portals/common-links#/$defs/linkItem' },
         usePortalConfig: {
           type: 'boolean',
-          title: 'Utiliser la configuration du portail',
+          title: 'Use the portal configuration',
+          'x-i18n-title': { fr: 'Utiliser la configuration du portail' },
           layout: 'switch',
           default: true
         },
         config: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/buttonConfig' },
         fullWidth: {
           type: 'boolean',
-          title: 'Afficher le bouton en pleine largeur'
+          title: 'Show the button at full width',
+          'x-i18n-title': { fr: 'Afficher le bouton en pleine largeur' }
         },
         centered: {
           type: 'boolean',
-          title: 'Centré',
+          title: 'Centered',
+          'x-i18n-title': { fr: 'Centré' },
           default: true,
           layout: { if: '!parent.data?.fullWidth' }
         },
@@ -69,7 +73,8 @@ export default {
           'label',
           'links',
           {
-            title: 'Configuration du menu',
+            title: 'Menu appearance',
+            'x-i18n-title': { fr: 'Apparence du menu' },
             comp: 'card',
             children: [
               'usePortalConfig',
@@ -89,29 +94,38 @@ export default {
         uuid: { type: 'string', layout: 'none' },
         label: {
           type: 'string',
-          title: 'Libellé du menu',
-          description: 'Texte affiché sur le bouton du menu',
+          title: 'Menu label',
+          'x-i18n-title': { fr: 'Libellé du menu' },
+          description: 'Text displayed on the menu button',
+          'x-i18n-description': { fr: 'Texte affiché sur le bouton du menu' },
           default: 'Menu'
         },
         links: {
           type: 'array',
-          title: 'Liens',
+          title: 'Links',
+          'x-i18n-title': { fr: 'Liens' },
           items: { $ref: 'https://github.com/data-fair/portals/common-links#/$defs/linkItem' },
           layout: {
             itemTitle: linkItemTitle,
-            messages: { addItem: 'Ajouter un lien' }
+            'x-i18n-itemTitle': { fr: linkItemTitleFr },
+            messages: {
+              addItem: 'Add a link',
+              'x-i18n-addItem': { fr: 'Ajouter un lien' }
+            }
           }
         },
         usePortalConfig: {
           type: 'boolean',
-          title: 'Utiliser la configuration du portail',
+          title: 'Use the portal configuration',
+          'x-i18n-title': { fr: 'Utiliser la configuration du portail' },
           layout: 'switch',
           default: true
         },
         config: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/buttonConfig' },
         centered: {
           type: 'boolean',
-          title: 'Centré',
+          title: 'Centered',
+          'x-i18n-title': { fr: 'Centré' },
           default: true
         },
         mb: { $ref: 'https://github.com/data-fair/portals/page-elements-defs#/$defs/margin-bottom' }

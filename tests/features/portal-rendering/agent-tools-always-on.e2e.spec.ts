@@ -38,5 +38,25 @@ test.describe('agent tools are always on', () => {
       (navigator as any).modelContext.listTools().map((t: any) => t.name))
     expect(toolNames).toContain('list_datasets')
     expect(toolNames).toContain('navigate')
+
+    // ...and so is the portal's guidance, as keyed host state (agents libs 0.7 ignore a
+    // host-supplied system prompt): answered on the tab channel like the chat asks for it.
+    const state = await page.evaluate(async () => {
+      const channelId = sessionStorage.getItem('mcpTabChannelId')
+      const ch = new BroadcastChannel(channelId!)
+      const state: Record<string, string> = {}
+      ch.onmessage = (e) => {
+        const data = e.data
+        if (data?.channel === channelId && data.type === 'agent-event' && data.event?.key) state[data.event.key] = data.event.detail
+      }
+      ch.postMessage({ channel: channelId, type: 'agent-state-request' })
+      await new Promise(resolve => setTimeout(resolve, 500))
+      ch.close()
+      return state
+    })
+    expect(state.portal).toContain('« Tools Always On »')
+    expect(state['portal-data']).toContain('never invent or estimate data')
+    expect(state['portal-screen']).toContain('get_current_location')
+    expect(state['portal-links']).toContain('absolute URL')
   })
 })

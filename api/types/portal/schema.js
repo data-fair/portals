@@ -9,17 +9,17 @@ export default {
   properties: {
     _id: {
       type: 'string',
-      title: 'Identifiant',
+      title: 'Identifier',
       readOnly: true
     },
     title: {
       type: 'string',
-      title: 'Titre',
+      title: 'Title',
       readOnly: true
     },
     whiteLabel: {
-      title: 'Marque blanche',
-      description: 'Si coché le portail n\'affichera aucune marque Koumoul',
+      title: 'White label',
+      description: 'When checked, the portal shows no Koumoul branding',
       type: 'boolean',
       default: false,
       readOnly: true
@@ -31,13 +31,13 @@ export default {
     },
     md2Compat: {
       type: 'boolean',
-      title: 'Compatibilité MD2',
+      title: 'MD2 compatibility',
       default: false,
       readOnly: true
     },
     staging: {
-      title: 'Pré-production',
-      description: 'Si coché les contributeurs pourront publier des ressources sans solliciter les administrateurs',
+      title: 'Pre-production',
+      description: 'When checked, contributors can publish resources without asking the administrators',
       type: 'boolean',
       default: false
     },
@@ -55,8 +55,8 @@ export default {
     },
     contributorDepartments: {
       type: 'array',
-      title: 'Départements contributeurs',
-      description: 'Départements dont les administrateurs peuvent publier sur ce portail, comme s\'ils en étaient propriétaires.',
+      title: 'Contributor departments',
+      description: 'Departments whose administrators can publish on this portal as if they owned it.',
       items: { type: 'string' },
       default: []
     },

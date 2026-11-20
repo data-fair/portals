@@ -76,7 +76,7 @@ const { element } = defineProps<{ element: MenuElement }>()
 const { portalConfig } = usePortalStore()
 const { locale, t } = useI18n()
 const { preview } = usePortalStore()
-const { resolveLink, resolveLinkTitle } = useNavigationStore()
+const { resolveLink, resolveLinkTitle, linkRel } = useNavigationStore()
 
 // Vuetify tints the activator from [aria-haspopup=menu][aria-expanded=true], which
 // this trigger drops (its popup is a list of links, not a menu). `active` restores

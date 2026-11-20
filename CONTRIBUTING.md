@@ -76,6 +76,5 @@ You can also mark a test with `.only` (e.g. `it.only`, `test.only`, `describe.on
 ### package.json scripts description
 
 - `"prepare": "husky || true"` : Initializes Husky hooks before the first `npm install`. The `|| true` ensures the command doesn't fail if Husky is not installed or encounters an error.
-- `EVENTS_LOG_LEVEL=alert` : Disable the lib express events log in the console, to avoid too much noise.
 
 </details>

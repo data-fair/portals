@@ -33,7 +33,7 @@ test.describe('portals UI', () => {
     await page.getByRole('tab', { name: 'Apparence' }).click()
 
     // In assisted mode, change the primary color in the browser
-    const assistedPrimaryInput = page.getByLabel('Couleur principale')
+    const assistedPrimaryInput = page.getByLabel('Couleur primaire')
     await assistedPrimaryInput.click()
     await assistedPrimaryInput.fill('#FF0000')
     await assistedPrimaryInput.press('Tab')
@@ -45,7 +45,7 @@ test.describe('portals UI', () => {
     await page.waitForTimeout(500)
 
     // In manual mode, the primary color should reflect the assisted mode value
-    const manualPrimaryInput = page.getByLabel('Couleur principale').first()
+    const manualPrimaryInput = page.getByLabel('Couleur primaire').first()
     await expect(manualPrimaryInput).toHaveValue('#FF0000')
   })
 
@@ -65,7 +65,7 @@ test.describe('portals UI', () => {
     await page.waitForTimeout(500)
 
     // In manual mode, change the primary color
-    const manualPrimaryInput = page.getByLabel('Couleur principale').first()
+    const manualPrimaryInput = page.getByLabel('Couleur primaire').first()
     await manualPrimaryInput.click()
     await manualPrimaryInput.fill('#00FF00')
     await manualPrimaryInput.press('Tab')
@@ -76,7 +76,7 @@ test.describe('portals UI', () => {
     await page.waitForTimeout(500)
 
     // In assisted mode, the primary color should reflect the manual mode value
-    const assistedPrimaryInput = page.getByLabel('Couleur principale')
+    const assistedPrimaryInput = page.getByLabel('Couleur primaire')
     await expect(assistedPrimaryInput).toHaveValue('#00FF00')
   })
 })

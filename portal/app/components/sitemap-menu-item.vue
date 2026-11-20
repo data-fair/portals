@@ -40,5 +40,5 @@ defineProps<{
 }>()
 
 const { locale } = useI18n()
-const { resolveLink, resolveLinkTitle } = useNavigationStore()
+const { resolveLink, resolveLinkTitle, linkRel } = useNavigationStore()
 </script>

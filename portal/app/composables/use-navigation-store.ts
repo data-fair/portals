@@ -2,6 +2,7 @@ import type { VBreadcrumbs } from 'vuetify/components'
 import type { MenuItem } from '#api/types/portal/index.ts'
 import type { SimpleLinkItem, LinkItem } from '#api/types/common-links/index.ts'
 import { resolveMenuLink as resolveLink, isMenuItemActive } from '../utils/nav-active'
+import { annotateLinks as annotateHtmlLinks, linkRel as baseLinkRel } from '../../../shared/markdown/link-rel.ts'
 
 type BreadcrumbItem = BreadcrumbItems[number]
 type BreadcrumbItems = NonNullable<VBreadcrumbs['$props']['items']>
@@ -9,9 +10,13 @@ type BreadcrumbItems = NonNullable<VBreadcrumbs['$props']['items']>
 type NavigationStoreOptions = { isIframe: Ref<boolean> }
 export type NavigationStore = ReturnType<typeof createNavigationStore>
 const navigationStoreKey = Symbol('navigation-store')
+// Keep in sync with layout-app-bar's scroll-threshold
+const appBarScrollThreshold = 150
+// Space between the app bar and a title reached through its anchor
+const anchorGap = 32
 
 const createNavigationStore = (options: NavigationStoreOptions) => {
-  const { $portal } = useNuxtApp()
+  const { $portal, $i18n } = useNuxtApp()
   const _breadcrumbs = ref<BreadcrumbItems>([])
   const drawer = ref(false) // Simple boolean shared between navigations components
   const personalDrawer = ref(true) // Simple boolean shared between personal navigations components
@@ -23,7 +28,7 @@ const createNavigationStore = (options: NavigationStoreOptions) => {
   // scroll-threshold). Drives the app bar transparency and the drawer offset.
   const scrolled = ref(false)
   if (import.meta.client) {
-    const onScroll = () => { scrolled.value = window.scrollY > 150 }
+    const onScroll = () => { scrolled.value = window.scrollY > appBarScrollThreshold }
     window.addEventListener('scroll', onScroll, { passive: true })
     onScopeDispose(() => window.removeEventListener('scroll', onScroll))
   }
@@ -38,18 +43,38 @@ const createNavigationStore = (options: NavigationStoreOptions) => {
   // --v-layout-top to 0 when the header hides even though the nav bar stays
   // visible, so we derive the offset ourselves.
   const route = useRoute()
-  const appBarBottom = computed(() => {
-    if (isIframe.value) return 0
+  // App bar height when fully shown and once hidden on scroll (same rules as layout-app-bar's scroll-behavior):
+  // the navigation bar stays pinned with `hide`, everything slides away with `fully-hide`.
+  const appBarHeights = computed(() => {
+    if (isIframe.value) return { full: 0, collapsed: 0 }
     const isHome = route.path === '/'
     const config = $portal.config
     const header = (isHome && config.headerHomeActive) ? { ...config.header, ...config.headerHome } : config.header
     const navBar = (isHome && config.navBarHomeActive) ? { ...config.navBar, ...config.navBarHome } : config.navBar
     const full = (header.show ? 128 : 0) + 64
-    // The app bar shows its full height, so children sit below the whole bar.
-    if (appBarActive.value) return full
-    // Hidden on scroll: the navigation bar stays pinned with `hide`, everything slides away with `fully-hide`.
-    return navBar.keepOnScroll ? 64 : 0
+    if (!header.show || header.keepOnScroll) return { full, collapsed: full }
+    return { full, collapsed: navBar.keepOnScroll ? 64 : 0 }
   })
+  const appBarBottom = computed(() => appBarActive.value ? appBarHeights.value.full : appBarHeights.value.collapsed)
+  // Y offset (px) where a title reached through its anchor stops
+  const anchorTop = computed(() => appBarBottom.value + anchorGap)
+
+  // Gives each anchored title the scroll-margin-top matching the app bar it will have once scrolled to:
+  // VAppBar stays fully shown above its scroll threshold and shows again while scrolling up.
+  // Router hash scrolls, native fragment links and scrollIntoView all read this margin.
+  const updateAnchorMargins = () => {
+    const { full, collapsed } = appBarHeights.value
+    for (const el of document.querySelectorAll<HTMLElement>('.page-title--anchored')) {
+      const top = el.getBoundingClientRect().top + window.scrollY
+      const shown = top - collapsed - anchorGap < Math.max(appBarScrollThreshold, window.scrollY)
+      el.style.setProperty('--toc-scroll-offset', `${(shown ? full : collapsed) + anchorGap}px`)
+    }
+  }
+  if (import.meta.client) {
+    window.addEventListener('scroll', updateAnchorMargins, { passive: true })
+    onScopeDispose(() => window.removeEventListener('scroll', updateAnchorMargins))
+    useNuxtApp().hook('page:finish', updateAnchorMargins)
+  }
 
   // Emit BreadcrumbList JSON-LD from resolved breadcrumbs (SSR only)
   if (import.meta.server) {
@@ -157,6 +182,11 @@ const createNavigationStore = (options: NavigationStoreOptions) => {
   const showTopBreadcrumbs = computed(() => showBreadcrumbs('top'))
   const showBottomBreadcrumbs = computed(() => showBreadcrumbs('bottom'))
 
+  // rel "external" compares with the portal's host, the "new window" title follows the visitor's language
+  const host = useRequestURL().hostname
+  const linkRel = (href?: string, target?: boolean) => baseLinkRel(href, target, host)
+  const annotateLinks = (html?: string) => html && annotateHtmlLinks(html, host, i18n[$i18n.locale.value as 'fr' | 'en'].newWindow)
+
   /** Check if a link is external (not internal and not starting with /) */
   const isExternalLink = (link: SimpleLinkItem | MenuItem): boolean => {
     if (link.type === 'external') return !link.href?.startsWith('/')
@@ -203,6 +233,8 @@ const createNavigationStore = (options: NavigationStoreOptions) => {
     isExternalLink,
     resolveLink,
     resolveLinkTitle,
+    linkRel,
+    annotateLinks,
     drawer,
     personalDrawer,
     showTopBreadcrumbs,
@@ -211,7 +243,9 @@ const createNavigationStore = (options: NavigationStoreOptions) => {
     isIframe,
     scrolled,
     appBarActive,
-    appBarBottom
+    appBarBottom,
+    anchorTop,
+    updateAnchorMargins
   }
 }
 
@@ -244,7 +278,8 @@ const i18n = {
     sitemapPage: 'Sitemap',
     catalogApiDocPage: 'API Documentation',
     standardPage: 'Standard Page',
-    link: 'Link'
+    link: 'Link',
+    newWindow: 'New window'
   },
   fr: {
     homePage: 'Accueil',
@@ -262,6 +297,7 @@ const i18n = {
     sitemapPage: 'Plan du site',
     catalogApiDocPage: "Documentation d'API",
     standardPage: 'Page standard',
-    link: 'Lien'
+    link: 'Lien',
+    newWindow: 'Nouvelle fenêtre'
   }
 }

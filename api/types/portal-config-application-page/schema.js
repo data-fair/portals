@@ -1,9 +1,12 @@
+import { inheritedStyleLayout } from '../common-defs/schema.ts'
+
 export default {
   $id: 'https://github.com/data-fair/portals/portal-config-application-page',
   'x-exports': [],
   title: 'Application Page',
   'x-i18n-title': {
-    fr: "Page d'une visualisation"
+    fr: "Page d'une visualisation",
+    en: 'Application page'
   },
   type: 'object',
   unevaluatedProperties: false,
@@ -24,13 +27,16 @@ export default {
   properties: {
     showImage: {
       type: 'boolean',
-      title: "Afficher l'image",
-      description: "L'image sera affichée au dessus de la description.",
+      title: 'Show image',
+      'x-i18n-title': { fr: "Afficher l'image" },
+      description: 'The image will be displayed above the description.',
+      'x-i18n-description': { fr: "L'image sera affichée au-dessus de la description." },
       layout: 'switch'
     },
     titleStyle: {
       type: 'object',
-      title: 'Configuration des titres',
+      title: 'Application page section titles',
+      'x-i18n-title': { fr: 'Titres de section', en: 'Section titles' },
       layout: { comp: 'card' },
       properties: {
         position: {
@@ -47,42 +53,46 @@ export default {
     },
     metadata: {
       type: 'object',
-      title: 'Configuration des métadonnées',
+      title: 'Application page metadata',
+      'x-i18n-title': { fr: 'Métadonnées', en: 'Metadata' },
       layout: { comp: 'card' },
       properties: {
         location: {
           type: 'string',
-          title: 'Position des métadonnées',
+          title: 'Metadata position',
+          'x-i18n-title': { fr: 'Position des métadonnées' },
           layout: { cols: { md: 6 } },
           default: 'right',
           oneOf: [
-            { const: 'top', title: 'Sous le titre' },
-            { const: 'bottom', title: 'Sous la description' },
-            { const: 'right', title: 'À droite' }
+            { const: 'top', title: 'Below title', 'x-i18n-title': { fr: 'Sous le titre' } },
+            { const: 'bottom', title: 'Below description', 'x-i18n-title': { fr: 'Sous la description' } },
+            { const: 'right', title: 'Right', 'x-i18n-title': { fr: 'À droite' } }
           ]
         },
         actionsStyle: {
           type: 'string',
-          title: "Style des boutons d'actions",
+          title: 'Action buttons style',
+          'x-i18n-title': { fr: "Style des boutons d'actions" },
           layout: { cols: { md: 6 } },
           default: 'full',
           oneOf: [
-            { const: 'icon', title: 'Icône seulement' },
-            { const: 'full', title: 'Icône et texte' },
-            { const: 'text', title: 'Texte seulement' }
+            { const: 'icon', title: 'Icon only', 'x-i18n-title': { fr: 'Icône seulement' } },
+            { const: 'full', title: 'Icon and text', 'x-i18n-title': { fr: 'Icône et texte' } },
+            { const: 'text', title: 'Text only', 'x-i18n-title': { fr: 'Texte seulement' } }
           ]
         },
         rounded: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded',
-          layout: { cols: { md: 6 } }
+          layout: { cols: { md: 6 }, ...inheritedStyleLayout }
         },
         elevation: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation',
-          layout: { cols: { md: 6 } }
+          layout: { cols: { md: 6 }, ...inheritedStyleLayout }
         },
         showDepartment: {
           type: 'boolean',
-          title: 'Afficher le propriétaire',
+          title: 'Show owner',
+          'x-i18n-title': { fr: 'Afficher le propriétaire' },
           layout: {
             comp: 'switch',
             cols: { md: 6 }
@@ -91,7 +101,8 @@ export default {
         },
         showBaseApplication: {
           type: 'boolean',
-          title: "Afficher l'application de base",
+          title: 'Show base application',
+          'x-i18n-title': { fr: "Afficher l'application de base" },
           layout: {
             comp: 'switch',
             cols: { md: 6 }
@@ -107,7 +118,8 @@ export default {
 
     datasets: {
       type: 'object',
-      title: 'Configuration des jeux de données',
+      title: 'Application page datasets',
+      'x-i18n-title': { fr: 'Jeux de données', en: 'Datasets' },
       layout: {
         comp: 'card',
         children: [
@@ -123,18 +135,21 @@ export default {
       properties: {
         display: {
           type: 'string',
-          title: "Mode d'affichage",
+          title: 'Display mode',
+          'x-i18n-title': { fr: "Mode d'affichage" },
           default: 'card',
           layout: { cols: { md: 4 } },
           oneOf: [
-            { const: 'none', title: 'Aucun' },
-            { const: 'card', title: 'Vignette' },
+            { const: 'none', title: 'None', 'x-i18n-title': { fr: 'Aucun' } },
+            { const: 'card', title: 'Card', 'x-i18n-title': { fr: 'Vignette' } },
           ]
         },
         columns: {
           type: 'integer',
-          title: 'Nombre de colonnes',
-          description: 'Nombre de colonnes utilisées sur les écrans larges. Le nombre de colonnes sera réduit sur les écrans plus petits.',
+          title: 'Number of columns',
+          'x-i18n-title': { fr: 'Nombre de colonnes' },
+          description: 'Number of columns used on large screens. The number of columns will be reduced on smaller screens.',
+          'x-i18n-description': { fr: 'Nombre de colonnes utilisées sur les écrans larges. Le nombre de colonnes sera réduit sur les écrans plus petits.' },
           layout: { if: 'parent.data?.display === "card"', cols: { md: 4 } },
           default: 2,
           minimum: 1,
@@ -142,7 +157,8 @@ export default {
         },
         useGlobalCard: {
           type: 'boolean',
-          title: 'Utiliser la configuration globale des vignettes',
+          title: 'Use the global card configuration',
+          'x-i18n-title': { fr: 'Utiliser la configuration globale des vignettes' },
           layout: {
             if: 'parent.data?.display === "card"',
             comp: 'switch',

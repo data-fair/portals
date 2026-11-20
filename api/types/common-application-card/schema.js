@@ -1,3 +1,5 @@
+import { inheritedStyleLayout } from '../common-defs/schema.ts'
+
 export default {
   $id: 'https://github.com/data-fair/portals/common-application-card',
   'x-exports': [],
@@ -29,56 +31,65 @@ export default {
   properties: {
     actionsLocation: {
       type: 'string',
-      title: "Position des boutons d'actions sur la carte",
+      title: 'Action buttons position on card',
+      'x-i18n-title': { fr: "Position des boutons d'actions sur la carte" },
       layout: { cols: { md: 4 }, if: 'parent.data?.openInFullPage !== true' },
       default: 'bottom',
       oneOf: [
-        { const: 'right', title: 'À droite' },
-        { const: 'bottom', title: 'En bas' },
-        { const: 'none', title: 'Aucun' }
+        { const: 'right', title: 'Right', 'x-i18n-title': { fr: 'À droite' } },
+        { const: 'bottom', title: 'Bottom', 'x-i18n-title': { fr: 'En bas' } },
+        { const: 'none', title: 'None', 'x-i18n-title': { fr: 'Aucun' } }
       ]
     },
     actionsStyle: {
       type: 'string',
-      title: "Style des boutons d'actions",
+      title: 'Action buttons style',
+      'x-i18n-title': { fr: "Style des boutons d'actions" },
       layout: { cols: { md: 4 }, if: 'parent.data?.openInFullPage !== true' },
       default: 'full',
       oneOf: [
-        { const: 'icon', title: 'Icône seulement' },
-        { const: 'full', title: 'Icône et texte' },
-        { const: 'text', title: 'Texte seulement' }
+        { const: 'icon', title: 'Icon only', 'x-i18n-title': { fr: 'Icône seulement' } },
+        { const: 'full', title: 'Icon and text', 'x-i18n-title': { fr: 'Icône et texte' } },
+        { const: 'text', title: 'Text only', 'x-i18n-title': { fr: 'Texte seulement' } }
       ]
     },
     elevation: {
       $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation',
-      title: 'Élévation de la carte',
-      layout: { cols: { md: 4 } }
+      title: 'Card elevation',
+      'x-i18n-title': { fr: 'Élévation de la carte' },
+      layout: { cols: { md: 4 }, ...inheritedStyleLayout }
     },
     rounded: {
       $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded',
-      title: 'Arrondi de la carte',
-      layout: { cols: { md: 4 } }
+      title: 'Card rounded corners',
+      'x-i18n-title': { fr: 'Arrondi de la carte' },
+      layout: { cols: { md: 4 }, ...inheritedStyleLayout }
     },
     hover: {
       $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/hoverConfig',
-      title: 'Effets au survol de la carte'
+      title: 'Card hover effects',
+      'x-i18n-title': { fr: 'Effets au survol de la carte' }
     },
     titleLinesCount: {
       type: 'number',
-      title: 'Nombre de lignes pour le titre',
-      description: 'Force le titre à occuper exactement N lignes.',
+      title: 'Number of title lines',
+      'x-i18n-title': { fr: 'Nombre de lignes pour le titre' },
+      description: 'Forces the title to take up exactly N lines.',
+      'x-i18n-description': { fr: 'Force le titre à occuper exactement N lignes.' },
       layout: { cols: { md: 4 } },
       default: 2,
       oneOf: [
-        { const: 1, title: '1 ligne' },
-        { const: 2, title: '2 lignes' },
-        { const: 0, title: 'Sans limite de lignes' }
+        { const: 1, title: '1 line', 'x-i18n-title': { fr: '1 ligne' } },
+        { const: 2, title: '2 lines', 'x-i18n-title': { fr: '2 lignes' } },
+        { const: 0, title: 'No line limit', 'x-i18n-title': { fr: 'Sans limite de lignes' } }
       ]
     },
     openInFullPage: {
       type: 'boolean',
-      title: 'Ouvrir la visualisation en plein écran',
-      description: 'Au clic sur la vignette, l\'application s\'ouvre en plein écran au lieu d\'afficher la page de détail. Les boutons "Aperçu" et "Plein écran" de la carte sont alors masqués.',
+      title: 'Open the application in fullscreen',
+      'x-i18n-title': { fr: 'Ouvrir la visualisation en plein écran' },
+      description: 'Clicking the card opens the application in fullscreen instead of displaying the detail page. The "Preview" and "Fullscreen" buttons of the card are then hidden.',
+      'x-i18n-description': { fr: 'Au clic sur la vignette, l\'application s\'ouvre en plein écran au lieu d\'afficher la page de détail. Les boutons "Aperçu" et "Plein écran" de la carte sont alors masqués.' },
       layout: {
         comp: 'switch',
         cols: { md: 4 }
@@ -87,7 +98,8 @@ export default {
     },
     showSummary: {
       type: 'boolean',
-      title: 'Afficher le résumé',
+      title: 'Show summary',
+      'x-i18n-title': { fr: 'Afficher le résumé' },
       layout: {
         comp: 'switch',
         cols: { md: 4 }
@@ -99,12 +111,14 @@ export default {
     },
     showUpdatedAt: {
       type: 'boolean',
-      title: 'Afficher la date de mise à jour',
+      title: 'Show update date',
+      'x-i18n-title': { fr: 'Afficher la date de mise à jour' },
       layout: 'switch'
     },
     thumbnail: {
       type: 'object',
-      title: "Configuration de l'image",
+      title: 'Application card image',
+      'x-i18n-title': { fr: 'Image', en: 'Image' },
       layout: {
         comp: 'card',
         children: [
@@ -116,7 +130,7 @@ export default {
               'crop',
               'useTopic',
               'useSummary',
-              { markdown: '**Ordre de priorité :**\n1. **Image spécifique** (définie directement sur la visualisation)\n2. **Image de la thématique** (si activé)\n3. **Résumé de la visualisation** (si activé)\n4. **Capture automatique** de la visualisation' }
+              { markdown: '**Priority order:**\n1. **Specific image** (set directly on the application)\n2. **Topic image** (if enabled)\n3. **Application summary** (if enabled)\n4. **Automatic capture** of the application', 'x-i18n-markdown': { fr: '**Ordre de priorité :**\n1. **Image spécifique** (définie directement sur la visualisation)\n2. **Image de la thématique** (si activé)\n3. **Résumé de la visualisation** (si activé)\n4. **Capture automatique** de la visualisation' } }
             ]
           }
         ]
@@ -124,25 +138,29 @@ export default {
       properties: {
         show: {
           type: 'boolean',
-          title: "Afficher l'image",
+          title: 'Show image',
+          'x-i18n-title': { fr: "Afficher l'image" },
           layout: 'switch',
           default: true
         },
         location: {
           type: 'string',
-          title: "Position de l'image sur la carte",
+          title: 'Image position on card',
+          'x-i18n-title': { fr: "Position de l'image sur la carte" },
           layout: { cols: { md: 6 } },
           default: 'center',
           oneOf: [
-            { const: 'left', title: 'À gauche' },
-            { const: 'top', title: 'En haut' },
-            { const: 'center', title: 'Sous le titre' }
+            { const: 'left', title: 'Left', 'x-i18n-title': { fr: 'À gauche' } },
+            { const: 'top', title: 'Top', 'x-i18n-title': { fr: 'En haut' } },
+            { const: 'center', title: 'Below title', 'x-i18n-title': { fr: 'Sous le titre' } }
           ]
         },
         crop: {
           type: 'boolean',
-          title: "Recadrer l'image pour un rendu uniforme",
-          description: "Si désactivé, l'image gardera son ratio d'origine",
+          title: 'Crop image for uniform appearance',
+          'x-i18n-title': { fr: "Recadrer l'image pour un rendu uniforme" },
+          description: 'If disabled, the image will keep its original ratio',
+          'x-i18n-description': { fr: "Si désactivé, l'image gardera son ratio d'origine" },
           layout: {
             comp: 'switch',
             cols: { md: 6 }
@@ -151,8 +169,10 @@ export default {
         },
         useTopic: {
           type: 'boolean',
-          title: "Utiliser l'image de la première thématique",
-          description: "Permet d'utiliser l'image de la première thématique de la visualisation si aucune image n'est définie pour cette dernière.",
+          title: 'Use the first topic image',
+          'x-i18n-title': { fr: "Utiliser l'image de la première thématique" },
+          description: "Use the image of the application's first topic when no image is set for it.",
+          'x-i18n-description': { fr: "Permet d'utiliser l'image de la première thématique de la visualisation si aucune image n'est définie pour cette dernière." },
           layout: {
             comp: 'switch',
             cols: { md: 6 }
@@ -160,8 +180,10 @@ export default {
         },
         useSummary: {
           type: 'boolean',
-          title: 'Utiliser le résumé de la visualisation',
-          description: "Affiche le résumé de la visualisation si disponible, à la place de la capture automatique. Disponible uniquement lorsque l'image est positionnée sous le titre.",
+          title: 'Use the application summary',
+          'x-i18n-title': { fr: 'Utiliser le résumé de la visualisation' },
+          description: 'Shows the application summary if available, instead of the automatic capture. Only available when the image is positioned below the title.',
+          'x-i18n-description': { fr: "Affiche le résumé de la visualisation si disponible, à la place de la capture automatique. Disponible uniquement lorsque l'image est positionnée sous le titre." },
           layout: {
             comp: 'switch',
             cols: { md: 6 },
@@ -172,7 +194,8 @@ export default {
     },
     topics: {
       type: 'object',
-      title: 'Configuration des thématiques',
+      title: 'Application card topics',
+      'x-i18n-title': { fr: 'Thématiques', en: 'Topics' },
       layout: {
         comp: 'card',
         children: [
@@ -194,23 +217,26 @@ export default {
       properties: {
         show: {
           type: 'boolean',
-          title: 'Afficher les thématiques',
+          title: 'Show topics',
+          'x-i18n-title': { fr: 'Afficher les thématiques' },
           layout: 'switch',
         },
         color: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-topics' },
-        elevation: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation' },
-        density: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density' },
-        rounded: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded' },
+        elevation: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation', layout: { ...inheritedStyleLayout } },
+        density: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density', layout: { ...inheritedStyleLayout } },
+        rounded: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded', layout: { ...inheritedStyleLayout } },
         variant: { $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/variant' },
         showIcon: {
           type: 'boolean',
-          title: "Afficher l'icône",
+          title: 'Show icon',
+          'x-i18n-title': { fr: "Afficher l'icône" },
           layout: { comp: 'switch' },
           default: true
         },
         iconColor: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-topics',
-          title: "Couleur de l'icône",
+          title: 'Icon color',
+          'x-i18n-title': { fr: "Couleur de l'icône" },
           layout: {
             if: 'parent.data?.showIcon === true'
           }

@@ -3,7 +3,8 @@ export default {
   'x-exports': [],
   title: 'Reuse Page',
   'x-i18n-title': {
-    fr: "Page d'une réutilisation"
+    fr: "Page d'une réutilisation",
+    en: 'Reuse page'
   },
   type: 'object',
   unevaluatedProperties: false,
@@ -22,8 +23,10 @@ export default {
   properties: {
     showImage: {
       type: 'boolean',
-      title: "Afficher l'image",
-      description: "L'image sera affichée en dessous de la description.",
+      title: 'Show image',
+      'x-i18n-title': { fr: "Afficher l'image" },
+      description: 'The image will be displayed below the description.',
+      'x-i18n-description': { fr: "L'image sera affichée en dessous de la description." },
       layout: {
         comp: 'switch',
         cols: { md: 4 }
@@ -33,7 +36,8 @@ export default {
 
     titleStyle: {
       type: 'object',
-      title: 'Configuration des titres',
+      title: 'Reuse page section titles',
+      'x-i18n-title': { fr: 'Titres de section', en: 'Section titles' },
       layout: { comp: 'card' },
       properties: {
         position: {
@@ -51,7 +55,8 @@ export default {
 
     datasets: {
       type: 'object',
-      title: 'Configuration des jeux de données',
+      title: 'Reuse page datasets',
+      'x-i18n-title': { fr: 'Jeux de données', en: 'Datasets' },
       layout: {
         comp: 'card',
         children: [
@@ -67,18 +72,21 @@ export default {
       properties: {
         display: {
           type: 'string',
-          title: "Mode d'affichage",
+          title: 'Display mode',
+          'x-i18n-title': { fr: "Mode d'affichage" },
           default: 'card',
           layout: { cols: { md: 4 } },
           oneOf: [
-            { const: 'none', title: 'Aucun' },
-            { const: 'card', title: 'Vignette' }
+            { const: 'none', title: 'None', 'x-i18n-title': { fr: 'Aucun' } },
+            { const: 'card', title: 'Card', 'x-i18n-title': { fr: 'Vignette' } }
           ]
         },
         columns: {
           type: 'integer',
-          title: 'Nombre de colonnes',
-          description: 'Nombre de colonnes utilisées sur les écrans larges. Le nombre de colonnes sera réduit sur les écrans plus petits.',
+          title: 'Number of columns',
+          'x-i18n-title': { fr: 'Nombre de colonnes' },
+          description: 'Number of columns used on large screens. The number of columns will be reduced on smaller screens.',
+          'x-i18n-description': { fr: 'Nombre de colonnes utilisées sur les écrans larges. Le nombre de colonnes sera réduit sur les écrans plus petits.' },
           layout: { if: 'parent.data?.display === "card"', cols: { md: 4 } },
           default: 2,
           minimum: 1,
@@ -86,7 +94,8 @@ export default {
         },
         useGlobalCard: {
           type: 'boolean',
-          title: 'Utiliser la configuration globale des vignettes',
+          title: 'Use the global card configuration',
+          'x-i18n-title': { fr: 'Utiliser la configuration globale des vignettes' },
           layout: {
             if: 'parent.data?.display === "card"',
             comp: 'switch',
