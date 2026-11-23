@@ -38,8 +38,15 @@ services:
       - MONGO_URL=mongodb://localhost:${MONGO_PORT}/simple-directory
       - OBSERVER_ACTIVE=false
       - CIPHER_PASSWORD=dev-cipher-password-0123456789abcdef
-      - STORAGE_TYPE=file
-      - ADMINS=["test_superadmin@test.com","superadmin@dev.com","alban.mouton@koumoul.com"]
+      # accounts in mongo: the test suite seeds and cleans its own sub-space (test_portals_,
+      # tests/support/sd-fixtures.ts) through the test API, npm run dev-world seeds the dev world
+      # test_demo_ the same way (dev/resources/demo-world.json)
+      - STORAGE_TYPE=mongo
+      - ENABLE_TEST_API=1
+      # the test API needs NODE_ENV=development, the configuration stays the image's production one
+      - NODE_ENV=development
+      - NODE_CONFIG_ENV=production
+      - ADMINS=["test_portals_superadmin@test.com","test_demo_dev@example.org"]
       - CONTACT=contact@test.com
       # in dev simple-directory only notifies this service, directly (the shared identities router refuses calls through the proxy)
       - IDENTITIES_WEBHOOKS=[{"base":"http://localhost:${DEV_API_PORT}/api/identities","key":"secret-identities"}]
@@ -49,8 +56,7 @@ services:
       - MANAGE_DEPARTMENTS=true
       - MANAGE_PARTNERS=true
       - MANAGE_SITES=true
-      # non-human identities, declared in dev/resources/users.template.json (the scope tests, the
-      # autonomous-agent simulations)
+      # non-human identities, seeded with the test accounts (the scope tests, the autonomous-agent simulations)
       - MANAGE_NHIS=true
       # dev only: the agents NHI issuer is plain http on a .localhost host, which assertSafeIssuer refuses otherwise
       - NHIS_ALLOW_INSECURE_ISSUERS=true
@@ -71,10 +77,6 @@ services:
       - MAILS_TRANSPORT={"host":"localhost","port":${MAILDEV_SMTP_PORT},"ignoreTLS":true}
       # per recipient, stored in mongo: repeated test runs would stop the mails silently
       - MAILSRATELIMIT_POINTS=100000
-    volumes:
-      # rendered from users.template.json with the host and port of .env (dev/render-users.mjs)
-      - ./dev/resources/users.json:/app/data/users.json
-      - ./dev/resources/organizations.json:/app/data/organizations.json
     healthcheck:
       test: ["CMD", "nc", "-z", "localhost", "${SD_PORT}"]
       interval: 2s
@@ -177,8 +179,8 @@ services:
       - MODELS=[{"id":"mock-model","name":"Global Mock Model","provider":"global-mock","usage":["assistant","tools","summarizer","moderator"],"inputPricePerMillion":0,"outputPricePerMillion":0}]
       - DEFAULT_MODELS={"assistant":{"provider":"global-mock","id":"mock-model"}}
       - DEFAULT_CREDITS=-1
-      # NODE_ENV=development only for POST /api/test-env/autonomous-agent: an NHI declared in
-      # simple-directory's files pins the agent id (autonomous-agent:<id>), which the public creation
+      # NODE_ENV=development only for POST /api/test-env/autonomous-agent: an NHI seeded in
+      # simple-directory pins the agent id (autonomous-agent:<id>), which the public creation
       # route always generates. The configuration stays the image's production one.
       - NODE_ENV=development
       - NODE_CONFIG_ENV=production
@@ -272,7 +274,7 @@ services:
       - elasticsearch-data:/usr/share/elasticsearch/data
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9200"]
-      # 2 s probes while starting (df-dev wait-deps gives up after 3 min), then one per minute
+      # 2 s probes while starting (the dev start-up gives up after 3 min), then one per minute
       interval: 60s
       timeout: 10s
       retries: 3

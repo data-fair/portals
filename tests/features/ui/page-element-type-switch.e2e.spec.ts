@@ -1,7 +1,7 @@
 import { test, expect } from '../../fixtures/login.ts'
 import { axiosAuth, clean } from '../../support/axios.ts'
 
-const user1 = await axiosAuth('test_admin@test.com')
+const user1 = await axiosAuth('test_portals_admin@test.com')
 
 // A new block starts as a text block and keeps the keys it shares with the type then chosen:
 // a default of the text block that is invalid on the new type made the form invalid, and the
@@ -20,7 +20,7 @@ test.describe('the type of a new page block', () => {
       owner: portal.owner
     })).data
 
-    await goToWithAuth(`/portals-manager/pages/${createdPage._id}/edit-config`, 'test_admin')
+    await goToWithAuth(`/portals-manager/pages/${createdPage._id}/edit-config`, 'test_portals_admin')
     const blockTypes = [['Grille de blocs', 'responsive-grid'], ['Onglets', 'tabs'], ['Deux colonnes', 'two-columns']]
     for (const [label] of blockTypes) {
       await page.getByRole('button', { name: 'Ajouter un bloc à la page' }).click({ timeout: 30_000 })

@@ -3,11 +3,12 @@ import assert from 'node:assert/strict'
 import { axiosAuth, clean } from '../../support/axios.ts'
 import { nhiSession } from '../../support/nhi.ts'
 import { MongoClient } from 'mongodb'
+import { mongoUrl } from '../../support/mongo.ts'
 
-// the test NHI is admin of test_org1, as orgAdmin
-const orgAdmin = await axiosAuth({ email: 'test_admin@test.com', org: 'test_org1' })
-const orgContrib = await axiosAuth({ email: 'test_contrib@test.com', org: 'test_org1' })
-const outsider = await axiosAuth('test_alone@test.com')
+// the test NHI is admin of test_portals_org1, as orgAdmin
+const orgAdmin = await axiosAuth({ email: 'test_portals_admin@test.com', org: 'test_portals_org1' })
+const orgContrib = await axiosAuth({ email: 'test_portals_contrib@test.com', org: 'test_portals_org1' })
+const outsider = await axiosAuth('test_portals_alone@test.com')
 
 const statusOf = async (promise: Promise<any>) => {
   try {
@@ -21,7 +22,7 @@ const statusOf = async (promise: Promise<any>) => {
 // old editors stored properties the schema rejects (leftovers of an element type switch): they are
 // injected directly in the database of the dev API
 const injectLegacyData = async (pageId: string, mongoPatch: Record<string, any>) => {
-  const client = await MongoClient.connect(`mongodb://localhost:${process.env.MONGO_PORT}/data-fair-portals-development`)
+  const client = await MongoClient.connect(mongoUrl)
   try {
     const result = await client.db().collection('pages').updateOne({ _id: pageId as any }, mongoPatch)
     if (result.matchedCount !== 1) throw new Error(`mongo legacy data injection matched ${result.matchedCount} pages`)

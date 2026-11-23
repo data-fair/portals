@@ -4,14 +4,18 @@ export function portalUrl (portalId: string) {
   return `http://${portalId}.portals.${process.env.DEV_HOST}:${process.env.NGINX_PORT}`
 }
 
-// the portal is served on its own subdomain: French and cache bypass on every subdomain too
+// the portal is served on its own subdomain (<id>.portals.<DEV_HOST>): French and cache bypass on every
+// portal, set on their parent domain. Not on .<DEV_HOST>: chromium does not send a cookie of the .localhost
+// domain to its subdomains, and DEV_HOST is localhost by default
+const portalsCookieDomain = `.portals.${process.env.DEV_HOST}`
+
 export const test = base.extend<{
   goToPortal: (portalId: string, path?: string) => Promise<void>
 }>({
   page: async ({ page, browserName }, use) => {
     await page.context().addCookies([
-      { name: 'i18n_lang', value: 'fr', domain: `.${process.env.DEV_HOST}`, path: '/' },
-      { name: 'cache_bypass', value: '1', domain: `.${process.env.DEV_HOST}`, path: '/' }
+      { name: 'i18n_lang', value: 'fr', domain: portalsCookieDomain, path: '/' },
+      { name: 'cache_bypass', value: '1', domain: portalsCookieDomain, path: '/' }
     ])
     // WebKit applies the CSP upgrade-insecure-requests to http://*.localhost (Chromium and Firefox
     // do not): every portal resource then fails TLS. The dev env is http, production keeps the directive.

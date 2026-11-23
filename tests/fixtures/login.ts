@@ -1,6 +1,6 @@
 import { test as base, expect, request, type BrowserContext } from '@playwright/test'
-import { execFile } from 'node:child_process'
-import { promisify } from 'node:util'
+import { readFile } from 'node:fs/promises'
+import { devLogFile } from '../support/dev-logs.ts'
 
 /**
  * The `test` of every api and e2e spec (tests/fixtures/portal.ts extends it for the portal).
@@ -48,15 +48,11 @@ const sessionCookies = async (user: string, opts: AccountOpts) => {
   return session.cookies
 }
 
-const exec = promisify(execFile)
-// the scrollback of a df-dev pane; when df-dev cannot read it (no zellij >= 0.44 on PATH, no
-// running session, e.g. in CI) the attachment says why instead of being silently absent
-const paneLogs = async (pane: string) => {
-  try {
-    return (await exec('./node_modules/.bin/df-dev', ['logs', pane, '-n', '200'])).stdout
-  } catch (err: any) {
-    return `no pane logs: "df-dev logs ${pane}" failed (it needs zellij >= 0.44 on PATH and the dev session running; CI writes its own logs to dev/logs/)\n\n${err.stderr || err.message}`
-  }
+// the last lines of a dev process log (dev/logs/<name>.log written by `npm run dev`, see devLogFile), or a note
+const paneLogs = async (pane: 'api' | 'ui' | 'portal') => {
+  const file = devLogFile(pane)
+  const content = await readFile(file, 'utf8').catch(() => '')
+  return content ? content.split('\n').slice(-200).join('\n') : `no logs in ${file}: start the environment with "npm run dev"`
 }
 
 /**
@@ -94,7 +90,7 @@ export const test = base.extend<{
   diagnostics: [async ({}, use, testInfo) => {
     await use()
     if (testInfo.status === testInfo.expectedStatus) return
-    for (const pane of ['api', 'ui', 'portal']) {
+    for (const pane of ['api', 'ui', 'portal'] as const) {
       await testInfo.attach(`${pane}.log`, { body: await paneLogs(pane), contentType: 'text/plain' })
     }
   }, { auto: true }]

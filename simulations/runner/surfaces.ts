@@ -42,7 +42,7 @@ export function portalUrl (portalId: string) {
  * The portal cases' visitor: signed in, with no organization. Since agents #80 an anonymous visitor's
  * conversation is never reviewable, so it could not be exported and the run was invalid.
  */
-export const PORTAL_VISITOR = { id: 'test_alone', email: 'test_alone@test.com' } as const
+export const PORTAL_VISITOR = { id: 'test_portals_alone', email: 'test_portals_alone@test.com' } as const
 
 /**
  * The visitor signed in on the portal's own domain, through simple-directory's API as the e2e fixtures

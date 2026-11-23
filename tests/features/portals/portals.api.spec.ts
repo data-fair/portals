@@ -6,10 +6,10 @@ import FormData from 'form-data'
 import 'dotenv/config'
 import { clean, axiosAuth, directoryUrl } from '../../support/axios.ts'
 
-const user1 = await axiosAuth('test_admin@test.com')
-const orgAdmin = await axiosAuth({ email: 'test_admin@test.com', org: 'test_org1' })
-const deptAdmin = await axiosAuth({ email: 'test_admin_dep@test.com', org: 'test_org1' })
-const superadmin = await axiosAuth({ email: 'test_superadmin@test.com', adminMode: true })
+const user1 = await axiosAuth('test_portals_admin@test.com')
+const orgAdmin = await axiosAuth({ email: 'test_portals_admin@test.com', org: 'test_portals_org1' })
+const deptAdmin = await axiosAuth({ email: 'test_portals_admin_dep@test.com', org: 'test_portals_org1' })
+const superadmin = await axiosAuth({ email: 'test_portals_superadmin@test.com', adminMode: true })
 
 test.describe('portals management', () => {
   test.beforeEach(clean)
@@ -17,7 +17,7 @@ test.describe('portals management', () => {
   test('should create a portal', { tag: '@smoke' }, async () => {
     const portalConfig = { title: 'Portal 1', menu: { children: [] } }
     const portal = (await user1.post('/api/portals', { config: portalConfig })).data
-    assert.equal(portal.owner.id, 'test_admin')
+    assert.equal(portal.owner.id, 'test_portals_admin')
     assert.equal(portal.config.authentication, 'optional')
     assert.equal(portal.config.theme.colors.primary, '#1976D2')
     assert.deepEqual(portal.config, portal.draftConfig)
@@ -79,7 +79,7 @@ test.describe('portals management', () => {
     await orgAdmin.patch(`/api/portals/${sharedPortal._id}`, { contributorDepartments: ['dep1'] })
     const ownPortal = (await deptAdmin.post('/api/portals', { config: { title: 'Own', menu: { children: [] } } })).data
 
-    const list = (await deptAdmin.get('/api/portals', { params: { owner: 'organization:test_org1:dep1' } })).data
+    const list = (await deptAdmin.get('/api/portals', { params: { owner: 'organization:test_portals_org1:dep1' } })).data
     const ids = list.results.map((p: any) => p._id)
     assert.ok(!ids.includes(sharedPortal._id), 'contribute-only portal should be hidden with owner filter')
     assert.ok(ids.includes(ownPortal._id), 'own dept portal should still be visible')

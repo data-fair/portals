@@ -1,7 +1,7 @@
 import { test, expect } from '../../fixtures/login.ts'
 import { axiosAuth, clean } from '../../support/axios.ts'
 
-const orgAdmin = await axiosAuth({ email: 'test_admin@test.com', org: 'test_org1' })
+const orgAdmin = await axiosAuth({ email: 'test_portals_admin@test.com', org: 'test_portals_org1' })
 
 // the preview needs simple-directory's pseudo sessions and the capture service (as page-preview.api.spec.ts)
 const pseudoAvailable = await fetch(`http://localhost:${process.env.SD_PORT}/api/auth/pseudo`, { method: 'POST', headers: { 'x-secret-key': 'secret-pseudo-session', 'content-type': 'application/json' }, body: '{}' })
@@ -22,7 +22,7 @@ test.describe('page preview WebMCP tool', () => {
       portals: [portal._id]
     })).data
 
-    await goToWithAuth(`/portals-manager/pages/${created._id}`, 'test_admin', { org: 'test_org1' })
+    await goToWithAuth(`/portals-manager/pages/${created._id}`, 'test_portals_admin', { org: 'test_portals_org1' })
     await page.waitForFunction(() => {
       const mc = (navigator as any).modelContext
       return !!mc?.listTools?.().some((t: any) => t.name === 'preview_page')

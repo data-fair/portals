@@ -4,7 +4,7 @@ import { test, expect } from '../../fixtures/portal.ts'
 import { axiosAuth, clean } from '../../support/axios.ts'
 import { dataFairUrl, deleteDatasets, seedDataset } from '../../support/data-fair.ts'
 
-const user1 = await axiosAuth('test_admin@test.com')
+const user1 = await axiosAuth('test_portals_admin@test.com')
 const seeded: string[] = []
 
 test.describe('fragments of a meta-only dataset', () => {

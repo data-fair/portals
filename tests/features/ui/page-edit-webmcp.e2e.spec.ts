@@ -1,7 +1,7 @@
 import { test, expect } from '../../fixtures/login.ts'
 import { axiosAuth, clean } from '../../support/axios.ts'
 
-const user1 = await axiosAuth('test_admin@test.com')
+const user1 = await axiosAuth('test_portals_admin@test.com')
 
 // the webmcp tools answer with text only, their payloads are JSON in the first content part
 const toolJson = (result: any) => JSON.parse(result?.content?.[0]?.text)
@@ -29,7 +29,7 @@ test.describe('page edit WebMCP agent integration', () => {
 
     await goToWithAuth(
       `/portals-manager/pages/${createdPage._id}/edit-config`,
-      'test_admin'
+      'test_portals_admin'
     )
 
     // Wait for VJSF form to render
@@ -97,7 +97,7 @@ test.describe('page edit WebMCP agent integration', () => {
 
     await goToWithAuth(
       `/portals-manager/pages/${createdPage._id}/edit-config`,
-      'test_admin'
+      'test_portals_admin'
     )
 
     // Wait for VJSF form and WebMCP tools to be ready
@@ -129,7 +129,7 @@ test.describe('page edit WebMCP agent integration', () => {
       portals: [portal._id],
       owner: portal.owner
     })).data
-    await goToWithAuth(`/portals-manager/pages/${createdPage._id}/edit-config`, 'test_admin')
+    await goToWithAuth(`/portals-manager/pages/${createdPage._id}/edit-config`, 'test_portals_admin')
     await page.waitForFunction(() => (navigator as any).modelContext?.listTools?.().some((t: any) => t.name === 'pageConfig_describeState'), undefined, { timeout: 30_000 })
     const described = await page.evaluate(async () => {
       const result = await (navigator as any).modelContext.callTool({ name: 'pageConfig_describeState', arguments: {} })

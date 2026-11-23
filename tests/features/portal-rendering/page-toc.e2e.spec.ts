@@ -1,7 +1,7 @@
 import { test, expect } from '../../fixtures/portal.ts'
 import { axiosAuth, clean } from '../../support/axios.ts'
 
-const user1 = await axiosAuth('test_admin@test.com')
+const user1 = await axiosAuth('test_portals_admin@test.com')
 
 // n paragraphs of markdown: the API renders a text block's _html from its content when the
 // page is created, so a long page needs long content, not ready-made html

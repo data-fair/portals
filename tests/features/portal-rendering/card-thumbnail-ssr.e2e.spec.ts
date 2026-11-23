@@ -7,7 +7,7 @@ import { axiosAuth, clean } from '../../support/axios.ts'
 import { deleteDatasets, seedDataset } from '../../support/data-fair.ts'
 import { imageRef, stubImage, thumbnailSrc } from '../../support/cards.ts'
 
-const user1 = await axiosAuth('test_admin@test.com')
+const user1 = await axiosAuth('test_portals_admin@test.com')
 const seeded: string[] = []
 
 test.describe('card thumbnail on the server-rendered path', () => {

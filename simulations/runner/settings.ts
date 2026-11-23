@@ -8,14 +8,14 @@ import { axiosAuth } from '../../tests/support/axios.ts'
 
 export const ROOT = `http://${process.env.DEV_HOST}:${process.env.NGINX_PORT}`
 
-/** An org: the account shape portals are managed in. test_ data is wiped by test cleanups. */
-export const OWNER = { type: 'organization', id: 'test_org1', name: 'Test Org 1' } as const
-/** Admin of OWNER per dev/resources/organizations.json. */
-export const OWNER_ADMIN_EMAIL = 'test_admin@test.com'
+/** An org: the account shape portals are managed in. test_portals_ data is wiped by test cleanups. */
+export const OWNER = { type: 'organization', id: 'test_portals_org1', name: 'Test Org 1' } as const
+/** Admin of OWNER per tests/support/sd-fixtures.ts. */
+export const OWNER_ADMIN_EMAIL = 'test_portals_admin@test.com'
 /** Its user id, whose conversations a back-office case resumes. */
-export const OWNER_ADMIN_ID = 'test_admin'
+export const OWNER_ADMIN_ID = 'test_portals_admin'
 /** Global admin, needed to write another owner's agent settings. */
-const SUPER_ADMIN_EMAIL = 'test_superadmin@test.com'
+const SUPER_ADMIN_EMAIL = 'test_portals_superadmin@test.com'
 
 /** Agents settings, credit cap lifted, data-fair chat on. */
 export async function seedSettings (assistantModelId: string, toolsModelId: string) {
@@ -59,7 +59,7 @@ export async function fetchConversationExports (since: Date): Promise<Conversati
 /**
  * Erase `userId`'s conversations on the owner, before a case. Opening the chat resumes the person's
  * latest thread: without this a back-office case continued the previous case's conversation and
- * created none for fetchConversationExports to find. `DELETE /api/test-env` resets portals, not the
+ * created none for fetchConversationExports to find. `DELETE /api/test-env?prefix=test_portals_` resets portals, not the
  * agents service.
  */
 export async function eraseConversations (userId: string): Promise<void> {

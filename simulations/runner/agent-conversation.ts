@@ -1,5 +1,5 @@
 /**
- * One judged conversation with an autonomous agent of test_org1, on the agents page itself, through
+ * One judged conversation with an autonomous agent of test_portals_org1, on the agents page itself, through
  * lib-agents-sim's runSimulation: the chat is the page (`chatFrame: null`), and the portals state read
  * back after the run is this host's own check (`afterRun`): the case's premise (a run that never reached
  * its situation is invalid, not judged) and the state the judge reads (`hostState`).

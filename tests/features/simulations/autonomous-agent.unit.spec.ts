@@ -9,6 +9,7 @@ import { readFileSync } from 'node:fs'
 import { agentCases } from '../../../simulations/cases/autonomous-agents.ts'
 import { selectOwnCases } from '../../../simulations/cases/select.ts'
 import { cases } from '../../../simulations/cases/index.ts'
+import { sdFixtures } from '../../support/sd-fixtures.ts'
 import { AGENT_IDENTITIES, calledTool, toolMatches, toolsMismatch, type AgentSeedIds, type PortalsState, type RunState, type StoredPage } from '../../../simulations/runner/autonomous-agent.ts'
 
 const exportWith = (parts: any[]) => [{ conversationId: 'c', messages: [{ seq: 1, role: 'assistant', parts }], runs: [], blobs: new Map() }] as any
@@ -76,7 +77,7 @@ test.describe('the case registry', () => {
     for (const c of agentCases) {
       assert.equal(c.surface, 'autonomous-agent', c.name)
       assert.ok(c.agent in AGENT_IDENTITIES, `${c.name}: agent ${c.agent}`)
-      assert.equal(c.route, `/agents/organization/test_org1/chat?agentId=${c.agent}`, c.name)
+      assert.equal(c.route, `/agents/organization/test_portals_org1/chat?agentId=${c.agent}`, c.name)
       assert.ok(c.tools.required.length > 0, `${c.name}: no required tool`)
       for (const name of [...c.tools.required, ...(c.tools.forbidden ?? [])]) assert.match(name, /^((portals|datafair)_[a-z_]+[A-Za-z]*|form_[A-Za-z]+)$/, `${c.name}: ${name}`)
       assert.ok(c.premise.description.length > 10 && typeof c.premise.holds === 'function', `${c.name}: premise`)
@@ -96,8 +97,8 @@ test.describe('the case registry', () => {
     }
   })
 
-  test('the agent identities are the NHIs of the dev users, with the same scopes', () => {
-    const users = JSON.parse(readFileSync(new URL('../../../dev/resources/users.template.json', import.meta.url), 'utf8'))
+  test('the agent identities are the NHIs of the test users, with the same scopes', () => {
+    const users: any[] = sdFixtures({}).users
     for (const [agentId, { nhi, scopes }] of Object.entries(AGENT_IDENTITIES)) {
       const user = users.find((u: any) => u.id === nhi)
       assert.equal(user?.nhi?.subject, `autonomous-agent:${agentId}`, nhi)

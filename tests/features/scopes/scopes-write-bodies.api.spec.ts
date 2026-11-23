@@ -3,9 +3,9 @@ import assert from 'node:assert/strict'
 import { axiosAuth, clean } from '../../support/axios.ts'
 import { nhiSession } from '../../support/nhi.ts'
 
-// the test NHI is admin of test_org1, as this cookie user
-const orgAdmin = await axiosAuth({ email: 'test_admin@test.com', org: 'test_org1' })
-const owner = { type: 'organization', id: 'test_org1', name: 'Test Org 1' }
+// the test NHI is admin of test_portals_org1, as this cookie user
+const orgAdmin = await axiosAuth({ email: 'test_portals_admin@test.com', org: 'test_portals_org1' })
+const owner = { type: 'organization', id: 'test_portals_org1', name: 'Test Org 1' }
 
 const statusOf = async (promise: Promise<any>) => {
   try {

@@ -2,7 +2,7 @@ import { test, expect } from '../../fixtures/portal.ts'
 import { axiosAuth, clean } from '../../support/axios.ts'
 import { deleteDatasets, seedDataset } from '../../support/data-fair.ts'
 
-const user1 = await axiosAuth('test_admin@test.com')
+const user1 = await axiosAuth('test_portals_admin@test.com')
 
 // Create a home page and publish it through the real draft flow so the API
 // generates the server-side markdown (`_html`) that text elements render.

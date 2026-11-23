@@ -6,8 +6,8 @@ import type { AxiosInstance } from 'axios'
 import { axios, axiosAuth, clean } from '../../support/axios.ts'
 import { nhiSession } from '../../support/nhi.ts'
 
-// the test NHI is admin of test_org1, as this cookie user
-const orgAdmin = await axiosAuth({ email: 'test_admin@test.com', org: 'test_org1' })
+// the test NHI is admin of test_portals_org1, as this cookie user
+const orgAdmin = await axiosAuth({ email: 'test_portals_admin@test.com', org: 'test_portals_org1' })
 
 const statusOf = async (promise: Promise<any>) => {
   try {
@@ -138,7 +138,7 @@ test.describe('scope enforcement', () => {
     const pagesRead = await scoped('pages:read')
     assert.equal(await statusOf(pagesRead.get(`/api/portals/${portal._id}/public`)), 200)
     assert.equal(await statusOf(pagesRead.get('/api/fonts')), 200)
-    assert.equal(await statusOf(pagesRead.get('/api/limits/organization/test_org1')), 200)
+    assert.equal(await statusOf(pagesRead.get('/api/limits/organization/test_portals_org1')), 200)
     assert.equal(await statusOf(pagesRead.get('/api/ping')), 200)
   })
 

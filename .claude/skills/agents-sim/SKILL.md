@@ -13,25 +13,21 @@ transcript.
 
 Three things must be true, and each fails confusingly if it is not:
 
-1. The dev stack is up — `npx --no df-dev status`: core containers (nginx, simple-directory,
-   data-fair, mongo, elasticsearch) healthy, panes `api`, `ui`, `portal` running, and the
-   optional `agents` container started (`npx --no df-dev up agents` if it shows `not started`;
-   it starts the `mcp` container too, which the autonomous-agent cases need, and nginx needs
-   `MCP_PORT` in `.env`: add it by hand in an existing worktree), and the `events` container
-   (`npx --no df-dev up events`): without it the portal's notification calls answer 502, and
-   `portals_preview_portal_page` times out on the pages that make them, the home page first.
-   Back-office cases run the manager UI from the `ui` pane inside the data-fair shell;
-   portal cases run the `portal` pane.
+1. The dev stack is up (`npm run dev -- --profile agents --profile events`, started by the user): core
+   containers healthy, logs `api.log`, `ui.log`, `portal.log` in `dev/logs/` showing live processes, and
+   the optional `agents` container (it starts the `mcp` container too, which the autonomous-agent
+   cases need) and `events` container (without it the portal's notification calls answer 502, and
+   `portals_preview_portal_page` times out on the pages that make them, the home page first).
+   Back-office cases run the manager UI from the `ui` process inside the data-fair shell;
+   portal cases run the `portal` process.
 2. The data-fair container runs with `PRIVATE_AGENTS_URL` (see docker-compose.yml).
    Without it the back-office shows no chat at all and every back-office case dies
    waiting for the chat toggle. A container created before that line was added must
    be recreated by the user (`docker compose up -d data-fair`).
-3. The bridge is running — the `bridge` pane of the zellij layout starts suspended; the
-   maintainer presses Enter in it. `npx --no df-dev status` shows the pane running. The runner
-   checks the bridge and says so.
+3. The bridge is running (`npm run dev:bridge`, a long-running foreground process the maintainer
+   starts). The runner checks the bridge and says so.
 
-Use `npx --no df-dev up agents` for the agents container. Ask the user for anything else that
-is down (the session, the bridge). Never use docker or kill directly.
+Ask the user for anything that is down (the environment, the bridge). Never use docker or kill directly.
 
 A run calls `clean()`, which wipes the dev environment's test state — see the warning
 in AGENTS.md's Simulations section for exactly what it deletes. Do not run simulations

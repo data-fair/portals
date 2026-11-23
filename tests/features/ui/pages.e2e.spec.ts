@@ -1,13 +1,13 @@
 import { test, expect } from '../../fixtures/login.ts'
 import { axiosAuth, clean } from '../../support/axios.ts'
 
-const user1 = await axiosAuth('test_admin@test.com')
+const user1 = await axiosAuth('test_portals_admin@test.com')
 
 test.describe('pages UI', () => {
   test.beforeEach(clean)
 
   test('should display empty state when no pages exist', async ({ page, goToWithAuth }) => {
-    await goToWithAuth('/portals-manager/pages', 'test_admin')
+    await goToWithAuth('/portals-manager/pages', 'test_portals_admin')
     await expect(page.getByText('Vous n\'avez pas encore créé de page')).toBeVisible({ timeout: 10_000 })
   })
 
@@ -21,7 +21,7 @@ test.describe('pages UI', () => {
       owner: portal.owner
     })
 
-    await goToWithAuth('/portals-manager/pages', 'test_admin')
+    await goToWithAuth('/portals-manager/pages', 'test_portals_admin')
     await expect(page.getByText('Home Page E2E')).toBeVisible({ timeout: 10_000 })
   })
 })

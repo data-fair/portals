@@ -1,7 +1,7 @@
 import { test, expect } from '../../fixtures/login.ts'
 import { axiosAuth, clean } from '../../support/axios.ts'
 
-const user1 = await axiosAuth('test_admin@test.com')
+const user1 = await axiosAuth('test_portals_admin@test.com')
 
 // Judged simulations: a block the assistant added in the page editor was gone from the page
 // view's draft preview, and from the editor reopened from there. Both read the page store of
@@ -20,7 +20,7 @@ test.describe('page store', () => {
       owner: portal.owner
     })).data
 
-    await goToWithAuth(`/portals-manager/pages/${createdPage._id}`, 'test_admin')
+    await goToWithAuth(`/portals-manager/pages/${createdPage._id}`, 'test_portals_admin')
     await page.getByRole('link', { name: 'Éditer le brouillon' }).click({ timeout: 30_000 })
     await expect(page.getByLabel('Titre')).toHaveValue('Store Page', { timeout: 30_000 })
     const patched = page.waitForResponse(response =>

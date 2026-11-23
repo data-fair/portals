@@ -216,7 +216,7 @@ test.describe('agent surface of the api docs', () => {
   test('the page_config and portal_config editors compile the served schemas', async () => {
     test.slow()
     const { pageConfigSchema, portalConfigSchema } = await import('../../../api/src/draft-configs/service.ts')
-    const owner = { type: 'organization', id: 'test_org1', name: 'Test org' }
+    const owner = { type: 'organization', id: 'test_portals_org1', name: 'Test org' }
     const served: Record<string, unknown> = {
       '/pages/p1/draft-config/schema': await pageConfigSchema('generic'),
       '/pages/p1/draft-config': { title: 'A page', elements: [], genericMetadata: { slug: 'a-page' } },

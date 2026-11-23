@@ -32,7 +32,7 @@
 import { test, expect } from './fixtures/login.ts'
 import { axiosAuth, clean } from './support/axios.ts'
 
-const user1 = await axiosAuth('test_admin@test.com')
+const user1 = await axiosAuth('test_portals_admin@test.com')
 
 test('perf profiling seed', async ({ page, goToWithAuth }) => {
   await clean()
@@ -50,7 +50,7 @@ test('perf profiling seed', async ({ page, goToWithAuth }) => {
     owner: portal.owner
   })).data
 
-  await goToWithAuth(`/portals-manager/pages/${createdPage._id}/edit-config`, 'test_admin')
+  await goToWithAuth(`/portals-manager/pages/${createdPage._id}/edit-config`, 'test_portals_admin')
 
   // the VJSF form is rendered
   await expect(page.getByLabel('Titre')).toBeVisible({ timeout: 30_000 })

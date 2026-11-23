@@ -3,8 +3,8 @@ import assert from 'node:assert/strict'
 import 'dotenv/config'
 import { clean, axiosAuth } from '../../support/axios.ts'
 
-const orgAdmin = await axiosAuth({ email: 'test_admin@test.com', org: 'test_org1' })
-const otherUser = await axiosAuth('test_alone@test.com')
+const orgAdmin = await axiosAuth({ email: 'test_portals_admin@test.com', org: 'test_portals_org1' })
+const otherUser = await axiosAuth('test_portals_alone@test.com')
 
 test.describe('reuses list', () => {
   test.beforeEach(clean)

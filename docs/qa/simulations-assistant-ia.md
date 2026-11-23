@@ -79,7 +79,7 @@ Pourquoi les échecs :
 
 ## Agents autonomes
 
-Six cas (`simulations/autonomous-agent.sim.spec.ts`, `simulations/cases/autonomous-agents.ts`) : un agent de l'organisation `test_org1`, qui agit sous sa propre identité (NHI), utilise les outils `portals_*` et `datafair_*` du serveur mcp. Chaque cas choisit ses droits en choisissant son agent. La personne ne voit que la page de discussion de l'agent. Le juge lit le transcript et l'état stocké des portails et des pages (`hostState`).
+Six cas (`simulations/autonomous-agent.sim.spec.ts`, `simulations/cases/autonomous-agents.ts`) : un agent de l'organisation `test_portals_org1`, qui agit sous sa propre identité (NHI), utilise les outils `portals_*` et `datafair_*` du serveur mcp. Chaque cas choisit ses droits en choisissant son agent. La personne ne voit que la page de discussion de l'agent. Le juge lit le transcript et l'état stocké des portails et des pages (`hostState`).
 
 Référence du 09/11/2026, branche `feat-autonomous-agents`. Images : `agents:main` (1c2850b, agents #90 inclus), `mcp:main` (9c71695, openapi-mcp 0.11), `data-fair:master` (9abebab). `@data-fair/lib-agents-sim` 0.14.0 (`runSimulation`). Assistant Sonnet, outils Haiku, persona Sonnet. Deux passes, **10 runs sur 10 réussissent**. Entre parenthèses : le nombre de frictions relevées par le juge.
 
@@ -102,7 +102,7 @@ Le résultat stocké est juste dans tous les runs (`hostState`) : rien n'est mis
 - **L'aperçu** (`portals_preview_portal_page`) renvoie 45 à 80 Ko, surtout une capture PNG. Le résultat reste dans l'historique et alourdit chaque appel suivant : jusqu'à 535 000 jetons d'entrée cumulés sur un tour. Sur la page d'accueil, il dépasse le délai en dev : le service `events` n'est pas démarré et ses appels répondent en 502. La trace de pile dans ses erreurs 400 n'existe qu'en dev (`NODE_ENV`).
 - **L'agent** affirme parfois une vérification qu'il n'a pas faite (« je viens de relire la page », « visible par le public » après un aperçu en échec). Il n'annonce pas toujours ce qu'il a publié sous approbation automatique.
 
-Prérequis : le profil `agents` (conteneurs agents et mcp, `npx --no df-dev up agents`), et de préférence `events` pour que l'aperçu de la page d'accueil aboutisse, et le pont Claude Code, que seul l'utilisateur démarre. Dans un worktree existant, ajouter `MCP_PORT` à `.env` à la main. Le cas des données enregistre une application de base depuis cdn.jsdelivr (accès internet depuis le conteneur data-fair). Hors de `npm test` et de la CI.
+Prérequis : le profil `agents` (conteneurs agents et mcp, `npm run dev -- --profile agents`), et de préférence `events` pour que l'aperçu de la page d'accueil aboutisse, et le pont Claude Code, que seul l'utilisateur démarre. Le cas des données enregistre une application de base depuis cdn.jsdelivr (accès internet depuis le conteneur data-fair). Hors de `npm test` et de la CI.
 
 ### Aperçu de page
 
@@ -166,7 +166,7 @@ Ce que la passe montre encore :
    Ensuite, dans portals : mettre à jour, relancer `build-types` et remesurer.
 2. **Haiku comme modèle principal** : fiable sur les parcours courts, pas sur les longs, où il invente des échanges. À traiter dans le service agents.
 3. **Accessibilité des listes vjsf** : le bouton qui ouvre les actions d'une ligne (Modifier, Dupliquer…) n'a pas de nom. Ni la personne, ni l'assistant, ni un lecteur d'écran ne peut le désigner. Proposé, non fait (nécessite json-layout et vjsf).
-4. **Chat du portail** : les cas tournent désormais avec un visiteur connecté sans organisation (`test_alone`), seul jugeable depuis agents #80. Le chemin anonyme (son jeton, ses quotas) n'est plus couvert par les simulations.
+4. **Chat du portail** : les cas tournent désormais avec un visiteur connecté sans organisation (`test_portals_alone`), seul jugeable depuis agents #80. Le chemin anonyme (son jeton, ses quotas) n'est plus couvert par les simulations.
 5. **Couverture** : aucun cas ne concerne les réutilisations, les actualités ou les événements, ni un utilisateur sans droit d'écriture, ni l'anglais. `page-contenu` part d'une page qui a déjà un paragraphe d'introduction : la moitié de l'objectif n'est donc pas exercée.
 
 ## Fonctionnement
