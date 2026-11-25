@@ -1,7 +1,7 @@
 /**
  * The accounts of portals' test sub-space in simple-directory: every user, organization and member id
  * (and every email) starts with the prefix, so this suite seeds and cleans them without touching the
- * accounts of other sub-spaces (e.g. the dev world test_demo_ of dev/resources/demo-world.json).
+ * accounts of other sub-spaces (dev data under another prefix, other suites).
  *
  * Seeded through simple-directory's test API (POST /api/test-env/seed) after a cleanup of the prefix
  * (DELETE /api/test-env?prefix=): by tests/global-setup.ts before the spec files are loaded (many of them

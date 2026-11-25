@@ -10,7 +10,6 @@
     "dev": "bash dev/run.sh",
     "dev-deps": "bash dev/deps.sh",
     "dev-setup": "bash dev/setup.sh",
-    "dev-world": "node --disable-warning=ExperimentalWarning dev/world.ts",
     "dev:api": "cd api && FORCE_COLOR=1 NODE_ENV=development DEBUG='upgrade*' exec ../node_modules/.bin/nodemon -e js,mjs,ts,json,md index.ts",
     "dev:ui": "cd ui && FORCE_COLOR=1 NODE_CONFIG_DIR=../api/config/ exec ../node_modules/.bin/vite --port ${DEV_UI_PORT}",
     "dev:portal": "cd portal && FORCE_COLOR=1 NUXT_MONGO_URL=\"${NUXT_MONGO_URL:-mongodb://localhost:$MONGO_PORT/data-fair-portals-development}\" NUXT_PORTAL_URL_PATTERN=\"${NUXT_PORTAL_URL_PATTERN:-http://{subdomain\\}.portals.$DEV_HOST:$NGINX_PORT}\" NUXT_PRIVATE_DIRECTORY_URL=\"${NUXT_PRIVATE_DIRECTORY_URL:-http://localhost:$SD_PORT}\" NUXT_FRAME_ANCESTORS=\"${NUXT_FRAME_ANCESTORS:-http://$DEV_HOST:$NGINX_PORT}\" ../node_modules/.bin/nuxt dev 2>&1 | cat",

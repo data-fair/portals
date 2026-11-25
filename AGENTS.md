@@ -35,10 +35,9 @@ in `tests/support/sd-fixtures.ts`): `nhiSession(scope?)` in `tests/support/nhi.t
 exchanges its assertion for a scoped (or, without scope, unrestricted) session.
 
 The test cleanup endpoint (`DELETE /api/test-env?prefix=test_portals_`) only removes data whose `owner.id`
-starts with the prefix (400 on a missing or malformed prefix). To play around manually, use the dev account
-`test_demo_dev@example.org` (password `passwd`, a simple-directory admin, admin of the org `test_demo_org`): the
-dev world `test_demo_` (`dev/resources/demo-world.json`, seeded by `npm run dev-world`, which `npm run dev-deps`
-runs) is never cleaned by the tests.
+starts with the prefix (400 on a missing or malformed prefix). The repository ships no dev data: to play
+around manually, seed an account of your own through the same test API (`POST /api/test-env/seed`, as
+`tests/support/sd-fixtures.ts` does) under another prefix than `test_portals_`, so that the tests never clean it.
 
 ### Testing
 
