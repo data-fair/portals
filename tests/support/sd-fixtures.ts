@@ -20,17 +20,6 @@ const person = (name: string, firstName: string, lastName: string) => ({
   password
 })
 
-// non-human identity of an autonomous agent of the agents service: the subject pins the agent id
-const agentNhi = (env: Record<string, string | undefined>, name: string, agentId: string, scopes: string[]) => ({
-  id: `${prefix}org1_${name}_nhi`,
-  email: `${prefix}org1_${name}_nhi@test.com`,
-  nhi: {
-    provider: { issuer: `http://${env.DEV_HOST}:${env.NGINX_PORT}/agents/api/nhi` },
-    subject: `autonomous-agent:${agentId}`,
-    scopes
-  }
-})
-
 export const sdFixtures = (env: Record<string, string | undefined> = process.env) => {
   const users = [
     person('superadmin', 'Test', 'Superadmin'),
@@ -60,12 +49,7 @@ export const sdFixtures = (env: Record<string, string | undefined> = process.env
         },
         subject: 'scope-tests'
       }
-    },
-    // autonomous agents of org1, one scope set each (the subject pins the agent id)
-    agentNhi(env, 'pages_write', 'sim-pages-write', ['pages:write', 'portals:read', 'datasets:read', 'applications:read']),
-    agentNhi(env, 'pages_admin', 'sim-pages-admin', ['pages:admin', 'portals:read', 'datasets:read']),
-    agentNhi(env, 'pages_read', 'sim-pages-read', ['pages:read', 'portals:read']),
-    agentNhi(env, 'portals_write', 'sim-portals-write', ['portals:write', 'pages:read'])
+    }
   ]
 
   const organizations = [
@@ -79,11 +63,7 @@ export const sdFixtures = (env: Record<string, string | undefined> = process.env
         { id: `${prefix}user`, role: 'user' },
         { id: `${prefix}admin_dep`, role: 'admin', department: 'dep1' },
         { id: `${prefix}contrib_dep`, role: 'contrib', department: 'dep1' },
-        { id: `${prefix}org1_scope_nhi`, role: 'admin' },
-        { id: `${prefix}org1_pages_write_nhi`, role: 'admin' },
-        { id: `${prefix}org1_pages_admin_nhi`, role: 'admin' },
-        { id: `${prefix}org1_pages_read_nhi`, role: 'admin' },
-        { id: `${prefix}org1_portals_write_nhi`, role: 'admin' }
+        { id: `${prefix}org1_scope_nhi`, role: 'admin' }
       ]
     },
     {
