@@ -12,9 +12,9 @@ Quick start without any tooling: `npm ci && npm run dev` (fixed ports from `dev/
 
 The environment is started by the user, in a terminal: `npm run dev` starts the containers, the ingress manager, the api, the ui and the portal, logs in `dev/logs` (`ingress.log`, `api.log`, `ui.log`, `portal.log`). Read the logs before restarting anything: nodemon (api, ingress manager), vite (ui) and nuxt (portal) already reload on file changes. Agents do not kill the processes or containers they did not start.
 
-Each dev process also has its own npm script, reading its settings from environment variables (`dev/default.env` overridden by `.env`): `npm run dev-deps` (containers only), `npm run dev-setup` (idempotent builds), `npm run dev:ingress`, `npm run dev:api`, `npm run dev:ui`, `npm run dev:portal`, `npm run dev:bridge`.
+Each dev process also has its own npm script, reading its settings from environment variables (`dev/default.env` overridden by `.env`): `npm run dev-deps` (containers only), `npm run dev-setup` (idempotent builds), `npm run dev:ingress`, `npm run dev:api`, `npm run dev:ui`, `npm run dev:portal`.
 
-- Core containers: mongo, elasticsearch, simple-directory, data-fair, nginx. Optional: `agents` (back-office and portal chat, simulations; starts `mcp` too), `events`, `capture` (renders the pages for the agents' page preview, needs the `capture` image and simple-directory's pseudo sessions), `maildev` (contact form mails). Start them with a compose profile: `npm run dev -- --profile events --profile agents`. An optional service is absent when its port variable is empty (`EVENTS_PORT=`); `npm run dev` blanks the ports of the optional containers that are not running, so restart `npm run dev` after adding one.
+- Core containers: mongo, elasticsearch, simple-directory, data-fair, nginx. Optional: `agents` (back-office and portal chat; starts `mcp` too), `events`, `capture` (renders the pages for the agents' page preview, needs the `capture` image and simple-directory's pseudo sessions), `maildev` (contact form mails). Start them with a compose profile: `npm run dev -- --profile events --profile agents`. An optional service is absent when its port variable is empty (`EVENTS_PORT=`); `npm run dev` blanks the ports of the optional containers that are not running, so restart `npm run dev` after adding one.
 
 ### Port assignments
 
@@ -28,7 +28,7 @@ simple-directory stores its accounts in mongo. Test users and organizations live
 the sub-space `test_portals_` (every user, organization and member id, and every email, starts with it; password
 `passwd`). The tests seed it through simple-directory's test API (`DELETE /api/test-env?prefix=test_portals_`, then
 `POST /api/test-env/seed`), in `tests/global-setup.ts` (before the spec files, which log in at import time, are
-loaded) and in `tests/state-setup.ts` (the setup project of the tests and the simulations).
+loaded) and in `tests/state-setup.ts` (the setup project of the tests).
 
 The scope tests use a non-human identity, `test_portals_org1_scope_nhi` (admin of `test_portals_org1`,
 in `tests/support/sd-fixtures.ts`): `nhiSession(scope?)` in `tests/support/nhi.ts`
@@ -85,40 +85,15 @@ document that data-fair merges into its platform document:
 - `docs/architecture/api-docs.md`: the document, its tools, editor tool groups and skills, how
   data-fair merges it (namespace `portals`). The agent surface is pinned by
   `tests/fixtures/agent-surface.json`.
-
-### Simulations
-
-Judged browser simulations of the AI assistant (`@data-fair/lib-agents-sim`): a simulated
-person pursues a goal with the real assistant on a real model, then a judge reads the
-transcript. Cases live in `simulations/cases/index.ts` and run on two surfaces — the
-data-fair back-office shell embedding the manager UI, and the public portal's own chat.
-Run and judge them with the `/agents-sim` skill.
-
-- Never part of `npm test`, CI or hooks (separate `playwright.sim.config.ts`): they spend
-  Claude plan quota.
-- They need the `agents` profile (`npm run dev -- --profile agents`) and the Claude Code bridge
-  (`npm run dev:bridge`, port `BRIDGE_PORT`). Only the user starts the bridge: a long-running foreground process.
-- A run wipes `test_portals_`-owned portals data (`DELETE /api/test-env?prefix=test_portals_`), recreates the `sim-*`
-  datasets in data-fair, and rewrites `test_portals_org1`'s agents settings and data-fair topics.
-- Status summary: `docs/qa/simulations-assistant-ia.md`. What the judge reads as the
-  product's promises: `docs/architecture/agent.md`.
-
-Autonomous-agent cases (`simulations/autonomous-agent.sim.spec.ts`, cases in
-`simulations/cases/autonomous-agents.ts`, runner in `simulations/runner/autonomous-agent.ts`):
-an agent of `test_portals_org1`, acting as its own NHI, uses the `portals_*` / `datafair_*` tools of the
-mcp server. The judge also reads the stored portals state (`hostState`) read back by the case's `check`.
-
-- They need the `agents` profile (agents + mcp containers) and the
-  bridge, which only the user starts. Never part of `npm test` or CI.
-- Four agent identities (NHIs of `test_portals_org1`, defined in `tests/support/sd-fixtures.ts`):
-  `sim-pages-write`, `sim-pages-admin`, `sim-pages-read`, `sim-portals-write`
-  (user ids `test_portals_org1_<scope>_nhi`). Each case picks its scopes by picking its agent.
-- `MCP_PORT` (nginx exposes the mcp server on `/mcp-server/`).
 - simple-directory validates NHI scopes against data-fair's `scopes.json` (`PLATFORM_SCOPES_URL`),
   which lists portals' scopes only while data-fair's platform document holds a good fragment of portals
   (fetched while the portals api was up).
-- Seeding the data case registers a base application from cdn.jsdelivr: the data-fair container
-  needs internet access.
+
+### Simulations
+
+The judged browser simulations of the assistant (a simulated person, a real model, a judge reading the
+transcript) are not kept in this repository. What a judge reads as the product's promises is
+`docs/architecture/agent.md`, keep it current when the agent tools change.
 
 ### Linting & Type Checking
 

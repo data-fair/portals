@@ -1,8 +1,8 @@
 # The AI assistant in portals
 
 What the assistant is supposed to be able to do in this repository, where its tools
-come from, and what the person sees. Written for the simulation judge
-(`.claude/agents/simulation-judge.md`) and for anyone changing agent tools.
+come from, and what the person sees. Written for the judge of the assistant's
+simulations and for anyone changing agent tools.
 
 The chat itself (drawer/menu, conversation, skills, the `wait_for_user_action`
 handover, the gateway) belongs to the [agents](https://github.com/data-fair/agents)
@@ -159,9 +159,6 @@ Constraints the judge should know:
 
 ## Simulations
 
-`simulations/` runs judged scenarios on both surfaces; see AGENTS.md (Simulations) and
-`docs/qa/simulations-assistant-ia.md` for the latest results.
-
-The autonomous agents (an organization's agent acting as its own NHI on the mcp server's
-`portals_*` tools, limited by its scopes) have their own simulation cases, see AGENTS.md
-(Simulations) and `docs/qa/simulations-assistant-ia.md`.
+Judged scenarios run on both surfaces, and on the autonomous agents (an organization's agent
+acting as its own NHI on the mcp server's `portals_*` tools, limited by its scopes). They are
+not kept in this repository: this document is what their judge reads as the product's promises.

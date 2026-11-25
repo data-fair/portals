@@ -5,7 +5,7 @@
  *
  * Seeded through simple-directory's test API (POST /api/test-env/seed) after a cleanup of the prefix
  * (DELETE /api/test-env?prefix=): by tests/global-setup.ts before the spec files are loaded (many of them
- * log in at import time) and by tests/state-setup.ts (the setup project of the tests and the simulations).
+ * log in at import time) and by tests/state-setup.ts (the setup project of the tests).
  * All the users with a password use 'passwd'.
  */
 export const prefix = 'test_portals_'
@@ -61,7 +61,7 @@ export const sdFixtures = (env: Record<string, string | undefined> = process.env
         subject: 'scope-tests'
       }
     },
-    // the autonomous-agent simulations (simulations/runner/autonomous-agent.ts)
+    // autonomous agents of org1, one scope set each (the subject pins the agent id)
     agentNhi(env, 'pages_write', 'sim-pages-write', ['pages:write', 'portals:read', 'datasets:read', 'applications:read']),
     agentNhi(env, 'pages_admin', 'sim-pages-admin', ['pages:admin', 'portals:read', 'datasets:read']),
     agentNhi(env, 'pages_read', 'sim-pages-read', ['pages:read', 'portals:read']),

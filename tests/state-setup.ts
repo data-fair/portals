@@ -7,7 +7,7 @@ import { sdTestEnvUrl, seedSdFixtures } from './support/sd-fixtures.ts'
 
 const ax = axiosBuilder()
 
-// the setup project of the tests (api, e2e) and of the simulations (playwright.sim.config.ts)
+// the setup project of the tests (api, e2e)
 setup('Stateful tests setup', async () => {
   // Check that the dev API server is up
   await assert.doesNotReject(

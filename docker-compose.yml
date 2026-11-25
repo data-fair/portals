@@ -56,7 +56,7 @@ services:
       - MANAGE_DEPARTMENTS=true
       - MANAGE_PARTNERS=true
       - MANAGE_SITES=true
-      # non-human identities, seeded with the test accounts (the scope tests, the autonomous-agent simulations)
+      # non-human identities, seeded with the test accounts (the scope tests, autonomous agents)
       - MANAGE_NHIS=true
       # dev only: the agents NHI issuer is plain http on a .localhost host, which assertSafeIssuer refuses otherwise
       - NHIS_ALLOW_INSECURE_ISSUERS=true
@@ -100,7 +100,7 @@ services:
       - DIRECTORY_URL=http://${DEV_HOST}:${NGINX_PORT}/simple-directory
       - PRIVATE_DIRECTORY_URL=http://localhost:${SD_PORT}
       - PRIVATE_EVENTS_URL=http://localhost:${EVENTS_PORT}
-      # turns on the back-office agent chat (agentsIntegration), needed by the simulations
+      # turns on the back-office agent chat (agentsIntegration)
       - PRIVATE_AGENTS_URL=http://localhost:${AGENTS_PORT}
       # application thumbnails and datafair_preview_application (502 / 501 without it), with the capture profile
       - PRIVATE_CAPTURE_URL=http://localhost:${CAPTURE_PORT}
