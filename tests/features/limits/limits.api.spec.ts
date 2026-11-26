@@ -42,6 +42,23 @@ test.describe('limits', () => {
     )
   })
 
+  test('should count every portal and block creation once the limit is reached', async () => {
+    await anonymous.post('/api/limits/organization/test_org1', {
+      lastUpdate: new Date().toISOString(),
+      portals_nb_domains: { limit: 1 }
+    }, { params: { key } })
+
+    // a portal without a domain counts too
+    await orgAdmin.post('/api/portals', { config: { title: 'Portal 1' } })
+    const limits = (await orgAdmin.get('/api/limits/organization/test_org1')).data
+    assert.deepEqual(limits.portals_nb_domains, { limit: 1, consumption: 1 })
+
+    await assert.rejects(
+      orgAdmin.post('/api/portals', { config: { title: 'Portal 2' } }),
+      { status: 429 }
+    )
+  })
+
   test('should restrict access to limits', async () => {
     await assert.rejects(anonymous.post('/api/limits/organization/test_portals_org1', { lastUpdate: new Date().toISOString() }), { status: 401 })
     await assert.rejects(anonymous.post('/api/limits/organization/test_portals_org1', { lastUpdate: new Date().toISOString() }, { params: { key: 'wrong' } }), { status: 401 })
