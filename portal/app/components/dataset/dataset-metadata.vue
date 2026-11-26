@@ -215,6 +215,57 @@
         </div>
       </v-col>
 
+      <v-col
+        v-if="metadataConfig.showMetadataQuality && dataset.completeness"
+        v-bind="metadataColProps"
+      >
+        <div class="text-body-small text-medium-emphasis">
+          {{ t('quality.label') }}
+        </div>
+        <div class="d-flex align-center ga-1 pr-2">
+          <v-menu
+            v-if="dataset.completeness.criteria.length"
+            location="bottom end"
+          >
+            <template #activator="{ props: menuProps }">
+              <v-btn
+                v-bind="menuProps"
+                :icon="mdiInformation"
+                :title="t('quality.detail')"
+                :aria-label="t('quality.detail')"
+                size="small"
+                density="comfortable"
+                variant="text"
+              />
+            </template>
+            <v-card max-width="420">
+              <v-card-title class="text-wrap">
+                {{ t('quality.title') }}
+              </v-card-title>
+              <v-list density="compact">
+                <v-list-item
+                  v-for="criterion of dataset.completeness.criteria"
+                  :key="(criterion.custom ? 'custom.' : '') + criterion.key"
+                  :title="qualityLabel(criterion)"
+                  :subtitle="qualityHint(criterion)"
+                >
+                  <template #prepend>
+                    <v-icon
+                      :icon="[mdiCloseCircle, mdiAlertCircle, mdiCheckCircle][criterion.note * 2]"
+                      :color="['error', 'warning', 'success'][criterion.note * 2]"
+                    />
+                  </template>
+                </v-list-item>
+              </v-list>
+            </v-card>
+          </v-menu>
+          <dataset-quality-bar
+            :score="dataset.completeness.score"
+            class="flex-grow-1"
+          />
+        </div>
+      </v-col>
+
       <!-- Last update date -->
       <v-col v-bind="metadataColProps">
         <div class="text-body-small text-medium-emphasis">
@@ -324,7 +375,7 @@
 <script setup lang="ts">
 import type { Dataset } from '#api/types/index.ts'
 import type { ActionButtons } from '#api/types/portal-config'
-import { mdiLabel } from '@mdi/js'
+import { mdiAlertCircle, mdiCheckCircle, mdiCloseCircle, mdiInformation, mdiLabel } from '@mdi/js'
 import OwnerAvatar from '@data-fair/lib-vuetify/owner-avatar.vue'
 import formatBytes from '@data-fair/lib-vue/format/bytes.js'
 
@@ -380,6 +431,21 @@ const formatCustomValue = (definition: CustomMetadataDefinition) => {
   return value
 }
 
+type QualityCriterion = NonNullable<Dataset['completeness']>['criteria'][number]
+const qualityLabel = (criterion: QualityCriterion) => {
+  if (criterion.custom) return metadataSettings.data.value?.custom?.find(c => c.key === criterion.key)?.title || criterion.key
+  return (metadataSettings.data.value as Record<string, { title?: string } | undefined>)?.[criterion.key]?.title || t('quality.criteria.' + criterion.key)
+}
+// same wording as the data-fair back-office
+const qualityHint = (criterion: QualityCriterion) => {
+  if (criterion.note === 0) return t('quality.empty')
+  const { size, recommendedMin: min, recommendedMax: max } = criterion
+  if (size === undefined || (min === undefined && max === undefined)) return undefined
+  const value = criterion.custom ? dataset.customMetadata?.[criterion.key] : (dataset as Record<string, unknown>)[criterion.key]
+  const range = min !== undefined && max !== undefined ? t('quality.range', { min, max }) : min !== undefined ? t('quality.min', { min }) : t('quality.max', { max })
+  return `${t(Array.isArray(value) ? 'quality.values' : 'quality.chars', size)} · ${range}`
+}
+
 </script>
 
 <i18n lang="yaml">
@@ -425,6 +491,31 @@ const formatCustomValue = (definition: CustomMetadataDefinition) => {
     frequency: 'Update frequency:'
     topics: 'Topics:'
     updatedAt: Updated at
+    quality:
+      label: 'Metadata completeness score:'
+      title: Metadata completeness score
+      detail: Metadata completeness score detail
+      empty: Not filled
+      chars: 'no characters | {n} character | {n} characters'
+      values: 'no values | {n} value | {n} values'
+      range: '{min} to {max} recommended'
+      min: 'at least {min} recommended'
+      max: 'at most {max} recommended'
+      criteria:
+        summary: Summary
+        description: Description
+        license: License
+        origin: Origin
+        image: Image
+        topics: Topics
+        relatedDatasets: Related datasets
+        creator: Producer
+        spatial: Geographic coverage
+        temporal: Temporal coverage
+        frequency: Update frequency
+        modified: Data last modified
+        keywords: Keywords
+        searchTerms: Search terms
   fr:
     attachments: 'Pièces jointes :'
     creator: 'Producteur :'
@@ -467,4 +558,29 @@ const formatCustomValue = (definition: CustomMetadataDefinition) => {
     frequency: 'Fréquence de mise à jour :'
     topics: 'Thématiques :'
     updatedAt: Mis à jour le
+    quality:
+      label: 'Score de complétion des métadonnées :'
+      title: Score de complétion des métadonnées
+      detail: Détail du score de complétion des métadonnées
+      empty: Non renseignée
+      chars: 'aucun caractère | {n} caractère | {n} caractères'
+      values: 'aucune valeur | {n} valeur | {n} valeurs'
+      range: '{min} à {max} recommandés'
+      min: 'au moins {min} recommandés'
+      max: 'au plus {max} recommandés'
+      criteria:
+        summary: Résumé
+        description: Description
+        license: Licence
+        origin: Provenance
+        image: Image
+        topics: Thématiques
+        relatedDatasets: Jeux de données liés
+        creator: Producteur
+        spatial: Couverture géographique
+        temporal: Couverture temporelle
+        frequency: Fréquence de mise à jour
+        modified: Dernière mise à jour des données
+        keywords: Mots-clés
+        searchTerms: Termes de recherche
 </i18n>

@@ -158,6 +158,17 @@ export default {
             comp: 'switch',
             cols: { md: 6 }
           }
+        },
+        showMetadataQuality: {
+          type: 'boolean',
+          title: 'Show the metadata completeness score',
+          'x-i18n-title': { fr: 'Afficher le score de complétion des métadonnées' },
+          description: 'Score and detail of its criteria, shown when the owner activated the metadata completeness score in their settings.',
+          'x-i18n-description': { fr: 'Score et détail des critères, affichés quand le propriétaire a activé le score de complétion des métadonnées dans ses paramètres.' },
+          layout: {
+            comp: 'switch',
+            cols: { md: 6 }
+          }
         }
       }
     },
