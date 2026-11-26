@@ -8,6 +8,66 @@ const ownersGetItems = {
   itemKey: 'item.id'
 }
 
+export const applicationsStaticFilters = {
+  type: 'object',
+  description: 'Restrict the applications displayed by the catalog. These filters are neither visible nor editable by visitors.',
+  'x-i18n-description': { fr: 'Restreignent les visualisations affichées par le catalogue. Ces filtres ne sont ni visibles ni modifiables par les visiteurs.' },
+  properties: {
+    includedOwners: {
+      $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/staticFilterValues',
+      title: 'Owners to include',
+      'x-i18n-title': { fr: 'Propriétaires à inclure' },
+      layout: {
+        comp: 'autocomplete',
+        cols: { md: 6 },
+        getItems: ownersGetItems,
+        props: { chips: true, closableChips: true }
+      }
+    },
+    excludedOwners: {
+      $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/staticFilterValues',
+      title: 'Owners to exclude',
+      'x-i18n-title': { fr: 'Propriétaires à exclure' },
+      layout: {
+        comp: 'autocomplete',
+        cols: { md: 6 },
+        getItems: ownersGetItems,
+        props: { chips: true, closableChips: true }
+      }
+    },
+    includedTopics: {
+      $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/staticFilterValues',
+      title: 'Topics to include',
+      'x-i18n-title': { fr: 'Thématiques à inclure' },
+      layout: {
+        comp: 'autocomplete',
+        getItems: {
+          url: '/data-fair/api/v1/applications?mine=true&size=0&facets=topics',
+          itemsResults: 'data.facets.topics.map(f => ({ id: f.value.id, title: f.value.title }))',
+          itemTitle: 'item.title',
+          itemKey: 'item.id'
+        },
+        props: { chips: true, closableChips: true }
+      }
+    },
+    includedBaseApplications: {
+      $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/staticFilterValues',
+      title: 'Base applications to include',
+      'x-i18n-title': { fr: 'Applications de base à inclure' },
+      layout: {
+        comp: 'autocomplete',
+        getItems: {
+          url: '/data-fair/api/v1/applications?mine=true&size=0&facets=base-application',
+          itemsResults: "data.facets['base-application'].map(f => ({ id: f.value.url, title: f.value.title }))",
+          itemTitle: 'item.title',
+          itemKey: 'item.id'
+        },
+        props: { chips: true, closableChips: true }
+      }
+    }
+  }
+}
+
 export default {
   $id: 'https://github.com/data-fair/portals/page-element-applications',
   'x-exports': [],
@@ -98,65 +158,7 @@ export default {
           'x-i18n-description': { fr: 'Mode de configuration avancé. Permet de configurer des blocs de pages personnalisés entre les filtres de base et les résultats.' },
           layout: 'switch'
         },
-        staticFilters: {
-          type: 'object',
-          description: 'Restrict the applications displayed by the catalog. These filters are neither visible nor editable by visitors.',
-          'x-i18n-description': { fr: 'Restreignent les visualisations affichées par le catalogue. Ces filtres ne sont ni visibles ni modifiables par les visiteurs.' },
-          properties: {
-            includedOwners: {
-              $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/staticFilterValues',
-              title: 'Owners to include',
-              'x-i18n-title': { fr: 'Propriétaires à inclure' },
-              layout: {
-                comp: 'autocomplete',
-                cols: { md: 6 },
-                getItems: ownersGetItems,
-                props: { chips: true, closableChips: true }
-              }
-            },
-            excludedOwners: {
-              $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/staticFilterValues',
-              title: 'Owners to exclude',
-              'x-i18n-title': { fr: 'Propriétaires à exclure' },
-              layout: {
-                comp: 'autocomplete',
-                cols: { md: 6 },
-                getItems: ownersGetItems,
-                props: { chips: true, closableChips: true }
-              }
-            },
-            includedTopics: {
-              $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/staticFilterValues',
-              title: 'Topics to include',
-              'x-i18n-title': { fr: 'Thématiques à inclure' },
-              layout: {
-                comp: 'autocomplete',
-                getItems: {
-                  url: '/data-fair/api/v1/applications?mine=true&size=0&facets=topics',
-                  itemsResults: 'data.facets.topics.map(f => ({ id: f.value.id, title: f.value.title }))',
-                  itemTitle: 'item.title',
-                  itemKey: 'item.id'
-                },
-                props: { chips: true, closableChips: true }
-              }
-            },
-            includedBaseApplications: {
-              $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/staticFilterValues',
-              title: 'Base applications to include',
-              'x-i18n-title': { fr: 'Applications de base à inclure' },
-              layout: {
-                comp: 'autocomplete',
-                getItems: {
-                  url: '/data-fair/api/v1/applications?mine=true&size=0&facets=base-application',
-                  itemsResults: "data.facets['base-application'].map(f => ({ id: f.value.url, title: f.value.title }))",
-                  itemTitle: 'item.title',
-                  itemKey: 'item.id'
-                },
-                props: { chips: true, closableChips: true }
-              }
-            }
-          }
-        },
+        staticFilters: applicationsStaticFilters,
         filters: {
           type: 'object',
           properties: {

@@ -1,13 +1,13 @@
 // Seeds real data-fair resources for the specs that need the server-rendered path.
 //
-// DELETE /api/test-env only wipes the portals-manager collections, it never touches
+// DELETE /api/test-env?prefix=test_portals_ only wipes the portals-manager collections, it never touches
 // data-fair, so anything seeded here has to be deleted here too.
 import FormData from 'form-data'
 import { axiosAuth } from './axios.ts'
 
 export const dataFairUrl = `http://${process.env.DEV_HOST}:${process.env.NGINX_PORT}/data-fair`
 
-const admin = await axiosAuth('test_admin@test.com')
+const admin = await axiosAuth('test_portals_admin@test.com')
 
 /** The composite reference data-fair uses to scope a query to one portal */
 export const publicationSite = (portalId: string) => `data-fair-portals:${portalId}`
@@ -18,6 +18,7 @@ export const seedDataset = async (portalId: string, opts: {
   summary?: string
   image?: string
   attachments?: unknown[]
+  topics?: { id: string, title: string }[]
 }) => {
   await admin.post(`${dataFairUrl}/api/v1/datasets/${opts.id}`, {
     isMetaOnly: true,
@@ -28,6 +29,7 @@ export const seedDataset = async (portalId: string, opts: {
     summary: opts.summary,
     image: opts.image,
     attachments: opts.attachments,
+    topics: opts.topics,
     publicationSites: [publicationSite(portalId)]
   })
   await admin.put(`${dataFairUrl}/api/v1/datasets/${opts.id}/permissions`, [{ classes: ['read', 'list'] }])

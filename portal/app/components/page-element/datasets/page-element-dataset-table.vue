@@ -24,7 +24,7 @@ const { preview } = usePortalStore()
 if (element.syncParams === 'shared-filters' && element.uuid) {
   usePageFilterDescribeTool({
     uuid: element.uuid,
-    title: `Filtres : ${element.dataset?.title ?? 'tableau'}`,
+    title: t('filtersTool', { title: element.dataset?.title ?? t('datasetTable') }),
     description: `This page has a dataset table "${element.dataset?.title ?? ''}" that reflects all page filters: concept filters (keys starting with "_c") and dataset-specific filters (keys starting with "_d_${element.dataset?.id}_"). Use pageFilters_set to drive it.`
   })
 }
@@ -50,6 +50,8 @@ const url = computed(() => {
 <i18n lang="yaml">
   en:
     datasetTable: Table
+    filtersTool: 'Filters: {title}'
   fr:
     datasetTable: Tableau
+    filtersTool: 'Filtres : {title}'
 </i18n>

@@ -4,49 +4,40 @@
 
 Portals is the portal manager for the Data FAIR platform, developed by Koumoul. It allows creating and managing public data portals with customizable themes, pages, and content.
 
+Design specs and implementation plans are not kept in this repository; durable architecture docs live in `docs/architecture/`.
+
 ## Dev environment
 
-The user starts the dev environment of a checkout with `npm run dev-zellij` (zellij >= 0.44, session named after the checkout directory). Agents never start or kill the session, and act on processes and containers only through `df-dev`:
+Quick start without any tooling: `npm ci && npm run dev` (fixed ports from `dev/default.env`, overridden by `.env`), then `npm test`.
 
-```bash
-npx --no df-dev status                     # containers (health, memory), panes (running / exited + code), dev processes memory
-npx --no df-dev logs api -n 100            # last lines of a pane: api, ui, portal, ingress-manager, bridge
-npx --no df-dev restart api                # Ctrl+C, rerun, wait for /api/ping
-npx --no df-dev up agents events maildev   # optional containers (compose profiles), added to the running env
-npx --no df-dev down maildev
-```
+The environment is started by the user, in a terminal: `npm run dev` starts the containers, the ingress manager, the api, the ui and the portal, logs in `dev/logs` (`ingress.log`, `api.log`, `ui.log`, `portal.log`). Read the logs before restarting anything: nodemon (api, ingress manager), vite (ui) and nuxt (portal) already reload on file changes. Agents do not kill the processes or containers they did not start.
 
-- Read the logs before restarting: nodemon (api, ingress-manager), vite (ui) and nuxt (portal) already reload on file changes. Restart only a pane that exited, hangs, or needs new env.
-- If `restart` answers "not ready", report to the user with the logs instead of retrying.
-- Never use `docker compose restart`, `kill` or `zellij action` directly.
-- Optional containers: `agents` (back-office and portal chat, simulations), `events`, `maildev` (contact form mails). The user can start them with the env: `npm run dev-zellij -- --services agents,events,maildev`.
+Each dev process also has its own npm script, reading its settings from environment variables (`dev/default.env` overridden by `.env`): `npm run dev-deps` (containers only), `npm run dev-setup` (idempotent builds), `npm run dev:ingress`, `npm run dev:api`, `npm run dev:ui`, `npm run dev:portal`.
+
+- Core containers: mongo, elasticsearch, simple-directory, data-fair, nginx. Optional: `agents` (back-office and portal chat; starts `mcp` too), `events`, `capture` (renders the pages for the agents' page preview, needs the `capture` image and simple-directory's pseudo sessions), `maildev` (contact form mails). Start them with a compose profile: `npm run dev -- --profile events --profile agents`. An optional service is absent when its port variable is empty (`EVENTS_PORT=`); `npm run dev` blanks the ports of the optional containers that are not running, so restart `npm run dev` after adding one.
 
 ### Port assignments
 
-Port numbers are defined in `.env`. Do not modify port assignments.
-
-### Git worktrees
-
-To work on a separate branch in an isolated environment (own `.env`, own
-docker compose project, randomized ports so it doesn't clash with the main
-checkout), **always use the df-dev scripts from the main checkout** — never
-`git worktree add` by hand:
-
-```bash
-npx --no df-worktree <branch-name>          # ../portals_<branch>: npm ci + df-dev setup (.env, types, UI build (once))
-npx --no df-worktree-delete <branch> [-f]   # containers + volumes + images + zellij session, then the worktree
-```
-
-Branch names: letters, digits, `.`, `_`, `-`, at most 60 characters, no `/`.
+Port numbers are defined in `dev/default.env`: do not change `dev/default.env`, override locally in `.env`.
 
 ### Test and dev environment
 
 The environment allows for integration testing thanks to docker containers (see docker-compose.yml).
-Random ports are allocated and defined in `.env`.
 A nginx proxy is part of the containers and exposes all services, including the development API server (configured in dev/resources/nginx.conf.template).
-Test users are defined in dev/resources/users.json
+simple-directory stores its accounts in mongo. Test users and organizations live in `tests/support/sd-fixtures.ts`:
+the sub-space `test_portals_` (every user, organization and member id, and every email, starts with it; password
+`passwd`). The tests seed it through simple-directory's test API (`DELETE /api/test-env?prefix=test_portals_`, then
+`POST /api/test-env/seed`), in `tests/global-setup.ts` (before the spec files, which log in at import time, are
+loaded) and in `tests/state-setup.ts` (the setup project of the tests).
 
-The test cleanup endpoint (`DELETE /api/test-env`) only removes data whose `owner.id` starts with `test_`. Use the dev-only superadmin `superadmin@dev.com` (id `dev_superadmin`, password `passwd`, member of org `dev_org`) to play around manually without seeing your data wiped by tests.
+The scope tests use a non-human identity, `test_portals_org1_scope_nhi` (admin of `test_portals_org1`,
+in `tests/support/sd-fixtures.ts`): `nhiSession(scope?)` in `tests/support/nhi.ts`
+exchanges its assertion for a scoped (or, without scope, unrestricted) session.
+
+The test cleanup endpoint (`DELETE /api/test-env?prefix=test_portals_`) only removes data whose `owner.id`
+starts with the prefix (400 on a missing or malformed prefix). The repository ships no dev data: to play
+around manually, seed an account of your own through the same test API (`POST /api/test-env/seed`, as
+`tests/support/sd-fixtures.ts` does) under another prefix than `test_portals_`, so that the tests never clean it.
 
 ### Testing
 
@@ -83,37 +74,39 @@ portals and pages lists, page editor draft). Tag a test only if it is fast and c
 many features depend on. When iterating, run only the related test cases; `npm run quality`
 runs the full gate locally.
 
+### API for agents
+
+The manager API is usable by AI agents through OAuth scopes and an `x-agent` annotated OpenAPI
+document that data-fair merges into its platform document:
+
+- `docs/architecture/scopes.md`: scope vocabulary and tiers, the operations table in
+  `api/src/scopes.ts`, any-scope and refused routes, the publication-site sync of agent sessions.
+- `docs/architecture/api-docs.md`: the document, its tools, editor tool groups and skills, how
+  data-fair merges it (namespace `portals`). The agent surface is pinned by
+  `tests/fixtures/agent-surface.json`.
+- simple-directory validates NHI scopes against data-fair's `scopes.json` (`PLATFORM_SCOPES_URL`),
+  which lists portals' scopes only while data-fair's platform document holds a good fragment of portals
+  (fetched while the portals api was up).
+
 ### Simulations
 
-Judged browser simulations of the AI assistant (`@data-fair/lib-agents-sim`): a simulated
-person pursues a goal with the real assistant on a real model, then a judge reads the
-transcript. Cases live in `simulations/cases/index.ts` and run on two surfaces — the
-data-fair back-office shell embedding the manager UI, and the public portal's own chat.
-Run and judge them with the `/agents-sim` skill.
-
-- Never part of `npm test`, CI or hooks (separate `playwright.sim.config.ts`): they spend
-  Claude plan quota.
-- They need the `agents` container (`npx --no df-dev up agents`) and the Claude Code bridge
-  (`bridge` zellij pane, suspended until the user presses Enter in it, port `BRIDGE_PORT`
-  in `.env`). Only the user starts the bridge.
-- A run wipes `test_`-owned portals data (`DELETE /api/test-env`), recreates the `sim-*`
-  datasets in data-fair, and rewrites `test_org1`'s agents settings and data-fair topics.
-- Status summary: `docs/qa/simulations-assistant-ia.md`. What the judge reads as the
-  product's promises: `docs/architecture/agent.md`.
+The judged browser simulations of the assistant (a simulated person, a real model, a judge reading the
+transcript) are not kept in this repository. What a judge reads as the product's promises is
+`docs/architecture/agent.md`, keep it current when the agent tools change.
 
 ### Linting & Type Checking
 
 ```bash
 npm run lint             # ESLint for all workspaces
 npm run lint-fix         # Auto-fix lint issues
-npm run check-types      # TypeScript type checking (needs the UI build made by `npx --no df-dev setup`: it generates the auto-import declarations)
+npm run check-types      # TypeScript type checking (needs the UI build made by `npm run dev-setup`: it generates the auto-import declarations)
 ```
 
 ### Building
 
 ```bash
 npm run build-types      # Build type definitions from schemas
-npm -w ui run build      # Production UI build (done once by `npx --no df-dev setup`; re-run only to refresh the auto-import declarations)
+npm -w ui run build      # Production UI build (done once by `npm run dev-setup`; re-run only to refresh the auto-import declarations)
 ```
 
 ### Commits & release notes

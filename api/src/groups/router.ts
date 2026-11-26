@@ -8,11 +8,12 @@ import mongo from '#mongo'
 import findUtils from '../utils/find.ts'
 import { httpError, reqSessionAuthenticated, assertAccountRole } from '@data-fair/lib-express/index.js'
 import { createGroup, patchGroup, sendGroupEvent } from './service.ts'
+import { requireOperationScope } from '../scopes.ts'
 
 const router = Router()
 export default router
 
-router.get('', async (req, res) => {
+router.get('', requireOperationScope('listGroups'), async (req, res) => {
   const session = reqSessionAuthenticated(req)
   assertAccountRole(session, session.account, 'admin')
 
@@ -29,7 +30,7 @@ router.get('', async (req, res) => {
   res.json({ results, count })
 })
 
-router.post('', async (req, res) => {
+router.post('', requireOperationScope('createGroup'), async (req, res) => {
   const session = reqSessionAuthenticated(req)
   assertAccountRole(session, session.account, 'admin')
 
@@ -46,11 +47,11 @@ router.post('', async (req, res) => {
   }
 
   await createGroup(group)
-  sendGroupEvent(group, 'a été créé', 'create', session)
+  sendGroupEvent(group, 'create', session)
   res.status(201).json(group)
 })
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', requireOperationScope('getGroup'), async (req, res) => {
   const session = reqSessionAuthenticated(req)
   const group = await mongo.groups.findOne({ _id: req.params.id })
   if (!group) throw httpError(404, `Group "${req.params.id}" not found`)
@@ -58,7 +59,7 @@ router.get('/:id', async (req, res) => {
   res.json(group)
 })
 
-router.patch('/:id', async (req, res) => {
+router.patch('/:id', requireOperationScope('updateGroup'), async (req, res) => {
   const session = reqSessionAuthenticated(req)
   const group = await mongo.groups.findOne({ _id: req.params.id })
   if (!group) throw httpError(404, `Group "${req.params.id}" not found`)
@@ -66,16 +67,16 @@ router.patch('/:id', async (req, res) => {
 
   const body = patchReqBody.returnValid(req.body, { name: 'body' })
   const updatedGroup = await patchGroup(group, body, session)
-  sendGroupEvent(updatedGroup, 'a été modifié', 'patch', session)
+  sendGroupEvent(updatedGroup, 'patch', session)
   res.send(updatedGroup)
 })
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', requireOperationScope('deleteGroup'), async (req, res) => {
   const session = reqSessionAuthenticated(req)
   const group = await mongo.groups.findOne({ _id: req.params.id })
   if (!group) throw httpError(404, `Group "${req.params.id}" not found`)
   assertAccountRole(session, group.owner, 'admin')
   await mongo.groups.deleteOne({ _id: req.params.id })
-  sendGroupEvent(group, 'a été supprimé', 'delete', session)
+  sendGroupEvent(group, 'delete', session)
   res.status(204).send()
 })

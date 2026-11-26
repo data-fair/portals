@@ -326,8 +326,6 @@ const deleteGroup = useAsyncAction(
     deletingGroup: Deleting a group
     deleteGroupSuccess: Group deleted.
     deleteGroupError: Error while deleting the group.
-    confirmDeleteGroup: Do you really want to delete the group "{title}"? Deletion is permanent and data cannot be recovered.
-    groupNotEmptyError: Cannot delete the group while it contains pages
     delete: Delete
     deleteGroupWarning: Only groups without any page can be deleted.
     owner: Owner

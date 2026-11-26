@@ -10,10 +10,10 @@ import microTemplate from '@data-fair/lib-utils/micro-template.js'
 import { autoImports, componentsResolver, settingsPath } from '@data-fair/lib-vuetify/vite.js'
 import { commonjsDeps } from '@koumoul/vjsf/utils/build.js'
 
-// ports come from the .env written by df-dev (see dev/dev.json)
+// ports come from the environment (.env, created from dev/default.env by npm run dev-deps)
 const envPort = (name: string) => {
   const port = Number(process.env[name])
-  if (!Number.isInteger(port) || port <= 0) throw new Error(`missing or invalid ${name}, run "npx --no df-dev setup"`)
+  if (!Number.isInteger(port) || port <= 0) throw new Error(`missing or invalid ${name}, run "npm run dev-deps" to create .env from dev/default.env`)
   return port
 }
 

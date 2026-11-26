@@ -9,11 +9,12 @@ import * as postReqBody from '#doc/reuses/post-req-body/index.ts'
 import * as patchReqBody from '#doc/reuses/patch-req-body/index.ts'
 import { reqSessionAuthenticated, assertAccountRole, httpError } from '@data-fair/lib-express/index.js'
 import { createReuse, getReuseAsAdmin, getReuseAsAdminOrSubmitter, patchReuse, deleteReuse, sendReuseEvent, validateReuseDraft, cancelReuseDraft, submitReuse } from './service.ts'
+import { requireOperationScope } from '../scopes.ts'
 
 const router = Router()
 export default router
 
-router.get('', async (req, res, next) => {
+router.get('', requireOperationScope('listReuses'), async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
   assertAccountRole(session, session.account, 'admin')
 
@@ -42,7 +43,7 @@ router.get('', async (req, res, next) => {
   res.json({ results, count, facets: facets[0] })
 })
 
-router.post('', async (req, res, next) => {
+router.post('', requireOperationScope('createReuse'), async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
 
   const body = postReqBody.returnValid(req.body, { name: 'body' })
@@ -84,17 +85,17 @@ router.post('', async (req, res, next) => {
 
   await createReuse(reuse)
 
-  sendReuseEvent(reuse, 'a été créée', 'create', session)
+  sendReuseEvent(reuse, 'create', session)
   res.status(201).json(reuse)
 })
 
-router.get('/:id', async (req, res, next) => {
+router.get('/:id', requireOperationScope('getReuse'), async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
   const reuse = await getReuseAsAdminOrSubmitter(session, req.params.id)
   res.send(reuse)
 })
 
-router.patch('/:id', async (req, res, next) => {
+router.patch('/:id', requireOperationScope('updateReuse'), async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
   const reuse = await getReuseAsAdmin(session, req.params.id)
   const body = patchReqBody.returnValid(req.body, { name: 'body' })
@@ -105,35 +106,35 @@ router.patch('/:id', async (req, res, next) => {
   if (!onlyDraftChanged) {
     const hasOtherChanges = Object.keys(body).some(key => key !== 'portals' && key !== 'draftConfig')
     if (hasOtherChanges) {
-      sendReuseEvent(updatedReuse, 'a été modifiée', 'patch', session)
+      sendReuseEvent(updatedReuse, 'patch', session)
     }
   }
 
   res.send(updatedReuse)
 })
 
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id', requireOperationScope('deleteReuse'), async (req, res, next) => {
   const reuse = await getReuseAsAdmin(reqSessionAuthenticated(req), req.params.id)
   await deleteReuse(reuse)
-  sendReuseEvent(reuse, 'a été supprimée', 'delete', reqSessionAuthenticated(req))
+  sendReuseEvent(reuse, 'delete', reqSessionAuthenticated(req))
   res.status(204).send()
 })
 
-router.post('/:id/draft', async (req, res, next) => {
+router.post('/:id/draft', requireOperationScope('publishReuseDraft'), async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
   const reuse = await getReuseAsAdmin(session, req.params.id)
   await validateReuseDraft(reuse, session)
   res.status(204).send()
 })
 
-router.delete('/:id/draft', async (req, res, next) => {
+router.delete('/:id/draft', requireOperationScope('cancelReuseDraft'), async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
   const reuse = await getReuseAsAdmin(session, req.params.id)
   await cancelReuseDraft(reuse, session)
   res.status(204).send()
 })
 
-router.post('/:id/submit', async (req, res, next) => {
+router.post('/:id/submit', requireOperationScope('submitReuse'), async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
   const reuse = await getReuseAsAdmin(session, req.params.id)
   const portalId = req.body.portalId as string

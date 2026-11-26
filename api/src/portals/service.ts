@@ -9,16 +9,26 @@ import { type SessionStateAuthenticated, assertAccountRole, assertAdminMode, get
 // origin, which only our ingress routes here — the private instance (lib-node refuses non public
 // addresses in the default one, which is for URLs a user can influence)
 import { privateAxiosInstance as axios } from '@data-fair/lib-node/axios.js'
-import eventsQueue from '@data-fair/lib-node/events-queue.js'
+import eventsQueue, { type PushEvent } from '@data-fair/lib-node/events-queue.js'
 import { defaultTheme, fillTheme } from '@data-fair/lib-common-types/theme/index.js'
 import { renderMarkdown } from '@data-fair/portals-shared-markdown'
 import { forEachFooterBlock, footerImageRefs, hasKoumoulMention } from '#types/portal-config-footer/walk.ts'
 import mongo from '#mongo'
 import config from '#config'
-import { duplicateImage } from '../images/service.ts'
+import log from '@data-fair/lib-node/log.js'
+import { duplicateImage, transferResourceImages } from '../images/service.ts'
 import { getFontFamilyAssets } from '../fonts/service.ts'
+import { type SyncCredentials, assertCanSyncPortal, subscriptionRequests, syncPath, foreignPortalId, syncErrorStatus } from './operations.ts'
 
 const debug = debugModule('portals')
+
+/** 400 when a page or reuse of `owner` is attached to a portal of another owner (foreignPortalId) */
+export const assertOwnerPortals = async (owner: { type: string, id: string }, portalIds: string[]) => {
+  if (!portalIds.length) return
+  const portals = await mongo.portals.find({ _id: { $in: portalIds } }, { projection: { _id: 1, owner: 1 } }).toArray()
+  const foreignId = foreignPortalId(owner, portalIds, portals)
+  if (foreignId) throw httpError(400, `portal "${foreignId}" not found among the portals of the owner ${owner.type}:${owner.id}`)
+}
 const debugSyncPortal = debugModule('sync-portal')
 
 export const getPortalAsAdmin = async (sessionState: SessionStateAuthenticated, id: string) => {
@@ -52,21 +62,24 @@ export const getPortal = async (sessionState: SessionStateAuthenticated, id: str
   throw httpError(403, 'requires admin, contrib role(s)')
 }
 
-export const createPortal = async (portal: Portal, reqOrigin: string, cookie?: string) => {
+// who triggers a sync of a portal to the other services, and with which credentials
+export type SyncCaller = { session: SessionStateAuthenticated, headers: SyncCredentials }
+
+export const createPortal = async (portal: Portal, reqOrigin: string, caller: SyncCaller) => {
   debug('createPortal', portal)
   renderPortalConfigMarkdown(portal.config)
   renderPortalConfigMarkdown(portal.draftConfig)
-  await syncPortalUpdate(portal, null, reqOrigin, [], cookie)
+  await syncPortalUpdate(portal, null, reqOrigin, [], caller)
   await mongo.portals.insertOne(portal)
 }
 
-export const patchPortal = async (portal: Portal, patch: Partial<Portal>, session: SessionStateAuthenticated, reqOrigin: string, forceSync: SyncPart[], cookie?: string) => {
+export const patchPortal = async (portal: Portal, patch: Partial<Portal>, session: SessionStateAuthenticated, reqOrigin: string, forceSync: SyncPart[], headers: SyncCredentials) => {
   // Change WhiteLabel, isReference or md2Compat by super admin only
-  if (patch.whiteLabel || patch.isReference || patch.md2Compat) assertAdminMode(session)
+  if (patch.whiteLabel !== undefined || patch.isReference !== undefined || patch.md2Compat !== undefined) assertAdminMode(session)
 
   const whiteLabel = patch.whiteLabel ?? portal.whiteLabel
   if (patch.draftConfig && !whiteLabel && !hasKoumoulMention(patch.draftConfig.footer)) {
-    throw httpError(400, 'Le pied de page doit afficher la mention Koumoul : activez la ligne de copyright ou ajoutez le logo Koumoul dans un bloc images.')
+    throw httpError(400, 'The footer must show the Koumoul mention: enable the copyright line or add the Koumoul logo in an images block.')
   }
 
   if (patch.contributorDepartments && patch.contributorDepartments.length && portal.owner.department) {
@@ -76,20 +89,7 @@ export const patchPortal = async (portal: Portal, patch: Partial<Portal>, sessio
   // Change of ownership - Check permissions and propagate to images
   if (patch.owner) {
     assertAccountRole(session, patch.owner, 'admin')
-    await mongo.images.updateMany(
-      {
-        'owner.type': portal.owner.type,
-        'owner.id': portal.owner.id,
-        'resource.type': 'portal',
-        'resource._id': portal._id
-      },
-      {
-        $set: {
-          'owner.type': patch.owner.type,
-          'owner.id': patch.owner.id
-        }
-      }
-    )
+    await transferResourceImages({ type: 'portal', _id: portal._id }, portal.owner, patch.owner)
   }
 
   const fullPatch = {
@@ -105,15 +105,15 @@ export const patchPortal = async (portal: Portal, patch: Partial<Portal>, sessio
   }
   const updatedPortal = { ...portal, ...fullPatch }
   // we propagate before storing as it has a greater probability of failing and we prefer a cohesive state
-  await syncPortalUpdate(updatedPortal, portal, reqOrigin, forceSync, cookie)
+  await syncPortalUpdate(updatedPortal, portal, reqOrigin, forceSync, { session, headers })
   await mongo.portals.updateOne({ _id: portal._id }, { $set: fullPatch })
 
   return updatedPortal
 }
 
-export const deletePortal = async (portal: Portal, reqOrigin: string, cookie?: string) => {
+export const deletePortal = async (portal: Portal, reqOrigin: string, caller: SyncCaller) => {
   debug('deletePortal', portal)
-  await syncPortalDelete(portal, reqOrigin, cookie)
+  await syncPortalDelete(portal, reqOrigin, caller)
   // Remove portal reference from pages and delete images related to the portal
   await mongo.pages.updateMany(
     {
@@ -140,19 +140,19 @@ export const deletePortal = async (portal: Portal, reqOrigin: string, cookie?: s
   await mongo.portals.deleteOne({ _id: portal._id })
 }
 
-export const validatePortalDraft = async (portal: Portal, session: SessionStateAuthenticated, reqOrigin: string, cookie?: string) => {
+export const validatePortalDraft = async (portal: Portal, session: SessionStateAuthenticated, reqOrigin: string, headers: SyncCredentials) => {
   debug('validatePortalDraft', portal)
-  const updatedPortal = await patchPortal(portal, { config: portal.draftConfig, title: portal.draftConfig.title }, session, reqOrigin, [], cookie)
+  const updatedPortal = await patchPortal(portal, { config: portal.draftConfig, title: portal.draftConfig.title }, session, reqOrigin, [], headers)
   await cleanUnusedImages(updatedPortal)
-  sendPortalEvent(portal, 'a été validé', 'draft-validate', session, getChangesKeys(portal.config, updatedPortal.config))
+  sendPortalEvent(portal, 'draft-validate', session, getChangesKeys(portal.config, updatedPortal.config))
   return updatedPortal
 }
 
-export const cancelPortalDraft = async (portal: Portal, session: SessionStateAuthenticated, reqOrigin: string, cookie?: string) => {
+export const cancelPortalDraft = async (portal: Portal, session: SessionStateAuthenticated, reqOrigin: string, headers: SyncCredentials) => {
   debug('cancelPortalDraft', portal)
-  const updatedPortal = await patchPortal(portal, { draftConfig: portal.config }, session, reqOrigin, [], cookie)
+  const updatedPortal = await patchPortal(portal, { draftConfig: portal.config }, session, reqOrigin, [], headers)
   await cleanUnusedImages(updatedPortal)
-  sendPortalEvent(portal, 'a été annulé', 'draft-discard', session)
+  sendPortalEvent(portal, 'draft-discard', session)
   return updatedPortal
 }
 
@@ -273,33 +273,104 @@ const getIngressInfos = (portal: Portal) => {
   return ingressInfos
 }
 
+const postSDSites = async (sdSites: Awaited<ReturnType<typeof getSDSites>>) => {
+  for (const site of sdSites) {
+    debugSyncPortal('sync to SD', site)
+    try {
+      await axios.post(
+        `${config.privateDirectoryUrl}/api/sites`,
+        site,
+        { params: { key: config.secretKeys.sites } }
+      )
+    } catch (err: any) {
+      formatSyncError('simple-directory', err)
+    }
+  }
+}
+
+// the font faces are baked in the theme of the simple-directory sites, a change of a font asset
+// is not seen by syncPortalUpdate (both sides of its comparison read the current assets)
+export const syncPortalsUsingFonts = async (owner: { type: string, id: string }, familyNames: string[]) => {
+  const portals = await mongo.portals.find({
+    'owner.type': owner.type,
+    'owner.id': owner.id,
+    $or: ['config', 'draftConfig'].flatMap(c => ['bodyFontFamily', 'headingFontFamily'].map(f => ({ [`${c}.${f}`]: { $in: familyNames } })))
+  }).toArray()
+  for (const portal of portals) {
+    try {
+      await postSDSites(await getSDSites(portal))
+    } catch (err) {
+      log.warn('failed to sync the theme of a portal after a font change', { code: 'sync-portal-font', err, portalId: portal._id })
+    }
+  }
+}
+
 type SyncPart = 'ingress' | 'sd' | 'df'
 
 const formatSyncError = (service: string, err: any) => {
-  const status = err.response?.status
-  const data = err.response?.data
-  const message = typeof data === 'string' ? data : (data?.message || data?.msg || err.message)
-  throw httpError(status || 500, `${service} error${status ? ` (${status})` : ''}: ${message}`)
+  // lib-node's axios rejects with the response fields copied on the error
+  const status = err.status ?? err.response?.status
+  const data = err.data ?? err.response?.data
+  const message = (typeof data === 'string' && data) || data?.message || data?.msg || err.message
+  throw httpError(syncErrorStatus(status), `${service} error${status ? ` (${status})` : ''}: ${message}`)
+}
+
+const publicationSitesPath = (portal: Portal) => {
+  const ownerId = portal.owner.department ? encodeURIComponent(`${portal.owner.id}:${portal.owner.department}`) : portal.owner.id
+  return `/api/v1/settings/${portal.owner.type}/${ownerId}/publication-sites`
+}
+
+// the headers of a publication-site write on data-fair's private url, for a scope-restricted session
+const dataFairSecretHeaders = () => {
+  if (!config.privateDataFairUrl || !config.secretKeys.dataFair) {
+    throw httpError(500, 'config.privateDataFairUrl and config.secretKeys.dataFair are required to sync the publication sites of scope-restricted sessions')
+  }
+  return { 'x-secret-key': config.secretKeys.dataFair }
+}
+
+// data-fair does not subscribe a caller it only knows through the secret key, its own credentials do it here
+const postPublicationSiteSubscriptions = async (response: { created: boolean, subscriptions?: unknown[] }, reqOrigin: string, headers: SyncCredentials, portal: Portal) => {
+  for (const request of subscriptionRequests(response, reqOrigin, headers)) {
+    try {
+      await axios.post(request.url, request.body, { headers: request.headers })
+    } catch (err) {
+      log.warn('failed to subscribe to the events of a new publication site', { code: 'subscribe-publication-site', err, portalId: portal._id })
+    }
+  }
 }
 
 // portals are synced to settings.publicationSites in data-fair and to a dataset containing images
-export async function syncPortalUpdate (portal: Portal, previousPortal: Portal | null, reqOrigin: string, forceSync: SyncPart[], cookie?: string) {
+// caller null: a maintenance script, that acts for no user and so cannot sync data-fair
+export async function syncPortalUpdate (portal: Portal, previousPortal: Portal | null, reqOrigin: string, forceSync: SyncPart[], caller: SyncCaller | null) {
   debugSyncPortal('sync portal update', portal)
+  if (caller) assertCanSyncPortal(caller.session, portal)
 
   const publicationSite = getPublicationSite(portal)
   if (!forceSync.includes('df') && equal(publicationSite, previousPortal && getPublicationSite(previousPortal))) {
     debugSyncPortal('nothing new to sync to data-fair', publicationSite)
   } else {
     debugSyncPortal('sync to data-fair', publicationSite)
-    const ownerId = portal.owner.department ? encodeURIComponent(`${portal.owner.id}:${portal.owner.department}`) : portal.owner.id
-    try {
-      await axios.post(
-        `${reqOrigin}/data-fair/api/v1/settings/${portal.owner.type}/${ownerId}/publication-sites`,
-        publicationSite,
-        { headers: { cookie } }
-      )
-    } catch (err: any) {
-      formatSyncError('data-fair', err)
+    if (!caller) throw httpError(500, 'the publication site of a portal can only be synced on behalf of a user')
+    // TODO: unify on the secret-key path once every supported data-fair has it
+    if (syncPath(caller.session, caller.headers) === 'cookie') {
+      try {
+        await axios.post(
+          `${reqOrigin}/data-fair${publicationSitesPath(portal)}`,
+          publicationSite,
+          { headers: { cookie: caller.headers.cookie } }
+        )
+      } catch (err: any) {
+        formatSyncError('data-fair', err)
+      }
+    } else {
+      const headers = dataFairSecretHeaders()
+      let response: { created: boolean, subscriptions?: unknown[] } | undefined
+      try {
+        response = (await axios.post(`${config.privateDataFairUrl}${publicationSitesPath(portal)}`, publicationSite, { headers })).data
+      } catch (err: any) {
+        formatSyncError('data-fair', err)
+      }
+      if (response) await postPublicationSiteSubscriptions(response, reqOrigin, caller.headers, portal)
     }
   }
 
@@ -307,18 +378,7 @@ export async function syncPortalUpdate (portal: Portal, previousPortal: Portal |
   if (!forceSync.includes('sd') && equal(sdSites, previousPortal && await getSDSites(previousPortal))) {
     debugSyncPortal('nothing new to sync to SD', sdSites)
   } else {
-    for (const site of sdSites) {
-      debugSyncPortal('sync to SD', site)
-      try {
-        await axios.post(
-          `${config.privateDirectoryUrl}/api/sites`,
-          site,
-          { params: { key: config.secretKeys.sites } }
-        )
-      } catch (err: any) {
-        formatSyncError('simple-directory', err)
-      }
-    }
+    await postSDSites(sdSites)
   }
 
   if (config.privateIngressManagerUrl) {
@@ -340,12 +400,20 @@ export async function syncPortalUpdate (portal: Portal, previousPortal: Portal |
   }
 }
 
-async function syncPortalDelete (portal: Portal, reqOrigin: string, cookie?: string) {
-  const ownerId = portal.owner.department ? encodeURIComponent(`${portal.owner.id}:${portal.owner.department}`) : portal.owner.id
-  await axios.delete(
-    `${reqOrigin}/data-fair/api/v1/settings/${portal.owner.type}/${ownerId}/publication-sites/data-fair-portals/${portal._id}`,
-    { headers: { cookie } }
-  )
+async function syncPortalDelete (portal: Portal, reqOrigin: string, caller: SyncCaller) {
+  assertCanSyncPortal(caller.session, portal)
+  const sitePath = `${publicationSitesPath(portal)}/data-fair-portals/${portal._id}`
+  // TODO: unify on the secret-key path once every supported data-fair has it
+  if (syncPath(caller.session, caller.headers) === 'cookie') {
+    await axios.delete(`${reqOrigin}/data-fair${sitePath}`, { headers: { cookie: caller.headers.cookie } })
+  } else {
+    const headers = dataFairSecretHeaders()
+    try {
+      await axios.delete(`${config.privateDataFairUrl}${sitePath}`, { headers })
+    } catch (err: any) {
+      formatSyncError('data-fair', err)
+    }
+  }
   await deletePortalSites(portal)
 }
 
@@ -392,27 +460,30 @@ const cleanUnusedImages = async (portal: Portal) => {
   await mongo.images.deleteMany(deleteFilter)
 }
 
+const portalTitles = {
+  create: (title: string) => ({ en: `The portal ${title} was created`, fr: `Le portail ${title} a été créé` }),
+  patch: (title: string) => ({ en: `The portal ${title} was updated`, fr: `Le portail ${title} a été modifié` }),
+  delete: (title: string) => ({ en: `The portal ${title} was deleted`, fr: `Le portail ${title} a été supprimé` }),
+  'draft-validate': (title: string) => ({ en: `The draft of the portal ${title} was validated`, fr: `Le brouillon du portail ${title} a été validé` }),
+  'draft-discard': (title: string) => ({ en: `The draft of the portal ${title} was discarded`, fr: `Le brouillon du portail ${title} a été annulé` })
+}
+
+/** Body of a portal event that lists the changed keys of its configuration. */
+export const changesBody = (keys: string[]) => ({ en: `Changes: ${keys.join(', ')}`, fr: `Modifications : ${keys.join(', ')}` })
+
 /**
- * Helper function to send events related to portals
- * @param portal The portal object
- * @param actionText The text describing the action (e.g. "a été validé")
- * @param topicAction The action part of the topic key (e.g. "draft-validate", "draft-discard")
- * @param sessionState Optional session state for authentication
- * @param body Optional additional information to include in the event
+ * Send an event about a portal.
+ * @param topicAction The action part of the topic key, it also selects the event title
+ * @param body Details of the event
  */
 export const sendPortalEvent = (
   portal: Portal,
-  actionText: string,
-  topicAction: string,
+  topicAction: keyof typeof portalTitles,
   sessionState?: SessionStateAuthenticated,
-  body?: string
+  body?: PushEvent['body']
 ) => {
-  const title = topicAction.includes('draft-')
-    ? `Le brouillon du portail ${portal.title} ${actionText}`
-    : `Le portail ${portal.title} ${actionText}`
-
   eventsQueue.pushEvent({
-    title,
+    title: portalTitles[topicAction](portal.title),
     topic: { key: `portals:portal-${topicAction}:${portal._id}` },
     sender: portal.owner,
     resource: {
@@ -424,7 +495,7 @@ export const sendPortalEvent = (
   }, sessionState)
 }
 
-const getChangesKeys = (obj1: Record<string, any>, obj2: Record<string, any>): string => {
+const getChangesKeys = (obj1: Record<string, any>, obj2: Record<string, any>) => {
   const allKeys = new Set([...Object.keys(obj1), ...Object.keys(obj2)])
   const modifiedKeys: string[] = []
 
@@ -432,7 +503,7 @@ const getChangesKeys = (obj1: Record<string, any>, obj2: Record<string, any>): s
     if (!equal(obj1[key], obj2[key])) modifiedKeys.push(key)
   }
 
-  return 'Modifications : ' + modifiedKeys.join(', ')
+  return changesBody(modifiedKeys)
 }
 
 /**
@@ -445,7 +516,7 @@ export const duplicatePortalConfig = async (
   sourcePortalId: string,
   newPortalId: string,
   newOwner: Portal['owner']
-): Promise<{ config: PortalConfig; eventDetails: string }> => {
+): Promise<{ config: PortalConfig; eventDetails: PushEvent['body'] }> => {
   const sourcePortal = await mongo.portals.findOne({ _id: sourcePortalId })
   if (!sourcePortal) throw httpError(404, `portal "${sourcePortalId}" not found for duplication`)
 
@@ -488,8 +559,9 @@ export const duplicatePortalConfig = async (
     for (const topic of duplicatedConfig.topics) rewrite(topic.thumbnail)
   }
 
-  let eventDetails = `Dupliqué depuis le portail "${sourcePortal.title}" (${sourcePortalId})`
-  if (sourcePortal?.isReference) eventDetails = `Dupliqué depuis le portail de référence "${sourcePortal.title}" (${sourcePortalId})`
+  const eventDetails = sourcePortal.isReference
+    ? { en: `Duplicated from the reference portal "${sourcePortal.title}" (${sourcePortalId})`, fr: `Dupliqué depuis le portail de référence "${sourcePortal.title}" (${sourcePortalId})` }
+    : { en: `Duplicated from the portal "${sourcePortal.title}" (${sourcePortalId})`, fr: `Dupliqué depuis le portail "${sourcePortal.title}" (${sourcePortalId})` }
 
   return { config: duplicatedConfig, eventDetails }
 }

@@ -7,7 +7,7 @@ debug.enable('sync-portal')
 await mongo.connect()
 
 for await (const portal of mongo.portals.find({})) {
-  await syncPortalUpdate(portal, portal, '', ['ingress'])
+  await syncPortalUpdate(portal, portal, '', ['ingress'], null)
 }
 
 await mongo.client.close()

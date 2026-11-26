@@ -6,10 +6,11 @@ import FormData from 'form-data'
 import 'dotenv/config'
 import { clean, axiosAuth } from '../../support/axios.ts'
 
-const user1 = await axiosAuth('test_admin@test.com')
-const orgAdmin = await axiosAuth({ email: 'test_admin@test.com', org: 'test_org1' })
-const orgContrib = await axiosAuth({ email: 'test_contrib@test.com', org: 'test_org1' })
-const deptAdmin = await axiosAuth({ email: 'test_admin_dep@test.com', org: 'test_org1' })
+const user1 = await axiosAuth('test_portals_admin@test.com')
+const orgAdmin = await axiosAuth({ email: 'test_portals_admin@test.com', org: 'test_portals_org1' })
+const orgContrib = await axiosAuth({ email: 'test_portals_contrib@test.com', org: 'test_portals_org1' })
+const deptAdmin = await axiosAuth({ email: 'test_portals_admin_dep@test.com', org: 'test_portals_org1' })
+const superadmin = await axiosAuth({ email: 'test_portals_superadmin@test.com', adminMode: true })
 
 test.describe('pages management', () => {
   test.beforeEach(clean)
@@ -17,7 +18,7 @@ test.describe('pages management', () => {
   test('should create a page', { tag: '@smoke' }, async () => {
     const pageConfig = { title: 'My page', elements: [] }
     const page = (await user1.post('/api/pages', { type: 'home', config: pageConfig })).data
-    assert.equal(page.owner.id, 'test_admin')
+    assert.equal(page.owner.id, 'test_portals_admin')
     // the API attaches a computed table of contents (empty here, no anchored titles)
     assert.deepEqual(page.config, { ...pageConfig, _toc: [] })
     assert.deepEqual(page.draftConfig, { ...pageConfig, _toc: [] })
@@ -40,6 +41,31 @@ test.describe('pages management', () => {
     assert.deepEqual(datasets.config.elements[0].filters, { position: 'top', items: ['search', 'sort'] })
     const events = (await user1.post('/api/pages', { type: 'event-catalog', config: { title: 'Events', elements: [] } })).data
     assert.deepEqual(events.draftConfig.elements[0].filters, { position: 'top', items: ['search', 'include-past', 'sort'] })
+  })
+
+  test('should store the static filters of a topics list per source', async () => {
+    const element = {
+      type: 'topics',
+      datasetsStaticFilters: { includedTopics: [{ id: 't1', title: 'T1' }], types: ['file'] },
+      applicationsStaticFilters: { includedBaseApplications: [{ id: 'https://app/', title: 'App' }] }
+    }
+    const page = (await user1.post('/api/pages', {
+      type: 'generic',
+      config: { title: 'Topics page', elements: [element], genericMetadata: { slug: 'topics-page' } }
+    })).data
+    assert.deepEqual(page.config.elements[0].datasetsStaticFilters, element.datasetsStaticFilters)
+    assert.deepEqual(page.config.elements[0].applicationsStaticFilters, element.applicationsStaticFilters)
+  })
+
+  test('should reject an applications static filter in the datasets group of a topics list', async () => {
+    await assert.rejects(user1.post('/api/pages', {
+      type: 'generic',
+      config: {
+        title: 'Topics page',
+        elements: [{ type: 'topics', datasetsStaticFilters: { includedBaseApplications: [{ id: 'https://app/' }] } }],
+        genericMetadata: { slug: 'topics-page-invalid' }
+      }
+    }), (err: any) => err.status === 400)
   })
 
   test('should duplicate a page with an image', async () => {
@@ -77,7 +103,7 @@ test.describe('pages management', () => {
       config: { title: 'Duplicated page', elements: [] }
     })).data
 
-    assert.equal(duplicatedPage.owner.id, 'test_admin')
+    assert.equal(duplicatedPage.owner.id, 'test_portals_admin')
     assert.equal(duplicatedPage.config.title, 'Duplicated page')
     assert.equal(duplicatedPage.config.elements.length, 1, 'Duplicated page should have one element')
     assert.equal(duplicatedPage.config.elements[0].type, 'image')
@@ -167,5 +193,44 @@ test.describe('staging publication flow', () => {
     await user1.post(`/api/pages/${page._id}/draft`)
     const validated = (await user1.get(`/api/pages/${page._id}`)).data
     assert.deepEqual(validated.config._toc, updated.draftConfig._toc)
+  })
+})
+
+test.describe('page transfer', () => {
+  test.beforeEach(clean)
+
+  const uploadPageImage = async (ax: typeof orgAdmin, pageId: string) => {
+    const form = new FormData()
+    form.append('body', JSON.stringify({ resource: { type: 'page', _id: pageId } }))
+    form.append('image', createReadStream('tests/resources/logo.png'))
+    return (await ax.post('/api/images', form)).data
+  }
+
+  test('the page images follow it to another department and back to the organization', async () => {
+    const page = (await orgAdmin.post('/api/pages', { type: 'generic', config: { title: 'Org page', elements: [], genericMetadata: { slug: 'org-page' } } })).data
+    const image = await uploadPageImage(orgAdmin, page._id)
+
+    const dep1 = { type: 'organization', id: 'test_portals_org1', name: 'Test Org 1', department: 'dep1', departmentName: 'Department 1' }
+    await orgAdmin.patch(`/api/pages/${page._id}`, { owner: dep1 })
+    assert.equal((await deptAdmin.get(`/api/images/${image._id}/data`)).status, 200)
+
+    await orgAdmin.patch(`/api/pages/${page._id}`, { owner: { type: 'organization', id: 'test_portals_org1', name: 'Test Org 1' } })
+    assert.equal((await orgAdmin.get(`/api/images/${image._id}/data`)).status, 200)
+    assert.equal((await deptAdmin.get(`/api/images/${image._id}/data`, { validateStatus: () => true })).status, 404)
+  })
+
+  test('a standard page transferred and attached in one PATCH replaces the new owner\'s page of its type', async () => {
+    const portal = (await orgAdmin.post('/api/portals', { config: { title: 'Org portal', menu: { children: [] } } })).data
+    const orgContact = (await orgAdmin.post('/api/pages', { type: 'contact', config: { title: 'Contact', elements: [] }, portals: [portal._id] })).data
+    assert.deepEqual(orgContact.portals, [portal._id])
+
+    // from another account (a superadmin may transfer between accounts): the page to replace is the new owner's
+    const personalContact = (await user1.post('/api/pages', { type: 'contact', config: { title: 'New contact', elements: [] } })).data
+    const moved = (await superadmin.patch(`/api/pages/${personalContact._id}`, {
+      owner: { type: 'organization', id: 'test_portals_org1', name: 'Test Org 1' },
+      portals: [portal._id]
+    })).data
+    assert.deepEqual(moved.portals, [portal._id])
+    assert.deepEqual((await orgAdmin.get(`/api/pages/${orgContact._id}`)).data.portals, [])
   })
 })

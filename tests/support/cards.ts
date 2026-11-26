@@ -10,7 +10,7 @@ import type { Locator, Page, Route } from '@playwright/test'
 import { expect } from '@playwright/test'
 import { axiosAuth } from './axios.ts'
 
-const user = await axiosAuth('test_admin@test.com')
+const user = await axiosAuth('test_portals_admin@test.com')
 
 export type CardKind = 'datasets' | 'applications' | 'reuses'
 

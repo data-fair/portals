@@ -59,14 +59,14 @@ if (!preview) {
     return Array.from({ length: element.mode === 'custom' ? (element.applications?.length || 1) : element.limit }, (_, i) => ({
       id: `application-${i + 1}`,
       slug: `application-${i + 1}`,
-      title: element.applications?.[i]?.title || `Application ${i + 1}`,
-      summary: 'Ceci est un exemple de visualisation pour la prévisualisation.',
+      title: element.applications?.[i]?.title || `Lorem ipsum ${i + 1}`,
+      summary: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
       updatedAt: new Date().toISOString(),
       url: `https://example.com/app-${i + 1}`,
       href: `/applications/application-${i + 1}`,
       exposedUrl: `https://example.com/app-${i + 1}`,
       owner: session.account.value,
-      topics: [{ id: 'topic-1', title: 'Topic exemple', color: '#45d31d' }]
+      topics: [{ id: 'topic-1', title: 'Lorem', color: '#45d31d' }]
     }))
   })
 }

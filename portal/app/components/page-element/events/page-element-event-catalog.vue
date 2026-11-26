@@ -72,8 +72,8 @@ const {
     return query
   },
   mockDataFactory: () => Array.from({ length: 6 }, (_, i) => ({
-    title: `Événement ${i + 1}`,
-    description: 'Exemple d\'événement pour la prévisualisation.',
+    title: `Lorem ipsum ${i + 1}`,
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
     eventMetadata: { slug: `event-${i + 1}`, startDate: new Date().toISOString() }
   }))
 })

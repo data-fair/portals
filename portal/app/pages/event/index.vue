@@ -10,8 +10,6 @@
       v-if="pageConfigFetch.data.value"
       :model-value="pageConfigFetch.data.value.elements"
     />
-
-    <div data-iframe-height="40" />
   </layout-page>
 </template>
 

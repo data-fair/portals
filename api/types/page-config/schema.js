@@ -16,7 +16,11 @@ export default {
   'x-vjsf-locales': ['en', 'fr'],
   title: 'PageConfig',
   type: 'object',
-  unevaluatedProperties: false,
+  // not unevaluatedProperties: the validators are compiled for draft-07, which ignores it, and an
+  // unknown key (an invented toc option...) was stored without a word. The root has no composition,
+  // additionalProperties means the same here: refused by the page PATCH and POST, stripped by the
+  // healing validate export like the leftovers of elements
+  additionalProperties: false,
   layout: {
     title: null,
     children: [{

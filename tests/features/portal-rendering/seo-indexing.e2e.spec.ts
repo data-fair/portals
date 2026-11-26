@@ -4,7 +4,7 @@ import { test, expect } from '../../fixtures/portal.ts'
 import { axiosAuth, clean } from '../../support/axios.ts'
 import { deleteDatasets, seedDataset, seedFileDataset } from '../../support/data-fair.ts'
 
-const user1 = await axiosAuth('test_admin@test.com')
+const user1 = await axiosAuth('test_portals_admin@test.com')
 
 const baseHost = `${process.env.DEV_HOST}:${process.env.NGINX_PORT}`
 const portalUrl = (portalId: string, draft = false) => `http://${portalId}${draft ? '.draft' : ''}.portals.${baseHost}`

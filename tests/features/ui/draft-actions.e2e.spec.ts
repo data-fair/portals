@@ -1,7 +1,7 @@
 import { test, expect } from '../../fixtures/login.ts'
 import { axiosAuth, clean } from '../../support/axios.ts'
 
-const user1 = await axiosAuth('test_admin@test.com')
+const user1 = await axiosAuth('test_portals_admin@test.com')
 
 // Judged simulations: people clicked « Valider le brouillon », saw nothing happen and
 // concluded nothing was saved, although the draft had been published. The action was
@@ -22,7 +22,7 @@ test.describe('draft actions of the page editor', () => {
       owner: portal.owner
     })).data
 
-    await goToWithAuth(`/portals-manager/pages/${createdPage._id}/edit-config`, 'test_admin')
+    await goToWithAuth(`/portals-manager/pages/${createdPage._id}/edit-config`, 'test_portals_admin')
     await expect(page.getByLabel('Titre')).toBeVisible({ timeout: 30_000 })
 
     const validate = page.getByRole('button', { name: 'Valider le brouillon' })
@@ -82,7 +82,7 @@ test.describe('validating while the page draft is being saved', () => {
       portals: [portal._id],
       owner: portal.owner
     })).data
-    await goToWithAuth(`/portals-manager/pages/${createdPage._id}/edit-config`, 'test_admin')
+    await goToWithAuth(`/portals-manager/pages/${createdPage._id}/edit-config`, 'test_portals_admin')
     await expect(page.getByLabel('Titre')).toBeVisible({ timeout: 30_000 })
     // a first edit, saved: the draft differs and « Valider le brouillon » is enabled
     const firstPatch = page.waitForResponse(response =>
@@ -122,7 +122,7 @@ test.describe('draft actions of the portal editor', () => {
       if (request.method() === 'PATCH' && request.url().includes(`/api/portals/${portal._id}`)) patches.push(request.postData() ?? '')
     })
 
-    await goToWithAuth(`/portals-manager/portals/${portal._id}`, 'test_admin')
+    await goToWithAuth(`/portals-manager/portals/${portal._id}`, 'test_portals_admin')
     const title = page.getByLabel('Titre', { exact: true })
     await expect(title).toBeVisible({ timeout: 30_000 })
     const validate = page.getByRole('button', { name: 'Valider le brouillon' })
@@ -153,7 +153,7 @@ test.describe('draft actions of the portal editor', () => {
     const portal = (await user1.post('/api/portals', {
       config: { title: 'Quick Portal', menu: { children: [] } }
     })).data
-    await goToWithAuth(`/portals-manager/portals/${portal._id}`, 'test_admin')
+    await goToWithAuth(`/portals-manager/portals/${portal._id}`, 'test_portals_admin')
     const title = page.getByLabel('Titre', { exact: true })
     await expect(title).toBeVisible({ timeout: 30_000 })
     await page.waitForTimeout(3000)
@@ -182,7 +182,7 @@ test.describe('draft actions of the portal editor', () => {
 
   test('an edit undone by hand leaves nothing to validate', async ({ page, goToWithAuth }) => {
     const portal = (await user1.post('/api/portals', { config: { title: 'Back And Forth Portal', menu: { children: [] } } })).data
-    await goToWithAuth(`/portals-manager/portals/${portal._id}`, 'test_admin')
+    await goToWithAuth(`/portals-manager/portals/${portal._id}`, 'test_portals_admin')
     const title = page.getByLabel('Titre', { exact: true })
     await expect(title).toBeVisible({ timeout: 30_000 })
     const validate = page.getByRole('button', { name: 'Valider le brouillon' })
@@ -221,7 +221,7 @@ test.describe('undoing an edit of the assistant', () => {
       portals: [portal._id],
       owner: portal.owner
     })).data
-    await goToWithAuth(`/portals-manager/pages/${createdPage._id}/edit-config`, 'test_admin')
+    await goToWithAuth(`/portals-manager/pages/${createdPage._id}/edit-config`, 'test_portals_admin')
     await expect(page.getByLabel('Titre')).toBeVisible({ timeout: 30_000 })
     await page.waitForFunction(() => (navigator as any).modelContext?.listTools?.().some((t: any) => t.name === 'pageConfig_setFieldValue'), undefined, { timeout: 30_000 })
     const undo = page.locator('button[title="Annuler le dernier changement"]')

@@ -1,4 +1,6 @@
 import { inheritedStyleLayout } from '../common-defs/schema.ts'
+import { datasetsStaticFilters } from '../page-element-datasets/schema.js'
+import { applicationsStaticFilters } from '../page-element-applications/schema.js'
 
 export default {
   $id: 'https://github.com/data-fair/portals/page-element-functional',
@@ -20,18 +22,22 @@ export default {
           'x-i18n-title': { fr: "Titre de l'assistant" },
           type: 'string'
         },
+        // DEPRECATED with focusDatasets (agents libs 0.7 ignore them, docs/architecture/agent.md): kept for
+        // existing pages; remove with an upgrade script in a future release.
         systemPrompt: {
           title: 'Instructions (prompt)',
-          description: 'Describe the role of this assistant and the topic it helps with.',
-          'x-i18n-description': { fr: 'Décrivez le rôle de cet assistant et le sujet sur lequel il aide.' },
+          deprecated: true,
+          description: 'Deprecated, ignored since agents 0.7 (a persona is now a configured agent, chosen by its id). Kept so existing configurations stay valid; to be removed in a future release.',
+          'x-i18n-description': { fr: 'Obsolète, ignoré depuis agents 0.7 (une persona est désormais un agent configuré, choisi par son identifiant). Conservé pour que les configurations existantes restent valides ; sera supprimé dans une prochaine version.' },
           type: 'string',
           layout: 'textarea'
         },
         focusDatasets: {
           title: 'Focus datasets',
           'x-i18n-title': { fr: 'Jeux de données prioritaires' },
-          description: 'The assistant focuses its exploration on these datasets (without being strictly limited to them).',
-          'x-i18n-description': { fr: "L'assistant concentre ses explorations sur ces jeux de données (sans s'y limiter strictement)." },
+          deprecated: true,
+          description: 'Deprecated, ignored since agents 0.7 (a persona is now a configured agent, chosen by its id). Kept so existing configurations stay valid; to be removed in a future release.',
+          'x-i18n-description': { fr: 'Obsolète, ignoré depuis agents 0.7 (une persona est désormais un agent configuré, choisi par son identifiant). Conservé pour que les configurations existantes restent valides ; sera supprimé dans une prochaine version.' },
           type: 'array',
           items: {
             type: 'object',
@@ -213,6 +219,24 @@ export default {
             // Hidden when several sources are selected: we can only redirect to a single catalog.
             if: '!Array.isArray(parent.data?.mode) || parent.data?.mode.length <= 1'
           }
+        },
+        datasetsStaticFilters: {
+          ...datasetsStaticFilters,
+          additionalProperties: false,
+          title: 'Datasets static filters',
+          'x-i18n-title': { fr: 'Filtres statiques des jeux de données' },
+          description: "Restrict the topics displayed and their counts. Inside a datasets catalog, the block uses the catalog's static filters by default; filling these filters replaces them.",
+          'x-i18n-description': { fr: 'Restreignent les thématiques affichées et leurs compteurs. Dans un catalogue de données, le bloc reprend par défaut les filtres statiques du catalogue ; renseigner ces filtres les remplace.' },
+          layout: { comp: 'card', if: '!parent.data?.mode || parent.data.mode.includes("datasets")' }
+        },
+        applicationsStaticFilters: {
+          ...applicationsStaticFilters,
+          additionalProperties: false,
+          title: 'Applications static filters',
+          'x-i18n-title': { fr: 'Filtres statiques des visualisations' },
+          description: "Restrict the topics displayed and their counts. Inside an applications catalog, the block uses the catalog's static filters by default; filling these filters replaces them.",
+          'x-i18n-description': { fr: 'Restreignent les thématiques affichées et leurs compteurs. Dans un catalogue de visualisations, le bloc reprend par défaut les filtres statiques du catalogue ; renseigner ces filtres les remplace.' },
+          layout: { comp: 'card', if: 'parent.data?.mode?.includes("applications")' }
         },
         centered: {
           type: 'boolean',

@@ -9,6 +9,29 @@ const debug = debugModule('images')
 export type ResourceType = 'page' | 'portal'
 
 /**
+ * Give the images of a transferred portal, page or reuse to its new owner, department included: the
+ * manager serves an image only to its owner's department (images/router.ts), so a transfer between
+ * departments, or between a department and the organization, used to leave them unreadable to the new owner.
+ */
+export const transferResourceImages = async (
+  resource: { type: 'portal' | 'page' | 'reuse', _id: string },
+  oldOwner: { type: string, id: string },
+  newOwner: { type: string, id: string, name?: string, department?: string, departmentName?: string }
+) => {
+  const owner: Record<string, string> = { 'owner.type': newOwner.type, 'owner.id': newOwner.id }
+  if (newOwner.name) owner['owner.name'] = newOwner.name
+  if (newOwner.department) owner['owner.department'] = newOwner.department
+  if (newOwner.departmentName) owner['owner.departmentName'] = newOwner.departmentName
+  const unset: Record<string, ''> = {}
+  if (!newOwner.department) unset['owner.department'] = ''
+  if (!newOwner.departmentName) unset['owner.departmentName'] = ''
+  await mongo.images.updateMany(
+    { 'owner.type': oldOwner.type, 'owner.id': oldOwner.id, 'resource.type': resource.type, 'resource._id': resource._id },
+    { $set: owner, ...(Object.keys(unset).length ? { $unset: unset } : {}) }
+  )
+}
+
+/**
  * Duplicate a single image with its mobile variant for a given resource.
  * Returns the new image id. If source is missing, returns the original id.
  *

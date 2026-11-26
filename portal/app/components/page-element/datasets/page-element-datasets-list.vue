@@ -61,12 +61,12 @@ if (!preview) {
     return Array.from({ length: element.mode === 'custom' ? (element.datasets?.length || 1) : element.limit }, (_, i) => ({
       id: `dataset-${i + 1}`,
       slug: `dataset-${i + 1}`,
-      title: element.datasets?.[i]?.title || `Dataset ${i + 1}`,
-      summary: 'Ceci est un exemple de jeu de données pour la prévisualisation.',
+      title: element.datasets?.[i]?.title || `Lorem ipsum ${i + 1}`,
+      summary: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
       dataUpdatedAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       owner: session.account.value,
-      topics: [{ id: 'topic-1', title: "Thématique d'exemple", color: '#45d31d' }],
+      topics: [{ id: 'topic-1', title: 'Lorem', color: '#45d31d' }],
       isMetaOnly: false
     }))
   })

@@ -5,7 +5,7 @@
     :title="attachment.title"
   >
     <v-list-item-subtitle v-if="attachment.type === 'file'">
-      {{ attachment.name }} - {{ formatBytes(attachment.size) }} - {{ t('updatedAt') }} {{
+      {{ attachment.name }} - {{ formatBytes(attachment.size, locale) }} - {{ t('updatedAt') }} {{
         dayjs(attachment.updatedAt).format('LL') }}
     </v-list-item-subtitle>
     <v-list-item-subtitle v-if="attachment.type === 'remoteFile'">
@@ -32,7 +32,7 @@ import { mdiDownload, mdiOpenInNew } from '@mdi/js'
 import formatBytes from '@data-fair/lib-vue/format/bytes.js'
 
 const { dataset } = defineProps<{ dataset: Pick<Dataset, 'image' | 'attachments'> }>()
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const { dayjs } = useLocaleDayjs()
 const { linkRel, annotateLinks } = useNavigationStore()
 

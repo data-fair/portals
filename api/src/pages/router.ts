@@ -5,15 +5,17 @@ import mongo from '#mongo'
 import findUtils from '../utils/find.ts'
 import * as postReqBody from '#doc/pages/post-req-body/index.ts'
 import * as patchReqBody from '#doc/pages/patch-req-body/index.ts'
-import { httpError, reqSessionAuthenticated, assertAccountRole, assertAdminMode } from '@data-fair/lib-express/index.js'
+import { httpError, reqSessionAuthenticated, assertAccountRole, assertAdminMode, reqSiteUrl } from '@data-fair/lib-express/index.js'
 import { createPage, validatePageDraft, cancelPageDraft, getPageAsContrib, patchPage, deletePage, generateUniqueSlug, duplicatePageElements, initCatalogPageElements, sendPageEvent } from './service.ts'
 import { pageFacets } from './aggregations.ts'
 import { assertNbPagesLimit } from '../limits/service.ts'
+import { requireOperationScope } from '../scopes.ts'
+import { assertPreviewConfigured, previewTarget, pseudoSessionCookie, inspect, consumePreview } from './preview.ts'
 
 const router = Router()
 export default router
 
-router.get('', async (req, res, next) => {
+router.get('', requireOperationScope('listPages'), async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
   assertAccountRole(session, session.account, 'admin')
 
@@ -51,7 +53,7 @@ router.get('', async (req, res, next) => {
   res.json({ results, count, facets: facets[0] })
 })
 
-router.post('', async (req, res, next) => {
+router.post('', requireOperationScope('createPage'), async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
 
   // Auto-generate slug if not provided, before validation
@@ -103,16 +105,16 @@ router.post('', async (req, res, next) => {
   }
 
   const creationDetails = await createPage(page, body.sourcePageId)
-  sendPageEvent(page, 'a été créée', 'create', session, creationDetails)
+  sendPageEvent(page, 'create', session, creationDetails)
 
   res.status(201).json(page)
 })
 
-router.get('/:id', async (req, res, next) => {
+router.get('/:id', requireOperationScope('getPage'), async (req, res, next) => {
   res.send(await getPageAsContrib(reqSessionAuthenticated(req), req.params.id))
 })
 
-router.patch('/:id', async (req, res, next) => {
+router.patch('/:id', requireOperationScope('updatePage'), async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
   const page = await getPageAsContrib(session, req.params.id)
   const body = patchReqBody.returnValid(req.body, { name: 'body' })
@@ -123,26 +125,66 @@ router.patch('/:id', async (req, res, next) => {
   res.send({ ...updatedPage, body })
 })
 
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id', requireOperationScope('deletePage'), async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
   const page = await mongo.pages.findOne({ _id: req.params.id })
   if (!page) throw httpError(404, `page "${req.params.id}" not found`)
   assertAccountRole(session, page.owner, 'admin')
   await deletePage(page)
-  sendPageEvent(page, 'a été supprimée', 'delete', session)
+  sendPageEvent(page, 'delete', session)
   res.status(204).send()
 })
 
-router.post('/:id/draft', async (req, res, next) => {
+router.post('/:id/draft', requireOperationScope('publishPageDraft'), async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
   const page = await getPageAsContrib(session, req.params.id)
   await validatePageDraft(page, session)
   res.status(204).send()
 })
 
-router.delete('/:id/draft', async (req, res, next) => {
+router.delete('/:id/draft', requireOperationScope('cancelPageDraft'), async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
   const page = await getPageAsContrib(session, req.params.id)
   await cancelPageDraft(page, session)
   res.status(204).send()
+})
+
+const booleanQuery = (value: unknown, name: string, defaultValue: boolean) => {
+  if (value === undefined) return defaultValue
+  if (value === 'true' || value === 'false') return value === 'true'
+  throw httpError(400, `query parameter "${name}" must be true or false`)
+}
+
+// renders the page as the caller and returns a screenshot with a report of the render (the preview_portal_page agent tool)
+router.get('/:id/preview', requireOperationScope('previewPage'), async (req, res, next) => {
+  const session = reqSessionAuthenticated(req)
+  const page = await getPageAsContrib(session, req.params.id)
+
+  const query = req.query as Record<string, unknown>
+  const draft = booleanQuery(query.draft, 'draft', true)
+  const fullPage = booleanQuery(query.fullPage, 'fullPage', false)
+  if (query.viewport !== undefined && query.viewport !== 'desktop' && query.viewport !== 'mobile') throw httpError(400, 'query parameter "viewport" must be desktop or mobile')
+  const portalId = query.portal ?? page.portals[0] ?? page.requestedPortals[0]
+  if (!portalId) throw httpError(400, 'the page is attached to no portal and requested on none: there is nothing to render it on')
+  if (typeof portalId !== 'string' || (!page.portals.includes(portalId) && !page.requestedPortals.includes(portalId))) {
+    throw httpError(400, `the page is not attached to portal "${String(portalId)}" nor requested on it`)
+  }
+  // the published page is only served by the portals it is attached to
+  if (!draft && !page.portals.includes(portalId)) throw httpError(400, `the page is not published on portal "${portalId}" (only requested): use draft=true`)
+  const portal = await mongo.portals.findOne({ _id: portalId }, { projection: { _id: 1, ingress: 1 } })
+  if (!portal) throw httpError(404, `portal "${portalId}" not found`)
+
+  // the draft renders on the manager of the caller's site; computed before the budget, it may refuse
+  const managerUrl = draft ? reqSiteUrl(req) + '/portals-manager' : ''
+
+  // the cheap refusals above come before the budget
+  assertPreviewConfigured()
+  const retryAfter = consumePreview(session.user.id)
+  if (retryAfter) {
+    res.set('Retry-After', String(retryAfter))
+    throw httpError(429, `too many page previews, retry in ${retryAfter} seconds`)
+  }
+
+  const cookie = await pseudoSessionCookie(session)
+  res.json(await inspect(previewTarget(managerUrl, portal, page, draft), cookie, { mobile: query.viewport === 'mobile', fullPage }))
 })

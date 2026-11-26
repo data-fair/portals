@@ -18,7 +18,7 @@
         {{ t('formatSubtitle.' + file.format) }}
       </v-list-item-subtitle>
       <v-list-item-subtitle v-else>
-        {{ file.name }} ({{ formatBytes(file.size) }})
+        {{ file.name }} ({{ formatBytes(file.size, locale) }})
       </v-list-item-subtitle>
       <template #append>
         <v-btn

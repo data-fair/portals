@@ -59,11 +59,15 @@ export default {
       default: 'Assistant IA',
       layout: { if: 'parent.data?.active' }
     },
+    // DEPRECATED (agents libs 0.7 ignore it, docs/architecture/agent.md): kept for existing configurations,
+    // no default any more; remove with an upgrade script in a future release.
     systemPrompt: {
       type: 'string',
       title: 'System prompt',
       'x-i18n-title': { fr: 'Prompt système' },
-      default: 'Vous êtes un assistant IA intégré à un portail de données. Aidez les utilisateurs à trouver et comprendre les jeux de données disponibles.',
+      deprecated: true,
+      description: 'Deprecated, ignored since agents 0.7 (a persona is now a configured agent, chosen by its id). Kept so existing configurations stay valid; to be removed in a future release.',
+      'x-i18n-description': { fr: 'Obsolète, ignoré depuis agents 0.7 (une persona est désormais un agent configuré, choisi par son identifiant). Conservé pour que les configurations existantes restent valides ; sera supprimé dans une prochaine version.' },
       layout: {
         comp: 'textarea',
         if: 'parent.data?.active'
@@ -89,28 +93,6 @@ export default {
       properties: {
         width: { type: 'number', title: 'Width (px)', 'x-i18n-title': { fr: 'Largeur (px)' }, default: 400, layout: { cols: 6 } },
         height: { type: 'number', title: 'Height (px)', 'x-i18n-title': { fr: 'Hauteur (px)' }, default: 500, layout: { cols: 6 } }
-      }
-    },
-    btnProps: {
-      type: 'object',
-      title: 'Button options',
-      'x-i18n-title': { fr: 'Options du bouton' },
-      unevaluatedProperties: false,
-      layout: { if: 'parent.data?.active', cols: 6 },
-      properties: {
-        size: {
-          type: 'string',
-          title: 'Size',
-          'x-i18n-title': { fr: 'Taille' },
-          default: 'default',
-          oneOf: [
-            { const: 'x-small', title: 'Extra small', 'x-i18n-title': { fr: 'Très petit' } },
-            { const: 'small', title: 'Small', 'x-i18n-title': { fr: 'Petit' } },
-            { const: 'default', title: 'Normal' },
-            { const: 'large', title: 'Large', 'x-i18n-title': { fr: 'Grand' } },
-            { const: 'x-large', title: 'Extra large', 'x-i18n-title': { fr: 'Très grand' } }
-          ]
-        }
       }
     }
   }

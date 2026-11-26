@@ -112,8 +112,6 @@
         />
       </v-row>
     </template>
-
-    <div data-iframe-height="40" />
   </layout-page>
 </template>
 
