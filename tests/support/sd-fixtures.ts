@@ -1,11 +1,11 @@
 /**
  * The accounts of portals' test sub-space in simple-directory: every user, organization and member id
  * (and every email) starts with the prefix, so this suite seeds and cleans them without touching the
- * accounts of other sub-spaces (e.g. the dev world test_demo_ of dev/resources/demo-world.json).
+ * accounts of other sub-spaces (dev data under another prefix, other suites).
  *
  * Seeded through simple-directory's test API (POST /api/test-env/seed) after a cleanup of the prefix
  * (DELETE /api/test-env?prefix=): by tests/global-setup.ts before the spec files are loaded (many of them
- * log in at import time) and by tests/state-setup.ts (the setup project of the tests and the simulations).
+ * log in at import time) and by tests/state-setup.ts (the setup project of the tests).
  * All the users with a password use 'passwd'.
  */
 export const prefix = 'test_portals_'
@@ -18,17 +18,6 @@ const person = (name: string, firstName: string, lastName: string) => ({
   lastName,
   email: `${prefix}${name}@test.com`,
   password
-})
-
-// non-human identity of an autonomous agent of the agents service: the subject pins the agent id
-const agentNhi = (env: Record<string, string | undefined>, name: string, agentId: string, scopes: string[]) => ({
-  id: `${prefix}org1_${name}_nhi`,
-  email: `${prefix}org1_${name}_nhi@test.com`,
-  nhi: {
-    provider: { issuer: `http://${env.DEV_HOST}:${env.NGINX_PORT}/agents/api/nhi` },
-    subject: `autonomous-agent:${agentId}`,
-    scopes
-  }
 })
 
 export const sdFixtures = (env: Record<string, string | undefined> = process.env) => {
@@ -60,12 +49,7 @@ export const sdFixtures = (env: Record<string, string | undefined> = process.env
         },
         subject: 'scope-tests'
       }
-    },
-    // the autonomous-agent simulations (simulations/runner/autonomous-agent.ts)
-    agentNhi(env, 'pages_write', 'sim-pages-write', ['pages:write', 'portals:read', 'datasets:read', 'applications:read']),
-    agentNhi(env, 'pages_admin', 'sim-pages-admin', ['pages:admin', 'portals:read', 'datasets:read']),
-    agentNhi(env, 'pages_read', 'sim-pages-read', ['pages:read', 'portals:read']),
-    agentNhi(env, 'portals_write', 'sim-portals-write', ['portals:write', 'pages:read'])
+    }
   ]
 
   const organizations = [
@@ -79,11 +63,7 @@ export const sdFixtures = (env: Record<string, string | undefined> = process.env
         { id: `${prefix}user`, role: 'user' },
         { id: `${prefix}admin_dep`, role: 'admin', department: 'dep1' },
         { id: `${prefix}contrib_dep`, role: 'contrib', department: 'dep1' },
-        { id: `${prefix}org1_scope_nhi`, role: 'admin' },
-        { id: `${prefix}org1_pages_write_nhi`, role: 'admin' },
-        { id: `${prefix}org1_pages_admin_nhi`, role: 'admin' },
-        { id: `${prefix}org1_pages_read_nhi`, role: 'admin' },
-        { id: `${prefix}org1_portals_write_nhi`, role: 'admin' }
+        { id: `${prefix}org1_scope_nhi`, role: 'admin' }
       ]
     },
     {

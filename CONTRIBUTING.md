@@ -23,7 +23,7 @@ npm test
 
 The default ports (5650-5667) are in `dev/default.env`, copied to `.env` the first time: `.env` overrides `dev/default.env` and is never overwritten. `npm run dev-deps` only starts the containers (extra arguments go to docker compose, e.g. `npm run dev-deps -- --profile events --profile maildev`); `npm run dev` accepts the same arguments.
 
-Each dev process has its own npm script and reads its settings from environment variables (every key of `dev/default.env`): `npm run dev-setup` (idempotent builds, no container), then `npm run dev:ingress`, `npm run dev:api`, `npm run dev:ui`, `npm run dev:portal` (and `npm run dev:bridge`, the Claude Code bridge of the simulations), each in its own terminal with the variables of `.env` exported. An optional service (events, agents, mcp, capture) is absent when its port variable is empty (for example `EVENTS_PORT=`); `npm run dev` blanks the ports of the optional containers that are not running. `DEV_LOG_DIR` (default `dev/logs`) and `DEV_LOG_PREFIX` set where `npm run dev` writes the logs of the processes.
+Each dev process has its own npm script and reads its settings from environment variables (every key of `dev/default.env`): `npm run dev-setup` (idempotent builds, no container), then `npm run dev:ingress`, `npm run dev:api`, `npm run dev:ui`, `npm run dev:portal`, each in its own terminal with the variables of `.env` exported. An optional service (events, agents, mcp, capture) is absent when its port variable is empty (for example `EVENTS_PORT=`); `npm run dev` blanks the ports of the optional containers that are not running. `DEV_LOG_DIR` (default `dev/logs`) and `DEV_LOG_PREFIX` set where `npm run dev` writes the logs of the processes.
 
 Stop the containers with `npm run stop-dev-deps`.
 

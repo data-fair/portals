@@ -39,14 +39,13 @@ services:
       - OBSERVER_ACTIVE=false
       - CIPHER_PASSWORD=dev-cipher-password-0123456789abcdef
       # accounts in mongo: the test suite seeds and cleans its own sub-space (test_portals_,
-      # tests/support/sd-fixtures.ts) through the test API, npm run dev-world seeds the dev world
-      # test_demo_ the same way (dev/resources/demo-world.json)
+      # tests/support/sd-fixtures.ts) through the test API
       - STORAGE_TYPE=mongo
       - ENABLE_TEST_API=1
       # the test API needs NODE_ENV=development, the configuration stays the image's production one
       - NODE_ENV=development
       - NODE_CONFIG_ENV=production
-      - ADMINS=["test_portals_superadmin@test.com","test_demo_dev@example.org"]
+      - ADMINS=["test_portals_superadmin@test.com"]
       - CONTACT=contact@test.com
       # in dev simple-directory only notifies this service, directly (the shared identities router refuses calls through the proxy)
       - IDENTITIES_WEBHOOKS=[{"base":"http://localhost:${DEV_API_PORT}/api/identities","key":"secret-identities"}]
@@ -56,7 +55,7 @@ services:
       - MANAGE_DEPARTMENTS=true
       - MANAGE_PARTNERS=true
       - MANAGE_SITES=true
-      # non-human identities, seeded with the test accounts (the scope tests, the autonomous-agent simulations)
+      # non-human identities, seeded with the test accounts (the scope tests, autonomous agents)
       - MANAGE_NHIS=true
       # dev only: the agents NHI issuer is plain http on a .localhost host, which assertSafeIssuer refuses otherwise
       - NHIS_ALLOW_INSECURE_ISSUERS=true
@@ -100,7 +99,7 @@ services:
       - DIRECTORY_URL=http://${DEV_HOST}:${NGINX_PORT}/simple-directory
       - PRIVATE_DIRECTORY_URL=http://localhost:${SD_PORT}
       - PRIVATE_EVENTS_URL=http://localhost:${EVENTS_PORT}
-      # turns on the back-office agent chat (agentsIntegration), needed by the simulations
+      # turns on the back-office agent chat (agentsIntegration)
       - PRIVATE_AGENTS_URL=http://localhost:${AGENTS_PORT}
       # application thumbnails and datafair_preview_application (502 / 501 without it), with the capture profile
       - PRIVATE_CAPTURE_URL=http://localhost:${CAPTURE_PORT}
@@ -190,8 +189,8 @@ services:
       # data-fair's mcp, built into every autonomous agent with an identity: called as the agent, its reach
       # the identity's scopes
       - PRIVATE_MCP_URL=http://${DEV_HOST}:${NGINX_PORT}/mcp-server/mcp
-      # the approval reviewer's stage 1 runs on the dev bridge, which starts a Claude Code session per call:
-      # the production 5 s timeout turns most reviews into cards there (agents docs, moderation.md)
+      # the approval reviewer's stage 1 may run on a slow model in dev: the production 5 s timeout would turn
+      # most reviews into cards there (agents docs, moderation.md)
       - APPROVAL_REVIEW_STAGE1_TIMEOUT_MS=15000
 
   # the MCP server built from /data-fair/api/v1/platform/api-docs.json (portals merged in): /mcp-server/mcp

@@ -144,8 +144,11 @@ test.describe('GET /pages/:id/preview', () => {
   test('a pages:read session renders a page embedding a private application', async () => {
     skipUnlessRenderable()
     const { portal } = await seed()
-    // the application is private: only the permissions of the account read it, not the scopes of the session
-    const app = (await orgAdmin.post(`${dataFairUrl}/api/v1/applications`, { url: 'https://cdn.jsdelivr.net/npm/@data-fair/app-charts@1/dist/', title: 'Private app' })).data
+    // the application is private: only the permissions of the account read it, not the scopes of the session.
+    // Its base application is any public one of data-fair (they depend on its configuration): none is registered here
+    const baseApps = (await orgAdmin.get(`${dataFairUrl}/api/v1/base-applications`, { params: { size: 1 } })).data.results
+    assert.ok(baseApps.length, 'data-fair serves no public base application')
+    const app = (await orgAdmin.post(`${dataFairUrl}/api/v1/applications`, { url: baseApps[0].url, title: 'Private app' })).data
     try {
       await orgAdmin.patch(`${dataFairUrl}/api/v1/applications/${app.id}`, { publicationSites: [publicationSite(portal._id)] })
       const page = (await orgAdmin.post('/api/pages', {

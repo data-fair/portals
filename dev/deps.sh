@@ -24,6 +24,3 @@ while [ $# -gt 0 ]; do
 done
 
 docker compose --progress quiet ${global_args[@]+"${global_args[@]}"} up -d --wait ${scale_args[@]+"${scale_args[@]}"}
-
-# the dev world (test_demo_ accounts of dev/resources/demo-world.json), never cleaned by the tests
-npm run dev-world
