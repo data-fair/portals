@@ -1,16 +1,17 @@
 import { test, expect } from '../../fixtures/login.ts'
 import { axiosAuth, clean } from '../../support/axios.ts'
 import { MongoClient } from 'mongodb'
+import { mongoUrl } from '../../support/mongo.ts'
 
-const user1 = await axiosAuth('test_admin@test.com')
+const user1 = await axiosAuth('test_portals_admin@test.com')
 
 // Create a valid page through the API then inject legacy data directly in mongo:
 // the current API rejects such configs, but old versions of the editor stored them
 // (typically leftovers of an element type switch) and page duplication copied them
 // around. The page editor must keep working on them.
-// The e2e stack always runs against the dev API server, hence the development database.
+// The e2e tests always run against the dev API server, hence its database.
 const injectLegacyData = async (pageId: string, mongoPatch: Record<string, any>) => {
-  const client = await MongoClient.connect(`mongodb://localhost:${process.env.MONGO_PORT}/data-fair-portals-development`)
+  const client = await MongoClient.connect(mongoUrl)
   try {
     const result = await client.db().collection('pages').updateOne({ _id: pageId as any }, mongoPatch)
     if (result.matchedCount !== 1) throw new Error(`mongo legacy data injection matched ${result.matchedCount} pages`)
@@ -51,7 +52,7 @@ test.describe('page editor on legacy configs rejected by the schema', () => {
     const injected = (await user1.get(`/api/pages/${createdPage._id}`)).data
     expect(injected.draftConfig.elements[0].mb).toBe(0)
 
-    await goToWithAuth(`/portals-manager/pages/${createdPage._id}/edit-config`, 'test_admin')
+    await goToWithAuth(`/portals-manager/pages/${createdPage._id}/edit-config`, 'test_portals_admin')
     await expect(page.getByLabel('Titre')).toBeVisible({ timeout: 30_000 })
 
     // the stale property is healed on load, no config error is reported
@@ -85,7 +86,7 @@ test.describe('page editor on legacy configs rejected by the schema', () => {
       $set: { 'config.elements.0.content': 42, 'draftConfig.elements.0.content': 42 }
     })
 
-    await goToWithAuth(`/portals-manager/pages/${createdPage._id}/edit-config`, 'test_admin')
+    await goToWithAuth(`/portals-manager/pages/${createdPage._id}/edit-config`, 'test_portals_admin')
     await expect(page.getByLabel('Titre')).toBeVisible({ timeout: 30_000 })
 
     const alert = page.getByRole('alert').filter({ hasText: 'La configuration de la page contient des erreurs' })

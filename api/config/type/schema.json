@@ -36,14 +36,14 @@
       "pattern": "^https?://"
     },
     "privateEventsUrl": {
-      "type": "string"
+      "type": ["string", "null"]
     },
     "privateDataFairUrl": {
       "type": "string",
       "pattern": "^https?://"
     },
     "privateCaptureUrl": {
-      "type": "string"
+      "type": ["string", "null"]
     },
     "secretKeys": {
       "type": "object",

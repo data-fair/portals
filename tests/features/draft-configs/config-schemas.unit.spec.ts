@@ -125,11 +125,11 @@ test.describe('editor config schemas', () => {
 
   test('the portal config schema is self-contained and compiles with json-layout', async () => {
     test.slow()
-    const schema: any = await portalConfigSchema({ owner: { type: 'organization', id: 'test_org1', name: 'Org' } })
+    const schema: any = await portalConfigSchema({ owner: { type: 'organization', id: 'test_portals_org1', name: 'Org' } })
     assert.ok(refsOf(schema).every(ref => ref.startsWith('#')), 'every ref is local')
     assert.deepEqual(contextReferences(schema), [])
     const compiled = compileQuietly(schema)
     const fetched = await createState(compiled, { title: 'Portal', menu: { children: [] }, footer: { copyright: true } })
-    assert.ok(fetched.some(url => url.includes('/settings/organization/test_org1/topics')), 'the topics of the portal owner')
+    assert.ok(fetched.some(url => url.includes('/settings/organization/test_portals_org1/topics')), 'the topics of the portal owner')
   })
 })

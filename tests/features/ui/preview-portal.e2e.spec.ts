@@ -1,7 +1,7 @@
 import { test, expect } from '../../fixtures/login.ts'
 import { axiosAuth, clean } from '../../support/axios.ts'
 
-const user1 = await axiosAuth('test_admin@test.com')
+const user1 = await axiosAuth('test_portals_admin@test.com')
 
 // Judged simulation: the assistant took the person back to the page editor with navigate, the
 // route lost its ?portal= query, and « Portail de prévisualisation » stayed empty: the default
@@ -20,7 +20,7 @@ test.describe('the portal a page is previewed on', () => {
       owner: portal.owner
     })).data
 
-    await goToWithAuth(`/portals-manager/pages/${createdPage._id}/edit-config`, 'test_admin')
+    await goToWithAuth(`/portals-manager/pages/${createdPage._id}/edit-config`, 'test_portals_admin')
     await expect(page.getByLabel('Titre')).toBeVisible({ timeout: 30_000 })
     await expect(page).toHaveURL(new RegExp(`portal=${portal._id}`))
     // a navigation from outside the app (the shell's navigate tool), to the page view without it

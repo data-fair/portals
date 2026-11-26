@@ -17,7 +17,7 @@ setup('warm up the portal and the heavy manager routes', async ({ page, goToWith
 
   // a real portal and page, so the real rendering pipelines run (not the 404 error path)
   await clean()
-  const admin = await axiosAuth('test_admin@test.com')
+  const admin = await axiosAuth('test_portals_admin@test.com')
   const portal = (await admin.post('/api/portals', {
     // the agent chat loads its own modules after hydration, the first visit would reload the page under a test
     config: { title: 'Warmup Portal', menu: { children: [] }, agentChat: { active: true } }
@@ -36,12 +36,12 @@ setup('warm up the portal and the heavy manager routes', async ({ page, goToWith
   await expect(page.locator('.df-agent-chat-toggle')).toBeVisible()
   stamp('portal home')
 
-  await goToWithAuth(`/portals-manager/pages/${createdPage._id}/edit-config`, 'test_admin')
+  await goToWithAuth(`/portals-manager/pages/${createdPage._id}/edit-config`, 'test_portals_admin')
   // the form proves vjsf and the page-config schemas finished compiling
   await expect(page.getByLabel('Titre')).toBeVisible()
   stamp('page editor')
 
-  await goToWithAuth(`/portals-manager/portals/${portal._id}`, 'test_admin')
+  await goToWithAuth(`/portals-manager/portals/${portal._id}`, 'test_portals_admin')
   await expect(page.getByRole('tab', { name: 'Apparence' })).toBeVisible()
   stamp('portal editor')
 

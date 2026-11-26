@@ -4,7 +4,7 @@
 import { test, expect } from '../../fixtures/portal.ts'
 import { axiosAuth, clean } from '../../support/axios.ts'
 
-const user1 = await axiosAuth('test_admin@test.com')
+const user1 = await axiosAuth('test_portals_admin@test.com')
 
 // No application is seeded in data-fair: the iframe lands on a 404, which does not matter
 // since the placeholder only lives until <d-frame> mounts.

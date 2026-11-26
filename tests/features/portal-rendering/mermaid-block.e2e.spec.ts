@@ -1,7 +1,7 @@
 import { test, expect, portalUrl } from '../../fixtures/portal.ts'
 import { axiosAuth, clean } from '../../support/axios.ts'
 
-const user1 = await axiosAuth('test_admin@test.com')
+const user1 = await axiosAuth('test_portals_admin@test.com')
 
 const createPortalWithDiagram = async (title: string, element: Record<string, unknown>) => {
   const portal = (await user1.post('/api/portals', {

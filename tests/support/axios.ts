@@ -1,6 +1,7 @@
 import type { AxiosAuthOptions } from '@data-fair/lib-node/axios-auth.js'
 import { axiosBuilder } from '@data-fair/lib-node/axios.js'
 import { axiosAuth as _axiosAuth } from '@data-fair/lib-node/axios-auth.js'
+import { prefix } from './sd-fixtures.ts'
 
 export const directoryUrl = `http://${process.env.DEV_HOST}:${process.env.NGINX_PORT}/simple-directory`
 export const apiUrl = `http://localhost:${process.env.DEV_API_PORT}/portals-manager`
@@ -15,7 +16,8 @@ export const axiosAuth = (opts: string | Omit<AxiosAuthOptions, 'directoryUrl' |
   return _axiosAuth({ ...opts, password: 'passwd', axiosOpts, directoryUrl })
 }
 
+/** delete what the accounts of this suite's sub-space (test_portals_) own */
 export const clean = async () => {
   const ax = axiosBuilder({ baseURL: apiUrl })
-  await ax.delete('/api/test-env')
+  await ax.delete('/api/test-env', { params: { prefix } })
 }

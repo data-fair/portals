@@ -9,7 +9,7 @@
         v-if="link.type === 'external'"
         :href="link.href"
         :title="link.title + ' - ' + t('newWindow')"
-        :variant="element.variant"
+        :variant="variantOf(index)"
         :rel="linkRel(link.href, true)"
         target="_blank"
         class="text-uppercase"
@@ -27,7 +27,8 @@
         v-else
         :to="resolveLink(link)"
         :rel="linkRel(resolveLink(link))"
-        :variant="element.variant"
+        :variant="variantOf(index)"
+        class="text-uppercase"
       >
         <template #prepend>
           <v-icon
@@ -45,7 +46,10 @@
 <script setup lang="ts">
 import type { FooterButtonsElement } from '#api/types/footer-elements/index.ts'
 
-defineProps<{ element: FooterButtonsElement }>()
+const props = defineProps<{ element: FooterButtonsElement }>()
+
+// the first button can stand apart (main call to action) while staying on the same line as the others
+const variantOf = (index: number) => (index === 0 && props.element.firstVariant) || props.element.variant
 
 const { t, locale } = useI18n()
 const { resolveLink, resolveLinkTitle, linkRel } = useNavigationStore()

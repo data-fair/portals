@@ -1,14 +1,15 @@
 import { test } from '../../fixtures/login.ts'
 import assert from 'node:assert/strict'
 import { MongoClient } from 'mongodb'
+import { mongoUrl } from '../../support/mongo.ts'
 import { axios, axiosAuth, clean } from '../../support/axios.ts'
 import { nhiSession } from '../../support/nhi.ts'
 import { dataFairUrl, publicationSite } from '../../support/data-fair.ts'
 
-const orgAdmin = await axiosAuth({ email: 'test_admin@test.com', org: 'test_org1' })
-const orgContrib = await axiosAuth({ email: 'test_contrib@test.com', org: 'test_org1' })
-const depAdmin = await axiosAuth({ email: 'test_admin_dep@test.com', org: 'test_org1', dep: 'dep1' })
-const outsider = await axiosAuth('test_alone@test.com')
+const orgAdmin = await axiosAuth({ email: 'test_portals_admin@test.com', org: 'test_portals_org1' })
+const orgContrib = await axiosAuth({ email: 'test_portals_contrib@test.com', org: 'test_portals_org1' })
+const depAdmin = await axiosAuth({ email: 'test_portals_admin_dep@test.com', org: 'test_portals_org1', dep: 'dep1' })
+const outsider = await axiosAuth('test_portals_alone@test.com')
 
 const baseHost = `${process.env.DEV_HOST}:${process.env.NGINX_PORT}`
 
@@ -45,7 +46,7 @@ const seed = async (ax = orgAdmin, title = 'Preview page') => {
 
 // the ingress of a portal points at a closed port: the render of its public host fails at once
 const setIngressUrl = async (portalId: string, url: string) => {
-  const client = await MongoClient.connect(`mongodb://localhost:${process.env.MONGO_PORT}/data-fair-portals-development`)
+  const client = await MongoClient.connect(mongoUrl)
   try {
     await client.db().collection('portals').updateOne({ _id: portalId as any }, { $set: { ingress: { url } } })
   } finally {
@@ -143,8 +144,11 @@ test.describe('GET /pages/:id/preview', () => {
   test('a pages:read session renders a page embedding a private application', async () => {
     skipUnlessRenderable()
     const { portal } = await seed()
-    // the application is private: only the permissions of the account read it, not the scopes of the session
-    const app = (await orgAdmin.post(`${dataFairUrl}/api/v1/applications`, { url: 'https://cdn.jsdelivr.net/npm/@data-fair/app-charts@1/dist/', title: 'Private app' })).data
+    // the application is private: only the permissions of the account read it, not the scopes of the session.
+    // Its base application is any public one of data-fair (they depend on its configuration): none is registered here
+    const baseApps = (await orgAdmin.get(`${dataFairUrl}/api/v1/base-applications`, { params: { size: 1 } })).data.results
+    assert.ok(baseApps.length, 'data-fair serves no public base application')
+    const app = (await orgAdmin.post(`${dataFairUrl}/api/v1/applications`, { url: baseApps[0].url, title: 'Private app' })).data
     try {
       await orgAdmin.patch(`${dataFairUrl}/api/v1/applications/${app.id}`, { publicationSites: [publicationSite(portal._id)] })
       const page = (await orgAdmin.post('/api/pages', {
