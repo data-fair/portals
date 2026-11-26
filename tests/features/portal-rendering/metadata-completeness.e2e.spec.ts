@@ -4,8 +4,8 @@ import { test, expect } from '../../fixtures/portal.ts'
 import { axiosAuth, clean } from '../../support/axios.ts'
 import { dataFairUrl, deleteDatasets, seedDataset } from '../../support/data-fair.ts'
 
-const user1 = await axiosAuth('test_admin@test.com')
-const settingsUrl = `${dataFairUrl}/api/v1/settings/user/test_admin`
+const user1 = await axiosAuth('test_portals_admin@test.com')
+const settingsUrl = `${dataFairUrl}/api/v1/settings/user/test_portals_admin`
 const seeded: string[] = []
 let initialDatasetsMetadata: unknown
 
