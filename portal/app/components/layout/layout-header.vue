@@ -14,7 +14,7 @@
         :link="headerConfig.logoPrimaryLink"
       />
       <template v-if="!logoCentered">
-        <v-spacer v-if="!headerConfig.showTitle" />
+        <v-spacer v-if="!(headerConfig.showTitle ?? true)" />
         <v-col
           v-else
           class="text-center"
@@ -54,16 +54,17 @@ const themedLogo = useThemedLogo()
  * - On desktop: use primary logo only.
  */
 const logo = computed(() => {
-  if (headerConfig.logoPrimaryType === 'hidden') return null
+  const logoPrimaryType = headerConfig.logoPrimaryType ?? 'default'
+  if (logoPrimaryType === 'hidden') return null
 
-  const primaryLogo = headerConfig.logoPrimaryType === 'local'
+  const primaryLogo = logoPrimaryType === 'local'
     ? headerConfig.logoPrimary || null
-    : headerConfig.logoPrimaryType === 'default'
+    : logoPrimaryType === 'default'
       ? themedLogo(portalConfig.value.logo, portalConfig.value.logoDark) || null
       : null
 
   // Centering hides the title, so treat it as "title hidden" for the mobile fallback.
-  const titleHidden = headerConfig.logoPrimaryCentered || !headerConfig.showTitle
+  const titleHidden = headerConfig.logoPrimaryCentered || !(headerConfig.showTitle ?? true)
 
   if (display.xs.value) {
     return headerConfig.logoPrimaryMobile || (titleHidden ? primaryLogo : null)

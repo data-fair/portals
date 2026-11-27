@@ -42,9 +42,9 @@ const applicationFetch = await useLocalFetch<{
 const thumbnailUrl = computed(() => {
   const cardConfig = portalConfig.value.applications.card
   const application = applicationFetch.data.value
-  if (!cardConfig.thumbnail?.show || !application) return undefined
+  if (!(cardConfig.thumbnail?.show ?? true) || !application) return undefined
   if (application.image) return application.image
-  if (cardConfig.thumbnail.useTopic && application.topics?.[0]?.id) {
+  if (cardConfig.thumbnail?.useTopic && application.topics?.[0]?.id) {
     const topicConfig = portalConfig.value.topics?.find((t) => t.id === application!.topics[0]!.id)
     if (topicConfig?.thumbnail) return getPortalImageSrc(topicConfig.thumbnail, false)
   }

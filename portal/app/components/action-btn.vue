@@ -22,7 +22,7 @@
 import type { RouteLocationRaw } from 'vue-router'
 import type { DatasetCard } from '#api/types/portal/index.js'
 
-defineProps<{
+const { actionStyle = 'full' } = defineProps<{
   /** Button destination */
   to?: RouteLocationRaw
   /** Button style */

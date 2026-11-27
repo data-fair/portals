@@ -5,7 +5,7 @@
            It is only false when explicitly set to false.
   -->
   <div
-    :class="`bg-${navBarConfig.color}`"
+    :class="navBarConfig.color && `bg-${navBarConfig.color}`"
     class="w-100 h-100"
   >
     <v-container
@@ -89,12 +89,13 @@ const appBarRef = ref()
 const { height: appBarHeight } = useElementSize(appBarRef)
 
 const logo = computed(() => {
-  if (navBarConfig.logoType !== 'hidden' && display.xs.value) {
+  const logoType = navBarConfig.logoType ?? 'hidden'
+  if (logoType !== 'hidden' && display.xs.value) {
     if (navBarConfig.logoMobile) return navBarConfig.logoMobile
     else return null
-  } else if (navBarConfig.logoType === 'local' && navBarConfig.logo) {
+  } else if (logoType === 'local' && navBarConfig.logo) {
     return navBarConfig.logo
-  } else if (navBarConfig.logoType === 'default' && portalConfig.value.logo) {
+  } else if (logoType === 'default' && portalConfig.value.logo) {
     return themedLogo(portalConfig.value.logo, portalConfig.value.logoDark)
   }
   return null

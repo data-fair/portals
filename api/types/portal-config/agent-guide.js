@@ -11,7 +11,7 @@ export const agentGuide = {
 - Social links take an identifier, not a URL (linkedin: koumoul).
 - The breadcrumb stays hidden until a position is chosen.
 - When the header shows the portal title, it is the main heading of every page.
-- Dataset and application cards only show what is set explicitly (summary, thumbnail, action buttons…).
+- A card option left empty takes its default value: summary, thumbnail and action buttons are shown unless turned off.
 - The contact email is never shown publicly: it receives the contact form's messages.
 - Fonts: use a name from the list; an unknown name silently falls back to the browser's font.`,
   fr: `Édition de la configuration d'un portail de données.
@@ -22,7 +22,7 @@ export const agentGuide = {
 - Les réseaux sociaux prennent un identifiant, pas une URL (linkedin : koumoul).
 - Le fil d'Ariane reste masqué tant qu'aucune position n'est choisie.
 - Quand l'entête affiche le titre du portail, c'est le titre principal de chaque page.
-- Les vignettes de jeux de données et de visualisations n'affichent que ce qui est réglé explicitement (résumé, image, boutons d'action…).
+- Une option de vignette laissée vide prend sa valeur par défaut : résumé, image et boutons d'action sont affichés sauf s'ils sont désactivés.
 - L'adresse de contact n'est jamais affichée publiquement : elle reçoit les messages du formulaire de contact.
 - Polices : utiliser un nom de la liste ; un nom inconnu bascule sans erreur sur la police du navigateur.`
 }

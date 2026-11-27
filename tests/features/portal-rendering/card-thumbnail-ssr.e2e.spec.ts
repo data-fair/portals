@@ -27,6 +27,7 @@ test.describe('card thumbnail on the server-rendered path', () => {
             card: {
               titleLinesCount: 1,
               showSummary: true,
+              ownerDisplay: 'none',
               thumbnail: { show: true, location, crop: true, default: imageRef('default-1') }
             }
           }

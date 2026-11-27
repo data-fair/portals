@@ -51,8 +51,9 @@ const createNavigationStore = (options: NavigationStoreOptions) => {
     const config = $portal.config
     const header = (isHome && config.headerHomeActive) ? { ...config.header, ...config.headerHome } : config.header
     const navBar = (isHome && config.navBarHomeActive) ? { ...config.navBar, ...config.navBarHome } : config.navBar
-    const full = (header.show ? 128 : 0) + 64
-    if (!header.show || header.keepOnScroll) return { full, collapsed: full }
+    const showHeader = header.show ?? true
+    const full = (showHeader ? 128 : 0) + 64
+    if (!showHeader || header.keepOnScroll) return { full, collapsed: full }
     return { full, collapsed: navBar.keepOnScroll ? 64 : 0 }
   })
   const appBarBottom = computed(() => appBarActive.value ? appBarHeights.value.full : appBarHeights.value.collapsed)
@@ -82,8 +83,8 @@ const createNavigationStore = (options: NavigationStoreOptions) => {
     const router = useRouter()
     const breadcrumbJsonLd = computed(() => {
       if (!_breadcrumbs.value.length) return undefined
-      const homeLabel = $portal.config.breadcrumb.showHome
-        ? ($portal.config.breadcrumb.homeLabel || 'Home')
+      const homeLabel = ($portal.config.breadcrumb.showHome ?? true)
+        ? ($portal.config.breadcrumb.homeLabel || i18n[$i18n.locale.value as 'fr' | 'en'].homePage)
         : undefined
 
       const items: Array<{ name: string; url: string }> = []

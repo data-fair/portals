@@ -42,7 +42,8 @@ const isHome = computed(() => route.path === '/')
 // prevent a weird bug with the css var --v-layout-top that changes when we scroll while it shouldn't
 const headerPadding = computed(() => {
   if (isIframe.value) return 0
-  const showHeader = (isHome.value && portalConfig.value.headerHomeActive) ? portalConfig.value.headerHome?.show : portalConfig.value.header.show
+  const header = (isHome.value && portalConfig.value.headerHomeActive) ? { ...portalConfig.value.header, ...portalConfig.value.headerHome } : portalConfig.value.header
+  const showHeader = header.show ?? true
   return 64 + (showHeader ? 128 : 0)
 })
 </script>

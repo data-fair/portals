@@ -9,15 +9,15 @@
       v-bind="{ ...$attrs, ...hoverProps }"
       :to="!preview && !isExternalLink(link) ? resolveLink(link) : undefined"
       :href="preview ? resolveMenuLink(link) : (isExternalLink(link) ? resolveLink(link) : undefined)"
-      :target="link.target ? '_blank' : undefined"
-      :rel="linkRel(resolveLink(link), link.target)"
-      :title="link.target ? resolveLinkTitle(link, locale) + ' - ' + t('newWindow') : undefined"
+      :target="newWindow ? '_blank' : undefined"
+      :rel="linkRel(resolveLink(link), newWindow)"
+      :title="newWindow ? resolveLinkTitle(link, locale) + ' - ' + t('newWindow') : undefined"
       :color="btnHover.color(isHovering, config?.color)"
-      :density="config?.density ?? portalConfig.defaults?.density"
+      :density="config?.density ?? portalConfig.defaults?.density ?? 'comfortable'"
       :elevation="btnHover.elevation(isHovering, config?.elevation ?? portalConfig.defaults?.elevation)"
       :rounded="config?.rounded ?? portalConfig.defaults?.rounded"
       :variant="config?.variant !== 'default' ? config?.variant : undefined"
-      :class="{ 'text-uppercase': config?.uppercase, 'bg-surface': !btnHover.color(isHovering, config?.color) }"
+      :class="{ 'text-uppercase': config?.uppercase ?? true, 'bg-surface': !btnHover.color(isHovering, config?.color) }"
       :style="btnHover.style(isHovering)"
       :active="false"
       @click="preview && $event.preventDefault()"
@@ -27,7 +27,7 @@
         to align vertically with the text properly.
       -->
       <template
-        v-if="config?.showIcon && link.icon && (link.icon.mdi?.svgPath || link.icon.custom)"
+        v-if="(config?.showIcon ?? true) && link.icon && (link.icon.mdi?.svgPath || link.icon.custom)"
         #prepend
       >
         <v-icon
@@ -51,7 +51,7 @@ defineOptions({
   inheritAttrs: false
 })
 
-const { config } = defineProps<{
+const { link, config } = defineProps<{
   link: LinkItem
   config?: ButtonConfig
 }>()
@@ -62,6 +62,7 @@ const { portalConfig, preview } = usePortalStore()
 const { isExternalLink, resolveLink, resolveLinkTitle, linkRel } = useNavigationStore()
 
 const btnHover = useButtonHover(() => config)
+const newWindow = computed(() => link.target ?? link.type === 'external')
 
 </script>
 

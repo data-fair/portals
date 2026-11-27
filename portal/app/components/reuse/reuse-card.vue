@@ -30,7 +30,7 @@
       >
         <!-- Thumbnail (Left Location) -->
         <!-- On mobile, always use top location -->
-        <template v-if="cardConfig.thumbnail?.show && cardConfig.thumbnail?.location === 'left' && !$vuetify.display.smAndDown">
+        <template v-if="thumbnail.show && thumbnail.location === 'left' && !$vuetify.display.smAndDown">
           <v-col
             cols="4"
             class="overflow-hidden"
@@ -65,13 +65,13 @@
         >
           <!-- Thumbnail (Top Location) -->
           <div
-            v-if="cardConfig.thumbnail?.show && (cardConfig.thumbnail?.location === 'top' || (cardConfig.thumbnail?.location === 'left' && $vuetify.display.smAndDown)) && currentThumbnailUrl"
+            v-if="thumbnail.show && (thumbnail.location === 'top' || (thumbnail.location === 'left' && $vuetify.display.smAndDown)) && currentThumbnailUrl"
             aria-hidden="true"
             class="flex-grow-0 overflow-hidden"
           >
             <v-img
               :src="currentThumbnailUrl"
-              :cover="cardConfig.thumbnail.crop"
+              :cover="thumbnail.crop"
               height="170"
               alt=""
               :style="hoverFx.imageStyle(isHovering)"
@@ -81,20 +81,20 @@
 
           <card-hover-title
             :title="reuse.config.title"
-            :lines-count="cardConfig.titleLinesCount"
+            :lines-count="cardConfig.titleLinesCount ?? 2"
             :hover-fx="hoverFx"
             :is-hovering="isHovering"
           />
 
           <!-- Thumbnail (Center Location) -->
           <div
-            v-if="cardConfig.thumbnail?.show && cardConfig.thumbnail?.location === 'center' && currentThumbnailUrl"
+            v-if="thumbnail.show && thumbnail.location === 'center' && currentThumbnailUrl"
             aria-hidden="true"
             class="flex-grow-0 overflow-hidden"
           >
             <v-img
               :src="currentThumbnailUrl"
-              :cover="cardConfig.thumbnail.crop"
+              :cover="thumbnail.crop"
               height="170"
               alt=""
               :style="hoverFx.imageStyle(isHovering)"
@@ -103,7 +103,7 @@
           </div>
 
           <v-card-text
-            v-if="(cardConfig.showSummary || (cardConfig.thumbnail?.show && cardConfig.thumbnail?.useSummary && !currentThumbnailUrl)) && reuse.config.summary?.length"
+            v-if="((cardConfig.showSummary ?? true) || (thumbnail.show && thumbnail.useSummary && !currentThumbnailUrl)) && reuse.config.summary?.length"
             class="pb-0"
           >
             {{ reuse.config.summary }}
@@ -118,7 +118,7 @@
           >
             <v-col cols="12">
               <p
-                v-if="cardConfig.showAuthor && reuse.config.author"
+                v-if="(cardConfig.showAuthor ?? true) && reuse.config.author"
                 class="text-body-small"
               >
                 {{ t('publishedBy', { author: reuse.config.author }) }}
@@ -151,6 +151,7 @@ const { portalConfig, preview } = usePortalStore()
 const getPageImageSrc = usePageImageSrc()
 const getPortalImageSrc = usePortalImageSrc()
 const hoverFx = useHoverConfig(() => cardConfig.hover)
+const thumbnail = computed(() => ({ show: true, location: 'center', crop: true, ...cardConfig.thumbnail }))
 
 const getReuseImageSrc = (imageRef: ImageRef, mobile: boolean) => {
   let id = imageRef._id
@@ -173,7 +174,7 @@ const leftThumbnailStyle = computed(() => {
   if (!currentThumbnailUrl.value) return undefined
   return {
     backgroundImage: `url("${currentThumbnailUrl.value}")`,
-    backgroundSize: cardConfig.thumbnail?.crop ? 'cover' : 'contain',
+    backgroundSize: thumbnail.value.crop ? 'cover' : 'contain',
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat',
     minHeight: '200px',

@@ -30,7 +30,7 @@
       >
         <!-- Thumbnail (Left Location) -->
         <!-- On mobile, always use top location -->
-        <template v-if="cardConfig.thumbnail?.show && cardConfig.thumbnail?.location === 'left' && !$vuetify.display.smAndDown">
+        <template v-if="thumbnail.show && thumbnail.location === 'left' && !$vuetify.display.smAndDown">
           <v-col
             cols="4"
             class="overflow-hidden"
@@ -65,13 +65,13 @@
         >
           <!-- Thumbnail (Top Location) -->
           <div
-            v-if="cardConfig.thumbnail?.show && (cardConfig.thumbnail?.location === 'top' || (cardConfig.thumbnail?.location === 'left' && $vuetify.display.smAndDown)) && currentThumbnailUrl"
+            v-if="thumbnail.show && (thumbnail.location === 'top' || (thumbnail.location === 'left' && $vuetify.display.smAndDown)) && currentThumbnailUrl"
             aria-hidden="true"
             class="flex-grow-0 overflow-hidden"
           >
             <v-img
               :src="currentThumbnailUrl"
-              :cover="cardConfig.thumbnail.crop"
+              :cover="thumbnail.crop"
               height="170"
               alt=""
               :style="hoverFx.imageStyle(isHovering)"
@@ -81,20 +81,20 @@
 
           <card-hover-title
             :title="application.title"
-            :lines-count="cardConfig.titleLinesCount"
+            :lines-count="cardConfig.titleLinesCount ?? 2"
             :hover-fx="hoverFx"
             :is-hovering="isHovering"
           />
 
           <!-- Thumbnail (Center Location) -->
           <div
-            v-if="cardConfig.thumbnail?.show && cardConfig.thumbnail?.location === 'center' && currentThumbnailUrl"
+            v-if="thumbnail.show && thumbnail.location === 'center' && currentThumbnailUrl"
             aria-hidden="true"
             class="flex-grow-0 overflow-hidden"
           >
             <v-img
               :src="currentThumbnailUrl"
-              :cover="cardConfig.thumbnail.crop"
+              :cover="thumbnail.crop"
               height="170"
               alt=""
               :style="hoverFx.imageStyle(isHovering)"
@@ -103,7 +103,7 @@
           </div>
 
           <v-card-text
-            v-if="(cardConfig.showSummary || (cardConfig.thumbnail?.show && cardConfig.thumbnail?.useSummary && cardConfig.thumbnail?.location === 'center' && !currentThumbnailUrl)) && application.summary?.length"
+            v-if="((cardConfig.showSummary ?? true) || (thumbnail.show && thumbnail.useSummary && thumbnail.location === 'center' && !currentThumbnailUrl)) && application.summary?.length"
             class="pb-0"
           >
             {{ application.summary }}
@@ -130,7 +130,7 @@
                 <card-owner
                   v-if="showOwner"
                   :owner="application.owner"
-                  :display="cardConfig.ownerDisplay"
+                  :display="ownerDisplay"
                   class="ms-5"
                 />
                 <span
@@ -141,7 +141,7 @@
                     class="text-center flex-shrink-0"
                     style="width: 20px"
                     aria-hidden="true"
-                  >{{ cardConfig.ownerDisplay === 'avatarName' ? '·' : '' }}</span>
+                  >{{ ownerDisplay === 'avatarName' ? '·' : '' }}</span>
                   {{ t('updatedAt') }} {{ dayjs(application.updatedAt).format('L') }}
                 </span>
               </div>
@@ -153,7 +153,7 @@
           />
 
           <!-- Actions (Bottom Location) -->
-          <template v-if="!cardConfig.openInFullPage && (cardConfig.actionsLocation === 'bottom' || (cardConfig.actionsLocation === 'right' && $vuetify.display.smAndDown))">
+          <template v-if="!cardConfig.openInFullPage && (actionsLocation === 'bottom' || (actionsLocation === 'right' && $vuetify.display.smAndDown))">
             <v-divider />
             <!--
               position-relative + z-index => sit above the card link overlay, so this
@@ -179,7 +179,7 @@
         </v-col>
 
         <!-- Actions (Right Location) -->
-        <template v-if="!cardConfig.openInFullPage && cardConfig.actionsLocation === 'right' && !$vuetify.display.smAndDown">
+        <template v-if="!cardConfig.openInFullPage && actionsLocation === 'right' && !$vuetify.display.smAndDown">
           <v-divider vertical />
           <!--
             cols=auto => fit column width to largest button
@@ -226,6 +226,9 @@ const { portalConfig, preview } = usePortalStore()
 const getPortalImageSrc = usePortalImageSrc()
 const { t } = useI18n()
 const hoverFx = useHoverConfig(() => cardConfig.hover)
+const thumbnail = computed(() => ({ show: true, location: 'center', crop: true, ...cardConfig.thumbnail }))
+const actionsLocation = computed(() => cardConfig.actionsLocation ?? 'bottom')
+const ownerDisplay = computed(() => cardConfig.ownerDisplay ?? 'avatar')
 
 const candidates = computed(() => applicationThumbnailCandidates(
   application,
@@ -234,7 +237,7 @@ const candidates = computed(() => applicationThumbnailCandidates(
   getPortalImageSrc
 ))
 
-const showOwner = computed(() => !!cardConfig.ownerDisplay && cardConfig.ownerDisplay !== 'none')
+const showOwner = computed(() => ownerDisplay.value !== 'none')
 
 const thumbnailProbe = useTemplateRef('thumbnailProbe')
 const { currentThumbnailUrl, onThumbnailError } = useThumbnailFallback(candidates, thumbnailProbe)
@@ -244,7 +247,7 @@ const leftThumbnailStyle = computed(() => {
   if (!currentThumbnailUrl.value) return undefined
   return {
     backgroundImage: `url("${currentThumbnailUrl.value}")`,
-    backgroundSize: cardConfig.thumbnail?.crop ? 'cover' : 'contain',
+    backgroundSize: thumbnail.value.crop ? 'cover' : 'contain',
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat',
     minHeight: '200px',

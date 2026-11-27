@@ -57,15 +57,15 @@ export const datasetThumbnailCandidates = (
   defaultImageSrc: ImageSrc
 ) => {
   const thumbnail = cardConfig.thumbnail as ThumbnailConfig | undefined
-  if (!thumbnail?.show) return []
+  if (!(thumbnail?.show ?? true)) return []
   const application = dataset.extras?.applications?.[0]
   return compact([
     dataset.image,
-    thumbnail.useTopic ? firstTopicThumbnail(dataset.topics, portalTopics, portalImageSrc) : undefined,
-    thumbnail.useApplication && application
+    thumbnail?.useTopic ? firstTopicThumbnail(dataset.topics, portalTopics, portalImageSrc) : undefined,
+    thumbnail?.useApplication && application
       ? applicationCaptureUrl(application.id, application.updatedAt)
       : undefined,
-    thumbnail.default ? defaultImageSrc(thumbnail.default, false) : undefined
+    thumbnail?.default ? defaultImageSrc(thumbnail.default, false) : undefined
   ])
 }
 
@@ -76,12 +76,12 @@ export const applicationThumbnailCandidates = (
   portalImageSrc: ImageSrc
 ) => {
   const thumbnail = cardConfig.thumbnail as ThumbnailConfig | undefined
-  if (!thumbnail?.show) return []
+  if (!(thumbnail?.show ?? true)) return []
   // the schema puts the summary before the automatic capture
-  const preferSummary = !!thumbnail.useSummary && thumbnail.location === 'center' && !!application.summary?.length
+  const preferSummary = !!thumbnail?.useSummary && (thumbnail?.location ?? 'center') === 'center' && !!application.summary?.length
   return compact([
     application.image,
-    thumbnail.useTopic ? firstTopicThumbnail(application.topics, portalTopics, portalImageSrc) : undefined,
+    thumbnail?.useTopic ? firstTopicThumbnail(application.topics, portalTopics, portalImageSrc) : undefined,
     preferSummary ? undefined : applicationCaptureUrl(application.id, application.updatedAt)
   ])
 }
@@ -93,9 +93,9 @@ export const reuseThumbnailCandidates = (
   defaultImageSrc: ImageSrc
 ) => {
   const thumbnail = cardConfig.thumbnail as ThumbnailConfig | undefined
-  if (!thumbnail?.show) return []
+  if (!(thumbnail?.show ?? true)) return []
   return compact([
     image ? reuseImageSrc(image, false) : undefined,
-    thumbnail.default ? defaultImageSrc(thumbnail.default, false) : undefined
+    thumbnail?.default ? defaultImageSrc(thumbnail.default, false) : undefined
   ])
 }

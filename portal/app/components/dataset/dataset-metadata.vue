@@ -335,9 +335,9 @@ const { t, locale } = useI18n()
 const { dayjs } = useLocaleDayjs()
 const { departmentLabel } = useDisplayOwner()
 
-const metadataConfig = computed(() => portalConfig.value.datasets.page.metadata || {})
-const topicsConfig = computed(() => portalConfig.value.datasets.page.topics)
-const keywordsConfig = computed(() => portalConfig.value.datasets.page.keywords)
+const metadataConfig = computed(() => ({ location: 'right', showDepartment: true, ...portalConfig.value.datasets.page.metadata }))
+const topicsConfig = computed(() => ({ show: true, ...portalConfig.value.datasets.page.topics }))
+const keywordsConfig = computed(() => ({ show: true, ...portalConfig.value.datasets.page.keywords }))
 const metadataColProps = computed(() => ({
   class: 'py-0',
   cols: 12,

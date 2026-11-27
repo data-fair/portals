@@ -25,7 +25,7 @@
         <v-chip
           v-bind="hoverProps"
           :color="resolvedColor(topic.color)"
-          :density="config?.density ?? portalConfig.defaults?.density"
+          :density="config?.density ?? portalConfig.defaults?.density ?? 'comfortable'"
           :elevation="hoverFx.elevation(isHovering, config?.elevation ?? portalConfig.defaults?.elevation)"
           :rounded="config?.rounded ?? portalConfig.defaults?.rounded"
           :link="isFilters || !!link"
@@ -38,7 +38,7 @@
           @click="toggle(topic.id)"
         >
           <v-icon
-            v-if="config?.showIcon && (topic.icon?.svgPath || topic.icon?.svg)"
+            v-if="(config?.showIcon ?? true) && (topic.icon?.svgPath || topic.icon?.svg)"
             :color="resolvedIconColor(topic.id, topic.color, isHovering)"
             :icon="topic.icon?.svgPath || extractSvgPath(topic.icon?.svg)"
             start

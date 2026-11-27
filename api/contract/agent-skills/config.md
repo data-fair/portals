@@ -73,20 +73,21 @@ The server recomputes the theme at each save:
 - **Menu** `menu.children`: `standard` items (`subtype`: home, contact, datasets, applications, reuses, event-catalog, news-catalog, legal-notice, privacy-policy, cookie-policy, accessibility, terms-of-service, sitemap, catalog-api-doc), `generic` / `event` / `news` (`pageRef { slug, title, group? }`), `external` (`title`, `href`), `submenu` (`title`, `children`). Page link suggestions do not work in editor sessions: find the pages with **portals_list_pages**, read their slug (and group) in their configuration, and set `pageRef` yourself.
 - **`navBar`**: `fluid` absent means **full width**: set `fluid: false` to align the tabs on the content. `align` absent means centered. `loginColor` sets only the background of the login button. `navBarHome` (with `navBarHomeActive`) is a variant for the home page; the same for `header` / `headerHome`.
 - **`header`**: the portal title is rendered as an `<h1>` when `show && showTitle && !logoPrimaryCentered`: the pages then use `<h2>` for their titles (`portals-pages`).
-- **`breadcrumb.position`** absent means hidden (`below-nav`, `above-footer`, `both`); never on the home page.
+- **`breadcrumb.position`** absent means hidden (`below-nav`, `above-footer`, `both`); never on the home page. `showHome`, `fluid` and `compact` default to on; an absent `homeLabel` is « Accueil » / « Home » in the visitor's language.
+- **Logos**: `header.logoPrimaryType` defaults to `default` (the portal logo), `navBar.logoType` to `hidden`, so the logo is not shown twice.
 
 ## Footer
 
 `copyright` (boolean), `background { color, image? }`, `rows[]`. A row has `columns` 1, 2 or 3 and its blocks in `blocks`, `blocks2`, `blocks3` (the blocks of hidden columns stay stored); block types `images`, `text`, `links`, `buttons`, `social`, `divider`, each requiring `type` and `align`. The Koumoul mention rule above applies.
 
-## Cards, catalogs, defaults: write every value
+## Cards, catalogs, defaults: absent means default
 
-**The schema defaults are not applied at render.** The manager's form fills them when a section is opened; the API does not, and the portal renders an absent key as "off". A portal configured through the API with `datasets.card: {}` shows cards without summary, image, owner or action buttons. Set every wanted value explicitly:
+**An absent key renders as its schema default**, exactly as after a save of the manager's form: write only what differs from the defaults, and `false` / `'none'` to turn something off. A portal configured through the API with `datasets.card: {}` shows cards with summary, centered thumbnail, owner avatar and action buttons at the bottom.
 
-- `datasets.card` / `applications.card`: `actionsLocation` absent = no action; `actionsStyle` absent = text only (`full` = icon + text); `showSummary` shows the dataset's `summary`, never its description; `thumbnail.show`, `topics.show`, `keywords.show`… absent = hidden. `reuses.card` and `news.card` have no actions.
-- `datasets.page`: the applications, reuses and related datasets sections are rendered only with an explicit `display` (`card`, …); `metadata.location` absent = full width; `metadata.actionButtons` lists the buttons.
-- `applications.page`: `datasets.display: 'card'` for "data used"; `metadata.showBaseApplication` is shown unless `false`.
-- `defaults` (`elevation`, `density`, `rounded`, `hover`) are inherited by cards, buttons, blocks and tabs that set nothing; absent on a new portal (flat cards).
+- `datasets.card` / `applications.card`: `actionsLocation` (default `bottom`, `none` = no action), `actionsStyle` (default `full` = icon + text), `showSummary` (default on) shows the dataset's `summary`, never its description, `thumbnail.show` (default on); `topics.show` and `keywords.show` have no default: absent = hidden. `reuses.card` and `news.card` have no actions.
+- `datasets.page`: the applications section is shown by default (`side-by-side`), the related datasets too (`card`), the reuses are not (`none`); `metadata.location` defaults to `right`; `metadata.actionButtons` lists the buttons; `showData` has no default: absent = no data preview (a new portal sets it).
+- `applications.page`: "data used" is shown as cards by default (`datasets.display`); `metadata.showBaseApplication` is shown unless `false`.
+- `defaults` (`elevation`, `density`, `rounded`, `hover`) are inherited by cards, buttons, blocks and tabs that set nothing; an absent `density` is `comfortable`, an absent `elevation` keeps each component's own Vuetify elevation.
 - Topic icons come from the owner's topics in data-fair, not from the portal: `showIcon` only shows what exists there.
 
 ## Contact, social, security

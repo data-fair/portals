@@ -27,7 +27,7 @@
       <v-row>
         <!-- Application image and description -->
         <v-col
-          :md="portalConfig.applications.page.metadata?.location === 'right' ? 8 : 12"
+          :md="(portalConfig.applications.page.metadata?.location ?? 'right') === 'right' ? 8 : 12"
           cols="12"
         >
           <v-img
@@ -46,8 +46,8 @@
 
         <!-- Metadata -->
         <v-col
-          :md="portalConfig.applications.page.metadata?.location === 'right' ? 4 : 12"
-          :class="portalConfig.applications.page.metadata?.location === 'top' ? 'order-md-first' : 'order-md-1'"
+          :md="(portalConfig.applications.page.metadata?.location ?? 'right') === 'right' ? 4 : 12"
+          :class="(portalConfig.applications.page.metadata?.location ?? 'right') === 'top' ? 'order-md-first' : 'order-md-1'"
           cols="12"
         >
           <application-metadata
@@ -68,7 +68,7 @@
 
       <!-- Datasets section -->
       <template
-        v-if="portalConfig.applications.page.datasets?.display && portalConfig.applications.page.datasets?.display !== 'none' && datasets.length"
+        v-if="(portalConfig.applications.page.datasets?.display ?? 'card') !== 'none' && datasets.length"
       >
         <page-element-title
           :element="{
@@ -84,7 +84,7 @@
           <v-col
             v-for="(dataset, i) in datasetsFetch.data.value?.results"
             :key="i"
-            :md="12 / (portalConfig.applications.page.datasets.columns || 3)"
+            :md="12 / (portalConfig.applications.page.datasets?.columns || 2)"
             cols="12"
           >
             <dataset-card
@@ -128,7 +128,7 @@ type BreadcrumbItem = NonNullable<VBreadcrumbs['$props']['items']>[number]
 const { t } = useI18n()
 const route = useRoute<'/applications/[ref]'>()
 const { portal, portalConfig } = usePortalStore()
-const headerHasTitle = computed(() => !!(portalConfig.value.header?.show && portalConfig.value.header?.showTitle))
+const headerHasTitle = computed(() => !!((portalConfig.value.header?.show ?? true) && (portalConfig.value.header?.showTitle ?? true)))
 const mainTitleTag = computed<HeadingTag>(() => headerHasTitle.value ? 'h2' : 'h1')
 const sectionTitleTag = computed<HeadingTag>(() => headerHasTitle.value ? 'h3' : 'h2')
 const { setBreadcrumbs, annotateLinks } = useNavigationStore()
@@ -186,9 +186,9 @@ const errorTitle = computed(() => {
 
 const thumbnailUrl = computed(() => {
   const cardConfig = portalConfig.value.applications.card
-  if (!cardConfig.thumbnail?.show || !application.value) return undefined
+  if (!(cardConfig.thumbnail?.show ?? true) || !application.value) return undefined
   if (application.value.image) return application.value.image
-  if (cardConfig.thumbnail.useTopic && application.value.topics?.[0]?.id) {
+  if (cardConfig.thumbnail?.useTopic && application.value.topics?.[0]?.id) {
     const topicConfig = portalConfig.value.topics?.find((t) => t.id === application.value!.topics![0]!.id)
     if (topicConfig?.thumbnail) return getPortalImageSrc(topicConfig.thumbnail, false)
   }

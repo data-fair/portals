@@ -12,9 +12,9 @@
       >
         <NuxtLink
           :to="resolveLink(link)"
-          :target="link.type === 'external' && link.target ? '_blank' : undefined"
-          :rel="linkRel(resolveLink(link), link.type === 'external' && link.target)"
-          :title="link.type === 'external' && link.target ? resolveLinkTitle(link, locale) + ' - ' + t('newWindow') : undefined"
+          :target="link.type === 'external' && (link.target ?? true) ? '_blank' : undefined"
+          :rel="linkRel(resolveLink(link), link.type === 'external' && (link.target ?? true))"
+          :title="link.type === 'external' && (link.target ?? true) ? resolveLinkTitle(link, locale) + ' - ' + t('newWindow') : undefined"
           class="simple-link d-flex align-center"
         >
           <span class="d-flex align-center">
@@ -43,9 +43,9 @@
       >
         <NuxtLink
           :to="resolveLink(link)"
-          :target="link.type === 'external' && link.target ? '_blank' : undefined"
-          :rel="linkRel(resolveLink(link), link.type === 'external' && link.target)"
-          :title="link.type === 'external' && link.target ? resolveLinkTitle(link, locale) + ' - ' + t('newWindow') : undefined"
+          :target="link.type === 'external' && (link.target ?? true) ? '_blank' : undefined"
+          :rel="linkRel(resolveLink(link), link.type === 'external' && (link.target ?? true))"
+          :title="link.type === 'external' && (link.target ?? true) ? resolveLinkTitle(link, locale) + ' - ' + t('newWindow') : undefined"
           class="simple-link d-flex align-center"
         >
           <span class="d-flex align-center">
@@ -81,9 +81,9 @@
       >
         <NuxtLink
           :to="resolveLink(link)"
-          :target="link.type === 'external' && link.target ? '_blank' : undefined"
-          :rel="linkRel(resolveLink(link), link.type === 'external' && link.target)"
-          :title="link.type === 'external' && link.target ? resolveLinkTitle(link, locale) + ' - ' + t('newWindow') : undefined"
+          :target="link.type === 'external' && (link.target ?? true) ? '_blank' : undefined"
+          :rel="linkRel(resolveLink(link), link.type === 'external' && (link.target ?? true))"
+          :title="link.type === 'external' && (link.target ?? true) ? resolveLinkTitle(link, locale) + ' - ' + t('newWindow') : undefined"
           class="simple-link d-flex align-center"
         >
           <span class="d-flex align-center">

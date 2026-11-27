@@ -15,7 +15,7 @@ export default {
           cols: { md: 6 }
         }]
       },
-      default: 'default',
+      default: 'hidden',
       oneOf: [
         { const: 'default', title: 'Use the main logo', 'x-i18n-title': { fr: 'Utiliser le logo principal' } },
         { const: 'local', title: 'Upload an image', 'x-i18n-title': { fr: 'Charger une image' } },

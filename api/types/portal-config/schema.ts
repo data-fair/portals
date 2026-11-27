@@ -405,6 +405,7 @@ export default {
         },
         color: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-main',
+          default: 'primary',
           title: 'Link color',
           'x-i18n-title': { fr: 'Couleur des liens' },
           layout: {
@@ -599,8 +600,7 @@ export default {
       properties: {
         elevation: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation',
-          layout: { cols: { md: 4 } },
-          default: 1
+          layout: { cols: { md: 4 } }
         },
         density: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density',
