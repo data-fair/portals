@@ -125,6 +125,15 @@ const listOf = (item: JsonSchema, extra: JsonSchema = {}) => ({
 
 const schemas = {
   portal: docSchema(portalSchema),
+  // GET /portals/{id} adds the public address of the portal
+  portalRead: (() => {
+    const schema = docSchema(portalSchema)
+    return {
+      ...schema,
+      required: [...schema.required, 'url'],
+      properties: { ...schema.properties, url: { type: 'string', description: 'The public address of the portal: its own domain once configured, its default address otherwise.' } }
+    }
+  })(),
   page: docSchema(pageSchema),
   reuse: docSchema(reuseSchema),
   group: docSchema(groupSchema),
@@ -203,7 +212,7 @@ const paths = {
   '/portals/{id}': {
     get: operation('getPortal', 'Portals', 'Get a portal', {
       parameters: [idParam('Id of the portal.')],
-      responses: ok('The portal.', ref('portal'))
+      responses: ok('The portal, with its public address.', ref('portalRead'))
     }),
     patch: operation('updatePortal', 'Portals', 'Update a portal', {
       description: 'owner, staging and contributorDepartments need the admin tier.',

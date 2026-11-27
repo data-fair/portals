@@ -156,10 +156,13 @@ export const cancelPortalDraft = async (portal: Portal, session: SessionStateAut
   return updatedPortal
 }
 
+// the public address of a portal: its own domain once an ingress is configured, its default address otherwise
+export const portalUrl = (portal: Pick<Portal, '_id' | 'ingress'>) => portal.ingress?.url || config.portalUrlPattern.replace('{subdomain}', portal._id)
+
 const getPublicationSite = (portal: Portal) => {
   const refType = portal.ingress ? 'slug' : 'id'
   const draftUrl = config.portalUrlPattern.replace('{subdomain}', portal._id + '.draft')
-  const url = portal.ingress ? portal.ingress.url : config.portalUrlPattern.replace('{subdomain}', portal._id)
+  const url = portalUrl(portal)
   const publicationSite: any = {
     type: 'data-fair-portals',
     id: portal._id,

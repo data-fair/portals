@@ -89,9 +89,9 @@ const declaredOperations: Partial<Record<ScopedOperationId | keyof typeof imageO
   getPortal: {
     name: 'get_portal',
     title: { en: 'Get a portal', fr: 'Lire un portail' },
-    description: 'Read a portal: its title, owner, settings and address (ingress). Read its draft configuration with form_getData (form "portals_portal_config").',
+    description: 'Read a portal: its title, owner, settings and public address (url, the link to give to open the portal). Read its draft configuration with form_getData (form "portals_portal_config").',
     params: idParam('portal'),
-    response: { concise: ['_id', 'title', 'owner', 'staging', 'contributorDepartments', 'ingress', 'createdAt', 'updatedAt'], detailed: true }
+    response: { concise: ['_id', 'title', 'url', 'owner', 'staging', 'contributorDepartments', 'updatedAt'], detailed: true }
   },
   updatePortal: {
     name: 'update_portal_settings',

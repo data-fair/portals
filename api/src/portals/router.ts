@@ -4,7 +4,6 @@ import { type PushEvent } from '@data-fair/lib-node/events-queue.js'
 import { randomUUID } from 'node:crypto'
 import { Router } from 'express'
 import mongo from '#mongo'
-import config from '#config'
 import findUtils from '../utils/find.ts'
 import * as postReqBody from '#doc/portals/post-req-body/index.ts'
 import * as patchReqBody from '#doc/portals/patch-req-body/index.ts'
@@ -12,7 +11,7 @@ import * as postIngressReqBody from '#types/portal-ingress/index.ts'
 import { httpError, reqSessionAuthenticated, assertAccountRole, assertAdminMode, reqOrigin, allowAnyScope } from '@data-fair/lib-express'
 import { defaultTheme, fillTheme } from '@data-fair/lib-common-types/theme/index.js'
 import { hasKoumoulMention } from '#types/portal-config-footer/walk.ts'
-import { createPortal, validatePortalDraft, cancelPortalDraft, getPortal, getPortalAsAdmin, patchPortal, deletePortal, sendPortalEvent, changesBody, duplicatePortalConfig } from './service.ts'
+import { createPortal, validatePortalDraft, cancelPortalDraft, getPortal, getPortalAsAdmin, portalUrl, patchPortal, deletePortal, sendPortalEvent, changesBody, duplicatePortalConfig } from './service.ts'
 import { requireOperationScope } from '../scopes.ts'
 import { syncHeaders } from './operations.ts'
 
@@ -133,7 +132,8 @@ router.post('', requireOperationScope('createPortal'), async (req, res, next) =>
 })
 
 router.get('/:id', requireOperationScope('getPortal'), async (req, res, next) => {
-  res.send(await getPortal(reqSessionAuthenticated(req), req.params.id))
+  const portal = await getPortal(reqSessionAuthenticated(req), req.params.id)
+  res.send({ ...portal, url: portalUrl(portal) })
 })
 
 /**
@@ -143,15 +143,11 @@ router.get('/:id/public', allowAnyScope, async (req, res, next) => {
   const portal = await mongo.portals.findOne({ _id: req.params.id })
   if (!portal) throw httpError(404, 'portal not found')
 
-  let url = ''
-  if (portal.ingress?.url) url = portal.ingress.url
-  else url = config.portalUrlPattern.replace('{subdomain}', portal._id)
-
   res.json({
     _id: portal._id,
     title: portal.config.title,
     owner: portal.owner,
-    url
+    url: portalUrl(portal)
   })
 })
 

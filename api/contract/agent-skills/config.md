@@ -10,7 +10,7 @@ How a data portal is configured: its model (draft and live configuration, owner,
 - **portals_update_portal_settings** changes the settings: staging mode (the portal shows the pages whose publication is *requested* on it, a preview of contributions), `contributorDepartments` (the administrators of these departments publish on it as if they owned it; only for a portal owned by the organization root), owner.
 - **portals_create_portal** takes a `config` with only `title` and `menu`, or a `sourcePortalId` to duplicate (a portal you administer or a reference portal): the published configuration, its images, menu and styles are copied, **not its pages**. The new portal's draft equals its live configuration: nothing to publish.
 - **portals_delete_portal** deletes the portal, its images and its data-fair publication site; its pages stay, detached.
-- A dedicated domain (`ingress`) is set by a platform super-administrator only. Without one, the portal's address follows the platform's pattern with its id.
+- A dedicated domain (`ingress`) is set by a platform super-administrator only. Without one, the portal's address follows the platform's pattern with its id. `portals_get_portal` gives the address to link to, either way (`url`).
 
 ### Typical sequence
 

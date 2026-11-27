@@ -74,6 +74,14 @@ test.describe('portals management', () => {
     await assert.rejects(orgUser.get('/api/portals'), (err: any) => err.status === 403)
   })
 
+  test('a portal read by its id gives its public address', async () => {
+    const portal = (await orgAdmin.post('/api/portals', { config: { title: 'Org portal', menu: { children: [] } } })).data
+    const read = (await orgAdmin.get(`/api/portals/${portal._id}`)).data
+    const publicInfo = (await orgAdmin.get(`/api/portals/${portal._id}/public`)).data
+    assert.ok(read.url.includes(portal._id), read.url)
+    assert.equal(read.url, publicInfo.url)
+  })
+
   test('dept admin lists org-root portal when their department is in contributorDepartments', async () => {
     const sharedPortal = (await orgAdmin.post('/api/portals', { config: { title: 'Shared', menu: { children: [] } } })).data
     await orgAdmin.patch(`/api/portals/${sharedPortal._id}`, { contributorDepartments: ['dep1'] })
