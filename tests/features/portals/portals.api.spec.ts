@@ -9,6 +9,8 @@ import { clean, axiosAuth, directoryUrl } from '../../support/axios.ts'
 const user1 = await axiosAuth('test_portals_admin@test.com')
 const orgAdmin = await axiosAuth({ email: 'test_portals_admin@test.com', org: 'test_portals_org1' })
 const deptAdmin = await axiosAuth({ email: 'test_portals_admin_dep@test.com', org: 'test_portals_org1' })
+const orgContrib = await axiosAuth({ email: 'test_portals_contrib@test.com', org: 'test_portals_org1' })
+const orgUser = await axiosAuth({ email: 'test_portals_user@test.com', org: 'test_portals_org1' })
 const superadmin = await axiosAuth({ email: 'test_portals_superadmin@test.com', adminMode: true })
 
 test.describe('portals management', () => {
@@ -59,6 +61,17 @@ test.describe('portals management', () => {
       deptAdmin.patch(`/api/portals/${portal._id}`, { contributorDepartments: ['dep2'] }),
       (err: any) => err.status === 400
     )
+  })
+
+  // the list asks the same role as reading a portal by its id (getPortal): admin or contrib of the account
+  test('a contributor lists and reads the portals of the account, cannot create one nor list the reference portals', async () => {
+    const portal = (await orgAdmin.post('/api/portals', { config: { title: 'Org portal', menu: { children: [] } } })).data
+    const list = (await orgContrib.get('/api/portals')).data
+    assert.deepEqual(list.results.map((p: any) => p._id), [portal._id])
+    assert.equal((await orgContrib.get(`/api/portals/${portal._id}`)).status, 200)
+    await assert.rejects(orgContrib.post('/api/portals', { config: { title: 'By contrib', menu: { children: [] } } }), (err: any) => err.status === 403)
+    await assert.rejects(orgContrib.get('/api/portals', { params: { isReference: 'true' } }), (err: any) => err.status === 403)
+    await assert.rejects(orgUser.get('/api/portals'), (err: any) => err.status === 403)
   })
 
   test('dept admin lists org-root portal when their department is in contributorDepartments', async () => {

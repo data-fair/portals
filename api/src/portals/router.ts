@@ -22,9 +22,11 @@ export default router
 
 router.get('', requireOperationScope('listPortals'), async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
-  assertAccountRole(session, session.account, 'admin')
-
   const params = req.query as Record<string, string>
+  // the portals of the account: the role that reads one of them by its id (getPortal). The reference
+  // portals of every account (templates to duplicate, a creation step) stay for the admins.
+  assertAccountRole(session, session.account, params.isReference === 'true' ? 'admin' : ['admin', 'contrib'])
+
   const sort = findUtils.sort(req.query.sort || 'createdAt:-1')
   const { skip, size } = findUtils.pagination(req.query)
   const project = findUtils.project(req.query.select)

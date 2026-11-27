@@ -10,6 +10,7 @@ const user1 = await axiosAuth('test_portals_admin@test.com')
 const orgAdmin = await axiosAuth({ email: 'test_portals_admin@test.com', org: 'test_portals_org1' })
 const orgContrib = await axiosAuth({ email: 'test_portals_contrib@test.com', org: 'test_portals_org1' })
 const deptAdmin = await axiosAuth({ email: 'test_portals_admin_dep@test.com', org: 'test_portals_org1' })
+const orgUser = await axiosAuth({ email: 'test_portals_user@test.com', org: 'test_portals_org1' })
 const superadmin = await axiosAuth({ email: 'test_portals_superadmin@test.com', adminMode: true })
 
 test.describe('pages management', () => {
@@ -22,6 +23,15 @@ test.describe('pages management', () => {
     // the API attaches a computed table of contents (empty here, no anchored titles)
     assert.deepEqual(page.config, { ...pageConfig, _toc: [] })
     assert.deepEqual(page.draftConfig, { ...pageConfig, _toc: [] })
+  })
+
+  // the list asks the same role as reading a page by its id (getPageAsContrib): admin or contrib of the account
+  test('a contributor lists the pages of the account, cannot list the reference pages', async () => {
+    const page = (await orgAdmin.post('/api/pages', { type: 'generic', config: { title: 'Org page', elements: [], genericMetadata: {} } })).data
+    const list = (await orgContrib.get('/api/pages')).data
+    assert.deepEqual(list.results.map((p: any) => p._id), [page._id])
+    await assert.rejects(orgContrib.get('/api/pages', { params: { isReference: 'true' } }), (err: any) => err.status === 403)
+    await assert.rejects(orgUser.get('/api/pages'), (err: any) => err.status === 403)
   })
 
   // the page previews draw a text block from its rendered _html: a judged simulation found the
