@@ -8,8 +8,8 @@
     >
       <news-card
         :page-config="newsPage"
-        :card-config="(!element.usePortalConfig && element.cardConfig) ? element.cardConfig : portalConfig.news.card"
-        :is-portal-config="element.usePortalConfig || !element.cardConfig"
+        :card-config="(!(element.usePortalConfig ?? true) && element.cardConfig) ? element.cardConfig : portalConfig.news.card"
+        :is-portal-config="(element.usePortalConfig ?? true) || !element.cardConfig"
       />
     </v-col>
   </v-row>

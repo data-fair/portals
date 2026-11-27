@@ -11,7 +11,7 @@
       :append-inner-icon="mdiMagnify"
       :label="t('search')"
       :aria-label="t(`searchByType.${catalogType}`)"
-      :density="config.filters?.density ?? portalConfig.defaults?.density"
+      :density="config.filters?.density ?? portalConfig.defaults?.density ?? 'comfortable'"
       :rounded="config.filters?.rounded ?? portalConfig.defaults?.rounded"
       variant="outlined"
       autofocus
@@ -35,7 +35,7 @@
       :items="conceptsItems"
       :label="t('filters.concepts')"
       :no-data-text="t('filters.noConcepts')"
-      :density="config.filters?.density ?? portalConfig.defaults?.density"
+      :density="config.filters?.density ?? portalConfig.defaults?.density ?? 'comfortable'"
       :rounded="config.filters?.rounded ?? portalConfig.defaults?.rounded"
       variant="outlined"
       chips
@@ -58,7 +58,7 @@
       :items="baseApplicationItems"
       :label="t('filters.baseApplication')"
       :no-data-text="t('filters.noBaseApplication')"
-      :density="config.filters?.density ?? portalConfig.defaults?.density"
+      :density="config.filters?.density ?? portalConfig.defaults?.density ?? 'comfortable'"
       :rounded="config.filters?.rounded ?? portalConfig.defaults?.rounded"
       variant="outlined"
       chips
@@ -83,7 +83,7 @@
       :items="topicsItems"
       :item-title="(item) => `${item.value.title} (${item.count})`"
       :item-value="(item) => item.value.id"
-      :density="config.filters?.density ?? portalConfig.defaults?.density"
+      :density="config.filters?.density ?? portalConfig.defaults?.density ?? 'comfortable'"
       :rounded="config.filters?.rounded ?? portalConfig.defaults?.rounded"
       variant="outlined"
       chips
@@ -122,7 +122,7 @@
       :items="keywordsItems"
       :item-title="(item) => `${item.value} (${item.count})`"
       item-value="value"
-      :density="config.filters?.density ?? portalConfig.defaults?.density"
+      :density="config.filters?.density ?? portalConfig.defaults?.density ?? 'comfortable'"
       :rounded="config.filters?.rounded ?? portalConfig.defaults?.rounded"
       variant="outlined"
       chips
@@ -145,7 +145,7 @@
       :label="portalConfig.labelsOverrides?.owner || t('filters.owners')"
       :no-data-text="t(`filters.${portalConfig.labelsOverrides?.owner ? 'noChoices' : 'noOwners'}`)"
       :items="ownersItems"
-      :density="config.filters?.density ?? portalConfig.defaults?.density"
+      :density="config.filters?.density ?? portalConfig.defaults?.density ?? 'comfortable'"
       :rounded="config.filters?.rounded ?? portalConfig.defaults?.rounded"
       variant="outlined"
       chips
@@ -180,7 +180,7 @@
     <v-checkbox
       v-model="filters.includePast.value"
       :label="t('filters.includePastEvents')"
-      :density="config.filters?.density ?? portalConfig.defaults?.density"
+      :density="config.filters?.density ?? portalConfig.defaults?.density ?? 'comfortable'"
       :rounded="config.filters?.rounded ?? portalConfig.defaults?.rounded"
       color="primary"
       hide-details
@@ -197,7 +197,7 @@
     <v-checkbox
       v-model="filters.queryable.value"
       :label="t('filters.queryable')"
-      :density="config.filters?.density ?? portalConfig.defaults?.density"
+      :density="config.filters?.density ?? portalConfig.defaults?.density ?? 'comfortable'"
       color="primary"
       hide-details
     />
@@ -214,7 +214,7 @@
       v-model:sort="sort"
       v-model:order="order"
       :items="sortItems"
-      :density="config.filters?.density ?? portalConfig.defaults?.density"
+      :density="config.filters?.density ?? portalConfig.defaults?.density ?? 'comfortable'"
       :rounded="config.filters?.rounded ?? portalConfig.defaults?.rounded"
       :drawer="drawer"
       :disabled="!!filters.search.value"
@@ -255,6 +255,16 @@ const { config, catalogType, drawer } = defineProps<{
   drawer?: boolean
 }>()
 
+// the defaultSort schema default of each catalog type, as in the useCatalog call of its page element
+const defaultSortFallbacks: Record<CatalogType, string> = {
+  datasets: 'createdAt:-1',
+  applications: 'createdAt:-1',
+  reuses: 'updatedAt:-1',
+  events: 'startDate:1',
+  news: 'date:-1'
+}
+const defaultSort = config.defaultSort ?? defaultSortFallbacks[catalogType]
+
 const filters = {
   search: useStringSearchParam('q'),
   includePast: useBooleanSearchParam('include-past'),
@@ -264,7 +274,7 @@ const filters = {
   keywords: useStringsArraySearchParam('keywords'),
   owners: useStringsArraySearchParam('owner'),
   queryable: useBooleanSearchParam('queryable'),
-  sort: useStringSearchParam('sort', { default: config.defaultSort })
+  sort: useStringSearchParam('sort', { default: defaultSort })
 }
 
 const staticFilters = ('staticFilters' in config ? config.staticFilters : undefined) as
@@ -399,7 +409,7 @@ const ownersItems = computed(() => {
 
 // Update filters.sort param when sort or order change
 watch([sort, order], () => {
-  const [defaultField, defaultOrder] = config.defaultSort?.split(':') || ['createdAt', '-1']
+  const [defaultField, defaultOrder] = defaultSort.split(':')
   const field = sort.value || defaultField
   const ord = order.value || defaultOrder as '-1' | '1'
   filters.sort.value = `${field}:${ord}`

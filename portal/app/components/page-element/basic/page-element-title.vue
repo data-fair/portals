@@ -42,20 +42,20 @@ const titleLink = computed(() => {
     href: isExternalLink(element.link) ? resolved : undefined,
     to: isExternalLink(element.link) ? undefined : resolved,
     title: altLinkTitle.value,
-    target: !!element.link.target
+    target: element.link.target ?? element.link.type === 'external'
   }
 })
 
 const lineGrow = computed(() =>
   isLink.value &&
-  (element.line?.position === 'none' || element.line?.position === 'bottom-small') &&
+  ((element.line?.position ?? 'none') === 'none' || element.line?.position === 'bottom-small') &&
   element.line?.growOnHover === true
 )
 
 const altLinkTitle = computed(() => {
   if (!element.link || element.link.type === 'none') return ''
   let linkTitle = element.link?.title || element.content || ''
-  if (element.link?.target) linkTitle += ' - ' + t('newWindow')
+  if (element.link?.target ?? element.link?.type === 'external') linkTitle += ' - ' + t('newWindow')
   return linkTitle
 })
 

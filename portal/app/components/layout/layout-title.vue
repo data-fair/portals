@@ -109,7 +109,7 @@ const titleTag = computed(() => element.titleTag ?? element.titleSize ?? 'h3')
 const showBottomLine = computed(() =>
   element.line?.position === 'bottom-small' ||
   element.line?.position === 'bottom-medium' ||
-  (lineGrow && element.line?.position === 'none')
+  (lineGrow && (element.line?.position ?? 'none') === 'none')
 )
 
 // underline decorates the text itself, so a wrapping title gets a line under each of its lines

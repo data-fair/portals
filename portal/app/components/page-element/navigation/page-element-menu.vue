@@ -1,5 +1,5 @@
 <template>
-  <div :class="element.centered && 'd-flex justify-center'">
+  <div :class="(element.centered ?? true) && 'd-flex justify-center'">
     <!-- no aria-haspopup: same rationale as the header submenus (nav-tabs.vue) -->
     <v-menu
       v-if="element.links && element.links.length"
@@ -14,12 +14,12 @@
             :aria-owns="undefined"
             :active="open"
             :color="btnHover.color(isHovering, config?.color)"
-            :density="config?.density ?? portalConfig.defaults?.density"
+            :density="config?.density ?? portalConfig.defaults?.density ?? 'comfortable'"
             :elevation="btnHover.elevation(isHovering, config?.elevation ?? portalConfig.defaults?.elevation)"
             :rounded="config?.rounded ?? portalConfig.defaults?.rounded"
             :variant="config?.variant !== 'default' ? config?.variant : undefined"
             :append-icon="mdiChevronDown"
-            :class="{ 'text-uppercase': config?.uppercase }"
+            :class="{ 'text-uppercase': config?.uppercase ?? true }"
             :style="btnHover.style(isHovering)"
           >
             <!-- text-truncate enables text overflow with ellipsis (...) when chip width exceeds available space -->
@@ -56,7 +56,7 @@
             > - {{ t('newWindow') }}</span>
             <template #prepend>
               <v-icon
-                v-if="config?.showIcon && link.icon && (link.icon.mdi?.svgPath || link.icon.custom)"
+                v-if="(config?.showIcon ?? true) && link.icon && (link.icon.mdi?.svgPath || link.icon.custom)"
                 :icon="link.icon.mdi?.svgPath || link.icon.custom"
                 :color="link.icon.color"
               />
@@ -84,7 +84,7 @@ const { resolveLink, resolveLinkTitle, linkRel } = useNavigationStore()
 const open = ref(false)
 
 const config = computed(() => {
-  return (!element.usePortalConfig && element.config) ? element.config : portalConfig.value.navLinksConfig
+  return (!(element.usePortalConfig ?? true) && element.config) ? element.config : portalConfig.value.navLinksConfig
 })
 
 const btnHover = useButtonHover(() => config.value)

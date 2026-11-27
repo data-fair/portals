@@ -15,7 +15,7 @@
     >
       <application-card
         :application="application"
-        :card-config="element.usePortalConfig ? portalConfig.applications.card : { ...portalConfig.applications.card, ...element.cardConfig }"
+        :card-config="(element.usePortalConfig ?? true) ? portalConfig.applications.card : { ...portalConfig.applications.card, ...element.cardConfig }"
       />
     </v-col>
   </v-row>
@@ -40,6 +40,7 @@ if (!preview) {
     ids: element.mode === 'custom' ? ids.join(',') : undefined,
     publicationSites: 'data-fair-portals:' + portal.value._id,
     size: element.mode !== 'custom' ? element.limit : undefined,
+    // compatibility: a list without mode keeps the API's default order, which no mode reproduces
     sort: element.mode === 'lastUpdated' ? 'updatedAt:-1' : element.mode === 'lastCreated' ? 'createdAt:-1' : undefined
   }))
 

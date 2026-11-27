@@ -1,6 +1,6 @@
 <template>
   <v-card
-    :border="element.border"
+    :border="element.border ?? true"
     :class="element.mb !== 0 && `mb-${element.mb ?? 4}`"
   >
     <v-tabs

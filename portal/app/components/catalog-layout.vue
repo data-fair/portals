@@ -92,7 +92,7 @@
             :sort="sort"
             :order="order"
             :items="sortItems"
-            :density="element.filters?.density || 'comfortable'"
+            :density="element.filters?.density ?? portalConfig.defaults?.density ?? 'comfortable'"
             :rounded="element.filters?.rounded"
             :disabled="!!search"
             @update:sort="$emit('update:sort', $event)"
@@ -201,7 +201,7 @@ const search = useStringSearchParam('q')
 
 const headingTag = computed(() => {
   let level = 1
-  if (portalConfig.value.header?.show && portalConfig.value.header?.showTitle) level++
+  if ((portalConfig.value.header?.show ?? true) && (portalConfig.value.header?.showTitle ?? true)) level++
   if (props.context?.isRoot && props.context.index > 0) level++
   return `h${level}`
 })

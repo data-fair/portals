@@ -10,7 +10,7 @@
     <v-col
       v-for="dataset in displayedDatasets"
       :key="dataset.id"
-      :md="12 / (element.columns || 2)"
+      :md="12 / (element.columns || 3)"
       cols="12"
     >
       <dataset-card
@@ -42,6 +42,7 @@ if (!preview) {
     publicationSites: 'data-fair-portals:' + portal.value._id,
     truncate: 250,
     size: element.mode !== 'custom' ? element.limit : undefined,
+    // compatibility: a list without mode keeps the API's default order, which no mode reproduces
     sort: element.mode === 'lastUpdated' ? 'modified:-1' : element.mode === 'lastCreated' ? 'createdAt:-1' : undefined
   }))
 

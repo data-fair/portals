@@ -13,6 +13,7 @@ export default {
           showTicks: 'always'
         }
       },
+      // the blocks render an absent mb as 4 (`mb ?? 4`): blocks stored before this default was 0 keep their spacing
       default: 0,
       minimum: 0,
       maximum: 16

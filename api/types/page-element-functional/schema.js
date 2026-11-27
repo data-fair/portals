@@ -96,7 +96,8 @@ export default {
         type: { const: 'search' },
         uuid: { type: 'string', layout: 'none' },
         density: {
-          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density'
+          $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/density',
+          layout: { ...inheritedStyleLayout }
         },
         rounded: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/rounded'

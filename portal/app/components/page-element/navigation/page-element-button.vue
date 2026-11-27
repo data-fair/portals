@@ -1,9 +1,9 @@
 <template>
-  <div :class="element.centered && !element.fullWidth && 'd-flex justify-center'">
+  <div :class="(element.centered ?? true) && !element.fullWidth && 'd-flex justify-center'">
     <nav-link
       v-if="element.link"
       :link="element.link"
-      :config="(!element.usePortalConfig && element.config) ? element.config : portalConfig.navLinksConfig"
+      :config="(!(element.usePortalConfig ?? true) && element.config) ? element.config : portalConfig.navLinksConfig"
       :block="element.fullWidth"
       :class="element.mb !== 0 && `mb-${element.mb ?? 4}`"
     />

@@ -13,7 +13,7 @@
       :cols="!element.fullWidth ? 'auto' : undefined"
     >
       <v-card
-        :border="element.border"
+        :border="element.border ?? true"
         :elevation="element.elevation"
         :rounded="element.rounded"
         :class="[element.mb !== 0 && `mb-${element.mb ?? 4}`, 'text-center']"

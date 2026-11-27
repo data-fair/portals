@@ -173,7 +173,8 @@ export default {
           'x-i18n-title': { fr: 'Marge supérieure' },
           layout: { cols: { xs: 6 } },
           minimum: 4,
-          maximum: 16
+          maximum: 16,
+          default: 4
         },
         pb: {
           type: 'integer',
@@ -181,7 +182,8 @@ export default {
           'x-i18n-title': { fr: 'Marge inférieure' },
           layout: { cols: { xs: 6 } },
           minimum: 4,
-          maximum: 16
+          maximum: 16,
+          default: 4
         },
         pl: {
           type: 'integer',
@@ -189,7 +191,8 @@ export default {
           'x-i18n-title': { fr: 'Marge gauche' },
           layout: { cols: { xs: 6 } },
           minimum: 4,
-          maximum: 16
+          maximum: 16,
+          default: 4
         },
         pr: {
           type: 'integer',
@@ -197,7 +200,8 @@ export default {
           'x-i18n-title': { fr: 'Marge droite' },
           layout: { cols: { xs: 6 } },
           minimum: 4,
-          maximum: 16
+          maximum: 16,
+          default: 4
         },
         overflowTop: {
           type: 'boolean',
@@ -257,7 +261,8 @@ export default {
             { const: 'start', title: 'Top', 'x-i18n-title': { fr: 'En haut' } },
             { const: 'center', title: 'Center', 'x-i18n-title': { fr: 'Au centre' } },
             { const: 'end', title: 'Bottom', 'x-i18n-title': { fr: 'En bas' } }
-          ]
+          ],
+          default: 'center'
         },
         elevation: {
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/elevation',
@@ -759,6 +764,7 @@ export default {
           title: 'Titles background color',
           'x-i18n-title': { fr: 'Couleur de fond des titres' },
           $ref: 'https://github.com/data-fair/portals/common-defs#/$defs/color-full',
+          default: 'surface',
           layout: {
             slots: {
               item: { name: 'color-select-item' },

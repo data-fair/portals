@@ -8,13 +8,13 @@
     <v-card
       v-bind="hoverProps"
       :link="hoverable"
-      :border="element.border"
+      :border="element.border ?? true"
       :rounded="element.rounded ?? portalConfig.defaults?.rounded"
       :elevation="hoverFx.elevation(isHovering, element.elevation ?? portalConfig.defaults?.elevation)"
       :variant="element.background?.tonal ? 'tonal' : undefined"
       :class="[element.mb !== 0 && `mb-${element.mb ?? 4}`, 'd-flex flex-column flex-grow-1']"
       :color="hoverFx.background(isHovering, element.background?.color)"
-      :style="hoverFx.rootStyle(isHovering, { hasBorder: !!element.border })"
+      :style="hoverFx.rootStyle(isHovering, { hasBorder: element.border ?? true })"
     >
       <!--
         Background image on its own layer so the image zoom effect scales it without the box.
@@ -25,8 +25,8 @@
         :style="[{
           inset: 0,
           zIndex: -1,
-          backgroundImage: element.background.tintStrength
-            ? `linear-gradient(rgba(var(--v-theme-${element.background.color}) ,${element.background.tintStrength}), rgba(var(--v-theme-${element.background.color}) ,${element.background.tintStrength})), url(${getPageImageSrc(element.background.image, false)})`
+          backgroundImage: tintStrength
+            ? `linear-gradient(rgba(var(--v-theme-${element.background.color}) ,${tintStrength}), rgba(var(--v-theme-${element.background.color}) ,${tintStrength})), url(${getPageImageSrc(element.background.image, false)})`
             : `url(${getPageImageSrc(element.background.image, false)})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center'
@@ -60,6 +60,7 @@
       >
         <!-- Thumbnail (Left Location) -->
         <!-- On mobile, fall back to the top location (see main column below) -->
+        <!-- compatibility: a thumbnail without location stays hidden, which no location reproduces -->
         <template v-if="element.thumbnail?.location === 'left' && element.thumbnail?.image && !$vuetify.display.smAndDown">
           <v-col
             cols="4"
@@ -89,7 +90,7 @@
           >
             <v-img
               :src="getPageImageSrc(element.thumbnail.image, false)"
-              :cover="element.thumbnail.crop"
+              :cover="element.thumbnail.crop ?? true"
               height="170"
               alt=""
               :style="hoverFx.imageStyle(isHovering)"
@@ -122,7 +123,7 @@
           >
             <v-img
               :src="getPageImageSrc(element.thumbnail.image, false)"
-              :cover="element.thumbnail.crop"
+              :cover="element.thumbnail.crop ?? true"
               height="170"
               alt=""
               :style="hoverFx.imageStyle(isHovering)"
@@ -175,7 +176,7 @@
                 v-for="(action, i) in element.actions"
                 :key="i"
                 :link="action"
-                :config="(!element.actionStyle?.usePortalConfig && element.actionStyle?.config) ? element.actionStyle.config : portalConfig.navLinksConfig"
+                :config="(!(element.actionStyle?.usePortalConfig ?? true) && element.actionStyle?.config) ? element.actionStyle.config : portalConfig.navLinksConfig"
               />
             </v-defaults-provider>
           </v-card-actions>
@@ -196,6 +197,8 @@ const { element } = defineProps({
 const { preview, portalConfig } = usePortalStore()
 const { isExternalLink, resolveLink } = useNavigationStore()
 const getPageImageSrc = usePageImageSrc()
+// the tint needs a color: without one the gradient is invalid and hides the image
+const tintStrength = computed(() => element.background?.color ? (element.background.tintStrength ?? 0.8) : 0)
 const hoverFx = useHoverConfig(() => element.hover)
 const hoverable = computed(() => !!element.link && element.link.type !== 'none')
 
@@ -206,7 +209,7 @@ const boxLink = computed(() => {
   return {
     href: external ? resolved : undefined,
     to: external ? undefined : resolved,
-    target: !!element.link.target
+    target: element.link.target ?? element.link.type === 'external'
   }
 })
 
@@ -215,7 +218,7 @@ const leftThumbnailStyle = computed(() => {
   if (!element.thumbnail?.image) return undefined
   return {
     backgroundImage: `url("${getPageImageSrc(element.thumbnail.image, false)}")`,
-    backgroundSize: element.thumbnail.crop ? 'cover' : 'contain',
+    backgroundSize: (element.thumbnail.crop ?? true) ? 'cover' : 'contain',
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat',
     minHeight: '200px',
@@ -229,7 +232,7 @@ const altLinkTitle = computed(() => {
   if (!element.link || element.link.type === 'none') return ''
   const linkTitle = element.link?.title || element.title || ''
   if (!linkTitle) return ''
-  return element.link?.target ? linkTitle + ' - ' + t('newWindow') : linkTitle
+  return boxLink.value?.target ? linkTitle + ' - ' + t('newWindow') : linkTitle
 })
 
 const contentId = useId()
