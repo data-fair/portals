@@ -90,7 +90,8 @@ router.post('', requireOperationScope('createPortal'), async (req, res, next) =>
       navigationColor: 'primary',
       hidePages: ['contribute', 'processings'],
       accountPages: []
-    }
+    },
+    defaults: { density: 'comfortable', rounded: 'default' }
   }
 
   // Prepare config by applying overrides in the expected order:

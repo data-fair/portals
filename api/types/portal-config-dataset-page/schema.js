@@ -33,6 +33,7 @@ export default {
   properties: {
     showData: {
       type: 'boolean',
+      default: false,
       title: 'Show the "Data" section',
       'x-i18n-title': { fr: 'Afficher la section "Données"' },
       description: 'Shows a section with the "Table", "Map", "Schema",... tabs depending on the available views.',
