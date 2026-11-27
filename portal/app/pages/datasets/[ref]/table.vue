@@ -52,13 +52,13 @@ const parentDataset = useParentDataset(datasetFetch.data.value?.partOf)
 const thumbnailUrl = computed(() => {
   const cardConfig = portalConfig.value.datasets.card
   const dataset = datasetFetch.data.value
-  if (!dataset || !cardConfig.thumbnail?.show) return undefined
+  if (!dataset || !(cardConfig.thumbnail?.show ?? true)) return undefined
   if (dataset.image) return dataset.image
-  if (cardConfig.thumbnail.useTopic && dataset.topics?.[0]?.id) {
+  if (cardConfig.thumbnail?.useTopic && dataset.topics?.[0]?.id) {
     const topicConfig = portalConfig.value.topics?.find((t) => t.id === dataset.topics[0]!.id)
     if (topicConfig?.thumbnail) return getPortalImageSrc(topicConfig.thumbnail, false)
   }
-  if (cardConfig.thumbnail.useApplication && dataset.extras?.applications?.[0]) {
+  if (cardConfig.thumbnail?.useApplication && dataset.extras?.applications?.[0]) {
     return `${origin}/data-fair/api/v1/applications/${dataset.extras.applications[0].id}/capture?updatedAt=${dataset.extras.applications[0].updatedAt}`
   }
   if (cardConfig.thumbnail?.default) return getPortalImageSrc(cardConfig.thumbnail.default, false)

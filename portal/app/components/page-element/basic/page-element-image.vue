@@ -28,8 +28,8 @@
       v-if="!element.zoomable && !element.isPresentation && element.link && element.link?.type !== 'none' && isExternalLink(element.link)"
       :href="resolveLink(element.link)"
       :title="altLinkTitle"
-      :target="element.link?.target ? '_blank' : undefined"
-      :rel="linkRel(resolveLink(element.link), element.link?.target)"
+      :target="newWindow ? '_blank' : undefined"
+      :rel="linkRel(resolveLink(element.link), newWindow)"
       :class="['d-flex justify-center', (element.cover || element.banner) && 'w-100']"
     >
       <img
@@ -45,8 +45,8 @@
       v-else-if="!element.zoomable && !element.isPresentation && element.link && element.link?.type !== 'none' && !isExternalLink(element.link)"
       :to="resolveLink(element.link)"
       :title="altLinkTitle"
-      :target="element.link?.target ? '_blank' : undefined"
-      :rel="linkRel(resolveLink(element.link), element.link?.target)"
+      :target="newWindow ? '_blank' : undefined"
+      :rel="linkRel(resolveLink(element.link), newWindow)"
       :class="['d-flex justify-center', (element.cover || element.banner) && 'w-100']"
     >
       <img
@@ -113,6 +113,7 @@ const getPageImageSrc = usePageImageSrc()
 const { showTopBreadcrumbs, isExternalLink, resolveLink, linkRel } = useNavigationStore()
 
 const display = useDisplay()
+const newWindow = computed(() => !!element.link && element.link.type !== 'none' && (element.link.target ?? element.link.type === 'external'))
 
 const image = computed(() => {
   if (element.banner && element.wideImage) return element.wideImage
@@ -166,7 +167,7 @@ const frameClass = computed(() => {
 const altLinkTitle = computed(() => {
   if (!element.link || element.link.type === 'none') return ''
   let linkTitle = element.link?.title || element.title || ''
-  if (element.link?.target) linkTitle += ' - ' + t('newWindow')
+  if (newWindow.value) linkTitle += ' - ' + t('newWindow')
   return linkTitle
 })
 

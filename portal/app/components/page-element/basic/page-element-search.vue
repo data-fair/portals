@@ -5,10 +5,11 @@
       element.mb !== 0 && `mb-${element.mb ?? 4}`
     ]"
   >
+    <!-- compatibility: a block without btnPosition keeps no button, which no position reproduces -->
     <v-text-field
       v-model="searchQuery"
       :label="element.label || t('searchLabel')"
-      :density="element.density"
+      :density="element.density ?? portalConfig.defaults?.density ?? 'comfortable'"
       :rounded="element.btnPosition === 'attached' ? `e-0 s-${element.rounded}` : element.rounded"
       :color="element.color"
       :base-color="element.color"
@@ -31,7 +32,7 @@
         <v-btn
           :color="element.color"
           :title="t('searchBtn')"
-          :density="element.density"
+          :density="element.density ?? portalConfig.defaults?.density ?? 'comfortable'"
           :rounded="element.btnPosition === 'attached' ? `s-0 e-${element.rounded}` : element.rounded"
           :elevation="element.btnPosition === 'spaced' ? element.elevation : 0"
           :class="element.btnPosition === 'spaced' ? 'ml-4 h-100' : 'h-100'"
@@ -61,7 +62,7 @@ const { element } = defineProps<{
 const { t } = useI18n()
 const router = useRouter()
 const route = useRoute()
-const { preview } = usePortalStore()
+const { preview, portalConfig } = usePortalStore()
 const search = useStringSearchParam('q')
 
 const searchQuery = ref(search.value || '')

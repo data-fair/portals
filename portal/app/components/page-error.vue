@@ -82,7 +82,7 @@ const defaultTitles: Record<number, string> = {
 }
 
 const title = computed(() => props.title || defaultTitles[props.statusCode] || t('error'))
-const headingTag = computed(() => (portalConfig.value.header?.show && portalConfig.value.header?.showTitle) ? 'h2' : 'h1')
+const headingTag = computed(() => ((portalConfig.value.header?.show ?? true) && (portalConfig.value.header?.showTitle ?? true)) ? 'h2' : 'h1')
 
 // Distinct document title per error type (RGAA 8.6). Registered after the page's
 // own usePageSeo so it wins over the generic page title.

@@ -10,7 +10,7 @@
       v-if="element.icon && (element.icon.mdi?.svgPath || element.icon.custom)"
       :icon="element.icon.mdi?.svgPath || element.icon.custom"
       :color="element.icon.color"
-      :size="element.size"
+      :size="element.size ?? 48"
     />
   </div>
 </template>

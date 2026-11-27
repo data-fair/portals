@@ -25,7 +25,7 @@
   </span>
   <span v-else-if="item.type === 'external'">
     {{ t('externalLink') }} - {{ t('label') }} : {{ item.title }} - {{ t('url') }} : {{ item.href }}<template
-      v-if="item.target"
+      v-if="item.target ?? true"
     > - {{ t('openNewTab') }}</template>
   </span>
   <span v-else-if="item.type === 'submenu'">

@@ -20,6 +20,7 @@ test.describe('portals management', () => {
     assert.equal(portal.owner.id, 'test_portals_admin')
     assert.equal(portal.config.authentication, 'optional')
     assert.equal(portal.config.theme.colors.primary, '#1976D2')
+    assert.deepEqual(portal.config.defaults, { density: 'comfortable', rounded: 'default' })
     assert.deepEqual(portal.config, portal.draftConfig)
   })
 

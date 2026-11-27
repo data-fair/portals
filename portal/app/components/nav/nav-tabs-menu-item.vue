@@ -19,15 +19,15 @@
         :active="isItemActive(link)"
         :to="link.type !== 'submenu' && !isExternalLink(link) ? resolveLink(link) : undefined"
         :href="link.type !== 'submenu' && isExternalLink(link) ? resolveLink(link) : undefined"
-        :target="link.type === 'external' && link.target ? '_blank' : undefined"
-        :rel="linkRel(resolveLink(link), link.type === 'external' && link.target)"
+        :target="link.type === 'external' && (link.target ?? true) ? '_blank' : undefined"
+        :rel="linkRel(resolveLink(link), link.type === 'external' && (link.target ?? true))"
         :role="undefined"
         color="primary"
         tabindex="0"
         link
       >
         <span
-          v-if="link.type === 'external' && link.target"
+          v-if="link.type === 'external' && (link.target ?? true)"
           class="d-sr-only"
         > - {{ t('newWindow') }}</span>
         <template #prepend>

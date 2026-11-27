@@ -8,8 +8,8 @@
     >
       <reuse-card
         :reuse="reuse"
-        :card-config="(!element.usePortalConfig && element.cardConfig) ? element.cardConfig : portalConfig.reuses.card"
-        :is-portal-config="element.usePortalConfig || !element.cardConfig"
+        :card-config="(!(element.usePortalConfig ?? true) && element.cardConfig) ? element.cardConfig : portalConfig.reuses.card"
+        :is-portal-config="(element.usePortalConfig ?? true) || !element.cardConfig"
       />
     </v-col>
   </v-row>
@@ -31,7 +31,7 @@ if (!preview) {
   const reusesQuery = computed(() => ({
     slugs: element.mode === 'custom' ? slugs.join(',') : undefined,
     size: element.mode !== 'custom' ? element.limit : undefined,
-    sort: element.mode === 'lastUpdated' ? 'updatedAt:-1' : element.mode === 'lastCreated' ? 'createdAt:-1' : undefined
+    sort: (element.mode ?? 'lastUpdated') === 'lastUpdated' ? 'updatedAt:-1' : element.mode === 'lastCreated' ? 'createdAt:-1' : undefined
   }))
 
   const reusesFetch = useFetch<ReuseFetch>('/portal/api/reuses', { query: reusesQuery })

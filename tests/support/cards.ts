@@ -44,7 +44,8 @@ export const createCardPortal = async (opts: {
   const config: Record<string, any> = {
     title: 'Card Portal',
     menu: { children: [] },
-    [kind]: { card }
+    // the owner avatar is an image too: off, so the card's only image is its thumbnail
+    [kind]: { card: kind === 'datasets' || kind === 'applications' ? { ownerDisplay: 'none', ...card } : card }
   }
   if (topics) config.topics = topics
 

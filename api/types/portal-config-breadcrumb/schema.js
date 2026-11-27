@@ -56,8 +56,7 @@ export default {
       layout: {
         if: 'parent.data?.position !== "none" && parent.data?.showHome === true',
         cols: { md: 6 }
-      },
-      default: 'Accueil'
+      }
     },
     fluid: {
       type: 'boolean',

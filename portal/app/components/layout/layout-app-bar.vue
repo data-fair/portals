@@ -2,21 +2,21 @@
   <component
     :is="preview ? VToolbar : VAppBar"
     v-model="appBarActive"
-    :color="headerConfig.show && headerConfig.color ? headerConfig.color : navBarConfig.color"
+    :color="showHeader && headerConfig.color ? headerConfig.color : navBarConfig.color"
     :class="[
       (navBarConfig.transparent && scrolled) ? 'opacity-90' : undefined,
       navBarConfig.color === 'background' ? 'header-border-inner' : undefined
     ]"
     :style="scrollBehavior === 'hide' && !appBarActive ? 'transform: translateY(-128px)' : undefined"
     :extension-height="64"
-    :height="headerConfig.show ? 128 : 0"
+    :height="showHeader ? 128 : 0"
     :scroll-behavior="scrollBehavior + ' elevate'"
     scroll-threshold="150"
     tag="header"
   >
     <!-- Header (128px) -->
     <layout-header
-      v-if="headerConfig.show"
+      v-if="showHeader"
       :header-config="headerConfig"
     />
 
@@ -41,6 +41,8 @@ const headerConfig = computed(() => {
   return { ...portalConfig.value.header, ...portalConfig.value.headerHome }
 })
 
+const showHeader = computed(() => headerConfig.value.show ?? true)
+
 const navBarConfig = computed(() => {
   if (!home || !portalConfig.value.navBarHomeActive) return portalConfig.value.navBar
   return { ...portalConfig.value.navBar, ...portalConfig.value.navBarHome }
@@ -52,7 +54,7 @@ const navBarConfig = computed(() => {
 // Vuetify 4 slides a hidden app bar out by its whole height whatever the behavior,
 // so `hide` overrides that transform to slide out the header only.
 const scrollBehavior = computed(() => {
-  if (!headerConfig.value.show || headerConfig.value.keepOnScroll) return 'default'
+  if (!showHeader.value || headerConfig.value.keepOnScroll) return 'default'
   return navBarConfig.value.keepOnScroll ? 'hide' : 'fully-hide'
 })
 

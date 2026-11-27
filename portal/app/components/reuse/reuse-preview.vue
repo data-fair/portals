@@ -54,7 +54,7 @@
 
   <!-- Image -->
   <div
-    v-if="portalConfig.reuses.page.showImage && reuseConfig.image"
+    v-if="(portalConfig.reuses.page.showImage ?? true) && reuseConfig.image"
     aria-hidden="true"
     class="mb-4"
   >
@@ -66,7 +66,7 @@
   </div>
 
   <!-- Datasets -->
-  <template v-if="portalConfig.reuses.page.datasets?.display === 'card' && datasets.length">
+  <template v-if="(portalConfig.reuses.page.datasets?.display ?? 'card') === 'card' && datasets.length">
     <page-element-title
       :element="{
         type: 'title',
@@ -127,7 +127,7 @@ const { reuseConfig, slug, reusesCatalogExists, editHref } = defineProps<{
 const { t } = useI18n()
 const { portal, portalConfig, preview } = usePortalStore()
 const { annotateLinks } = useNavigationStore()
-const headerHasTitle = computed(() => !!(portalConfig.value.header?.show && portalConfig.value.header?.showTitle))
+const headerHasTitle = computed(() => !!((portalConfig.value.header?.show ?? true) && (portalConfig.value.header?.showTitle ?? true)))
 const mainTitleTag = computed<HeadingTag>(() => headerHasTitle.value ? 'h2' : 'h1')
 const sectionTitleTag = computed<HeadingTag>(() => headerHasTitle.value ? 'h3' : 'h2')
 

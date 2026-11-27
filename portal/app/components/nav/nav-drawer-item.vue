@@ -8,8 +8,8 @@
       <v-list-item
         :to="!isExternalLink(item) ? resolveLink(item) : undefined"
         :href="isExternalLink(item) ? resolveLink(item) : undefined"
-        :target="item.type === 'external' && item.target ? '_blank' : undefined"
-        :rel="linkRel(resolveLink(item), item.type === 'external' && item.target)"
+        :target="item.type === 'external' && (item.target ?? true) ? '_blank' : undefined"
+        :rel="linkRel(resolveLink(item), item.type === 'external' && (item.target ?? true))"
         :active="isActive"
         :role="undefined"
         tabindex="0"
@@ -24,7 +24,7 @@
         <!-- text-wrap lets long titles wrap instead of being truncated -->
         <v-list-item-title class="text-wrap">
           {{ resolveLinkTitle(item, locale) }}<span
-            v-if="item.type === 'external' && item.target"
+            v-if="item.type === 'external' && (item.target ?? true)"
             class="d-sr-only"
           > - {{ t('newWindow') }}</span>
         </v-list-item-title>
@@ -64,8 +64,8 @@
       <v-list-item
         :to="!isExternalLink(item) ? resolveLink(item) : undefined"
         :href="isExternalLink(item) ? resolveLink(item) : undefined"
-        :target="item.type === 'external' && item.target ? '_blank' : undefined"
-        :rel="linkRel(resolveLink(item), item.type === 'external' && item.target)"
+        :target="item.type === 'external' && (item.target ?? true) ? '_blank' : undefined"
+        :rel="linkRel(resolveLink(item), item.type === 'external' && (item.target ?? true))"
         :active="isActive"
         :role="undefined"
         tabindex="0"
@@ -80,7 +80,7 @@
         <!-- text-wrap lets long titles wrap instead of being truncated -->
         <v-list-item-title class="text-wrap">
           {{ resolveLinkTitle(item, locale) }}<span
-            v-if="item.type === 'external' && item.target"
+            v-if="item.type === 'external' && (item.target ?? true)"
             class="d-sr-only"
           > - {{ t('newWindow') }}</span>
         </v-list-item-title>

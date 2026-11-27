@@ -99,18 +99,18 @@
                 <v-btn
                   v-bind="hoverProps"
                   :color="btnHover.color(isHovering, buttonConfig?.color)"
-                  :density="buttonConfig?.density ?? portalConfig.defaults?.density"
+                  :density="buttonConfig?.density ?? portalConfig.defaults?.density ?? 'comfortable'"
                   :elevation="btnHover.elevation(isHovering, buttonConfig?.elevation ?? portalConfig.defaults?.elevation)"
                   :rounded="buttonConfig?.rounded ?? portalConfig.defaults?.rounded"
                   :variant="valid ? (buttonConfig?.variant !== 'default' ? buttonConfig?.variant : undefined) : 'tonal'"
-                  :class="{ 'text-uppercase': buttonConfig?.uppercase }"
+                  :class="{ 'text-uppercase': buttonConfig?.uppercase ?? true }"
                   :style="btnHover.style(isHovering)"
                   :text="t('send')"
                   :loading="sendMessage.loading.value"
                   type="submit"
                 >
                   <template
-                    v-if="buttonConfig?.showIcon"
+                    v-if="buttonConfig?.showIcon ?? true"
                     #prepend
                   >
                     <v-icon :icon="mdiSend" />
@@ -205,7 +205,7 @@ const newMessage = { from: '', subject: '', text: '' }
 const valid = ref(false)
 const message = ref({ ...newMessage })
 
-const buttonConfig = computed(() => (!element.sendButton?.usePortalConfig && element.sendButton?.config) ? element.sendButton?.config : portalConfig.value.navLinksConfig)
+const buttonConfig = computed(() => (!(element.sendButton?.usePortalConfig ?? true) && element.sendButton?.config) ? element.sendButton?.config : portalConfig.value.navLinksConfig)
 
 const btnHover = useButtonHover(() => buttonConfig.value)
 
@@ -215,7 +215,7 @@ const msgMinLength = computed(() => {
   return v === -1 ? 0 : v
 })
 const msgMaxLength = computed(() => {
-  const v = element.defaultFields?.messageMaxLength ?? 3000
+  const v = element.defaultFields?.messageMaxLength ?? 2000
   return v === -1 ? 0 : v
 })
 const subjectRules = computed(() => {

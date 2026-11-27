@@ -55,7 +55,7 @@ export const resolvePageAnchors = async (pageConfig: PageConfig) => {
     while (seen.has(candidate)) candidate = `${base}-${counter++}`
     seen.add(candidate)
     element.anchor._slug = candidate
-    if (element.anchor.inToc) {
+    if (element.anchor.inToc ?? true) {
       const label = element.anchor.label?.trim()
       toc.push({ id: candidate, title: label || element.content || candidate })
     }

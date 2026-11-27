@@ -69,7 +69,7 @@ const { breadcrumbs } = useNavigationStore()
 
 const { t } = useI18n()
 
-const breadcrumbConfig = computed(() => portalConfig.value.breadcrumb)
+const breadcrumbConfig = computed(() => ({ showHome: true, fluid: true, compact: true, ...portalConfig.value.breadcrumb }))
 
 const breadcrumbItems = computed(() => {
   const items: BreadcrumbItems = [...breadcrumbs.value]

@@ -136,7 +136,7 @@ const { t } = useI18n()
 const { dayjs } = useLocaleDayjs()
 const { departmentLabel } = useDisplayOwner()
 
-const metadataConfig = computed(() => portalConfig.value.applications.page.metadata || {})
+const metadataConfig = computed(() => ({ location: 'right', showDepartment: true, ...portalConfig.value.applications.page.metadata }))
 const showBaseApplication = computed(() => metadataConfig.value.showBaseApplication !== false)
 
 const baseApplicationFetch = useLocalFetch<{
@@ -146,7 +146,7 @@ const baseApplicationFetch = useLocalFetch<{
   immediate: showBaseApplication.value
 })
 
-const topicsConfig = computed(() => portalConfig.value.applications.page.topics)
+const topicsConfig = computed(() => ({ show: true, ...portalConfig.value.applications.page.topics }))
 const metadataColProps = computed(() => ({
   class: 'py-0',
   cols: 12,

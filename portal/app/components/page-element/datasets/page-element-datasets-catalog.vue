@@ -21,7 +21,7 @@
   >
     <template #count-extra>
       <v-btn
-        v-if="element.showApiButton && !$vuetify.display.smAndDown"
+        v-if="(element.showApiButton ?? true) && !$vuetify.display.smAndDown"
         :icon="mdiCog"
         :title="t('catalogApiDoc')"
         to="/catalog-api-doc"

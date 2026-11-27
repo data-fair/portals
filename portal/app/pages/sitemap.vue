@@ -176,7 +176,7 @@ const session = useSession()
 const { portalConfig } = usePortalStore()
 const { resolveLink, setBreadcrumbs, isExternalLink } = useNavigationStore()
 
-const headerHasTitle = computed(() => !!(portalConfig.value.header?.show && portalConfig.value.header?.showTitle))
+const headerHasTitle = computed(() => !!((portalConfig.value.header?.show ?? true) && (portalConfig.value.header?.showTitle ?? true)))
 const mainTitleTag = computed<HeadingTag>(() => headerHasTitle.value ? 'h2' : 'h1')
 const sectionTitleTag = computed<HeadingTag>(() => headerHasTitle.value ? 'h3' : 'h2')
 

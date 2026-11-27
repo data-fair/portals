@@ -54,7 +54,7 @@ const {
   sort, order, goToPage, loadMore
 } = useCatalog<Omit<PageConfig, 'elements'>, EventFilters>(element, {
   endpoint: '/portal/api/events',
-  defaultSortFallback: 'startDate:-1',
+  defaultSortFallback: 'startDate:1',
   filterDefs: () => ({
     search: useStringSearchParam('q'),
     includePast: useBooleanSearchParam('include-past')

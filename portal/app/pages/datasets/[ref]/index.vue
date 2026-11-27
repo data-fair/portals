@@ -27,7 +27,7 @@
       <v-row>
         <!-- Dataset image and description -->
         <v-col
-          :md="portalConfig.datasets.page.metadata?.location === 'right' ? 8 : 12"
+          :md="(portalConfig.datasets.page.metadata?.location ?? 'right') === 'right' ? 8 : 12"
           cols="12"
         >
           <v-img
@@ -46,8 +46,8 @@
 
         <!-- Metadata -->
         <v-col
-          :md="portalConfig.datasets.page.metadata?.location === 'right' ? 4 : 12"
-          :class="portalConfig.datasets.page.metadata?.location === 'top' ? 'order-md-first' : 'order-md-1'"
+          :md="(portalConfig.datasets.page.metadata?.location ?? 'right') === 'right' ? 4 : 12"
+          :class="(portalConfig.datasets.page.metadata?.location ?? 'right') === 'top' ? 'order-md-first' : 'order-md-1'"
           cols="12"
         >
           <dataset-metadata
@@ -160,7 +160,7 @@
       </template>
 
       <!-- Applications section -->
-      <template v-if="portalConfig.datasets.page.applications?.display && portalConfig.datasets.page.applications?.display !== 'none' && orderedApplications.length">
+      <template v-if="(portalConfig.datasets.page.applications?.display ?? 'side-by-side') !== 'none' && orderedApplications.length">
         <page-element-title
           :element="{
             type: 'title',
@@ -333,7 +333,7 @@
 
       <!-- Related datasets section -->
       <template
-        v-if="portalConfig.datasets.page.relatedDatasets?.display && portalConfig.datasets.page.relatedDatasets?.display !== 'none' && relatedDatasets.length"
+        v-if="(portalConfig.datasets.page.relatedDatasets?.display ?? 'card') !== 'none' && relatedDatasets.length"
       >
         <page-element-title
           :element="{
@@ -349,7 +349,7 @@
           <v-col
             v-for="(relatedDataset, i) in relatedDatasetsFetch.data.value?.results"
             :key="i"
-            :md="12 / (portalConfig.datasets.page.relatedDatasets.columns || 3)"
+            :md="12 / (portalConfig.datasets.page.relatedDatasets?.columns || 2)"
             cols="12"
           >
             <dataset-card
@@ -394,7 +394,7 @@ type BreadcrumbItem = NonNullable<VBreadcrumbs['$props']['items']>[number]
 const { t } = useI18n()
 const route = useRoute<'/datasets/[ref]'>()
 const { portal, portalConfig } = usePortalStore()
-const headerHasTitle = computed(() => !!(portalConfig.value.header?.show && portalConfig.value.header?.showTitle))
+const headerHasTitle = computed(() => !!((portalConfig.value.header?.show ?? true) && (portalConfig.value.header?.showTitle ?? true)))
 const mainTitleTag = computed<HeadingTag>(() => headerHasTitle.value ? 'h2' : 'h1')
 const sectionTitleTag = computed<HeadingTag>(() => headerHasTitle.value ? 'h3' : 'h2')
 const { setBreadcrumbs, linkRel, annotateLinks } = useNavigationStore()
@@ -515,13 +515,13 @@ const errorTitle = computed(() => {
 
 const thumbnailUrl = computed(() => {
   const cardConfig = portalConfig.value.datasets.card
-  if (!cardConfig.thumbnail?.show || !dataset.value) return undefined
+  if (!(cardConfig.thumbnail?.show ?? true) || !dataset.value) return undefined
   if (dataset.value.image) return dataset.value.image
-  if (cardConfig.thumbnail.useTopic && dataset.value.topics?.[0]?.id) {
+  if (cardConfig.thumbnail?.useTopic && dataset.value.topics?.[0]?.id) {
     const topicConfig = portalConfig.value.topics?.find((t) => t.id === dataset.value!.topics![0]!.id)
     if (topicConfig?.thumbnail) return getPortalImageSrc(topicConfig.thumbnail, false)
   }
-  if (cardConfig.thumbnail.useApplication && dataset.value.extras?.applications?.[0]) {
+  if (cardConfig.thumbnail?.useApplication && dataset.value.extras?.applications?.[0]) {
     return `/data-fair/api/v1/applications/${dataset.value.extras.applications[0].id}/capture?updatedAt=${dataset.value.extras.applications[0].updatedAt}`
   }
   if (cardConfig.thumbnail?.default) return getPortalImageSrc(cardConfig.thumbnail.default, false)

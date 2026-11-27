@@ -9,8 +9,8 @@
       <event-card
         v-if="eventPage"
         :page-config="eventPage"
-        :card-config="(!element.usePortalConfig && element.cardConfig) ? element.cardConfig : portalConfig.events.card"
-        :is-portal-config="element.usePortalConfig || !element.cardConfig"
+        :card-config="(!(element.usePortalConfig ?? true) && element.cardConfig) ? element.cardConfig : portalConfig.events.card"
+        :is-portal-config="(element.usePortalConfig ?? true) || !element.cardConfig"
       />
     </v-col>
   </v-row>
@@ -33,6 +33,7 @@ if (!preview) {
     slugs: element.mode === 'custom' ? slugs.join(',') : undefined,
     size: element.mode !== 'custom' ? element.limit : undefined,
     includePast: element.mode === 'custom' ? 'true' : undefined,
+    // compatibility: a list without mode keeps the API's default order, which no mode reproduces
     sort: element.mode === 'upcoming' ? 'startDate:1' : undefined
   }))
 

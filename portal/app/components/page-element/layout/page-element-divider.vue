@@ -6,7 +6,7 @@
     :color="element.color"
     :class="[
       'my-4',
-      element.rounded ? 'rounded' : ''
+      (element.rounded ?? true) ? 'rounded' : ''
     ]"
   >
     <template
