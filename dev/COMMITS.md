@@ -69,4 +69,4 @@ chore: unify dev environment with data-fair conventions
 
 ## Release notes
 
-Once merged, commits feed the release notes — see `RELEASES.md` for the release format and category mapping (scopes can be **rewritten** in the release note when the editorial scope differs from the committed one).
+Release notes are written at release time from the merged pull requests: write PR titles and descriptions for that reader. A scope can be **rewritten** in the release notes when an editorial scope fits better than the committed one.
