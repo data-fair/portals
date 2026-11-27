@@ -109,10 +109,9 @@ npm run build-types      # Build type definitions from schemas
 npm -w ui run build      # Production UI build (done once by `npm run dev-setup`; re-run only to refresh the auto-import declarations)
 ```
 
-### Commits & release notes
+### Commits
 
 - Commit message convention (allowed types and scopes, ambiguous cases): see `dev/COMMITS.md`. The `scope-enum` rule is enforced as error — an unknown scope rejects the commit.
-- Release notes format and category mapping: see `dev/RELEASES.md`.
 
 ### Performance profiling
 
