@@ -110,13 +110,17 @@ RUN npm -w portal run build
 FROM base AS portal
 
 COPY --from=portal-builder /app/portal/.output portal/.output
-ADD package.json README.md LICENSE BUILD.json* ./
+ADD package.json LICENSE ./
 
 ENV PORT=8080
 ENV HOST=0.0.0.0
 
 # npm, corepack and yarn are never used at runtime and carry their own CVEs
 RUN rm -rf /usr/local/lib/node_modules /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/corepack /opt/yarn-* /usr/local/bin/yarn /usr/local/bin/yarnpkg
+
+# BUILD.json is written by CI for every build (README.md keeps the wildcard from matching nothing):
+# last, so that a build of unchanged code only adds this layer
+ADD README.md BUILD.json* ./
 
 EXPOSE 8080
 USER node
@@ -139,12 +143,16 @@ COPY --from=types /app/api/config api/config
 COPY --from=api-installer /app/shared/markdown/node_modules shared/markdown/node_modules
 COPY --from=api-installer /app/api/node_modules api/node_modules
 COPY --from=ui /app/ui/dist ui/dist
-ADD package.json README.md LICENSE BUILD.json* ./
+ADD package.json LICENSE ./
 # artificially create a dependency to "portal" target for better caching in github ci
 COPY --from=portal /app/package.json package.json
 
 # npm, corepack and yarn are never used at runtime and carry their own CVEs
 RUN rm -rf /usr/local/lib/node_modules /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/corepack /opt/yarn-* /usr/local/bin/yarn /usr/local/bin/yarnpkg
+
+# BUILD.json is written by CI for every build (README.md keeps the wildcard from matching nothing):
+# last, so that a build of unchanged code only adds this layer
+ADD README.md BUILD.json* ./
 
 EXPOSE 8080
 EXPOSE 9090
