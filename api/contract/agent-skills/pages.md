@@ -28,7 +28,7 @@ What the person's role on the owner allows (a scoped token never adds a right, i
 
 | Action | Role needed |
 | --- | --- |
-| Read a page, edit and save its draft, publish or discard the draft, request its publication | admin or contrib of the page's owner |
+| List and read the pages, edit and save a draft, publish or discard the draft, request its publication | admin or contrib of the page's owner |
 | Create a page, attach it to portals, delete it | admin of the page's owner |
 | Transfer a page | admin of the current **and** of the new owner |
 | Create, edit, delete a group | admin of the group's owner |

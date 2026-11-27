@@ -17,9 +17,11 @@ export default router
 
 router.get('', requireOperationScope('listPages'), async (req, res, next) => {
   const session = reqSessionAuthenticated(req)
-  assertAccountRole(session, session.account, 'admin')
-
   const params = req.query as Record<string, string>
+  // the pages of the account: the role that reads one of them by its id (getPageAsContrib). The reference
+  // pages of every account (templates to duplicate, a creation step) stay for the admins.
+  assertAccountRole(session, session.account, params.isReference === 'true' ? 'admin' : ['admin', 'contrib'])
+
   const sort = params.q ? { _score: { $meta: 'textScore' } } : findUtils.sort(params.sort || 'createdAt:-1')
   const { skip, size } = findUtils.pagination(params)
   const project = findUtils.project(params.select)

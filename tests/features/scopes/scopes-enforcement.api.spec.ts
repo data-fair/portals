@@ -87,6 +87,24 @@ test.describe('scope enforcement', () => {
     assert.equal(await statusOf((await scoped('all:admin')).post(`/api/portals/${portal._id}/draft`)), 204)
   })
 
+  // all:read only ever refuses: the account role of the session still decides, the read routes stay open
+  // to it and every write is refused
+  test('all:read lists and reads portals and pages, writes nothing', async () => {
+    const portal = (await createPortal(orgAdmin)).data
+    const page = (await createPage(orgAdmin)).data
+    const ax = await scoped('all:read')
+    assert.equal(await statusOf(ax.get('/api/portals')), 200)
+    assert.equal(await statusOf(ax.get(`/api/portals/${portal._id}`)), 200)
+    assert.equal(await statusOf(ax.get('/api/pages')), 200)
+    assert.equal(await statusOf(ax.get(`/api/pages/${page._id}`)), 200)
+    assert.equal(await statusOf(createPortal(ax)), 403)
+    assert.equal(await statusOf(createPage(ax)), 403)
+    assert.equal(await statusOf(ax.patch(`/api/portals/${portal._id}`, { staging: true })), 403)
+    assert.equal(await statusOf(ax.delete(`/api/portals/${portal._id}`)), 403)
+    assert.equal(await statusOf(ax.patch(`/api/pages/${page._id}`, { title: 'Changed' })), 403)
+    assert.equal(await statusOf(ax.delete(`/api/pages/${page._id}`)), 403)
+  })
+
   test('a scope of another family is refused', async () => {
     const pagesAdmin = await scoped('pages:admin')
     assert.equal(await statusOf(pagesAdmin.get('/api/reuses')), 403)
